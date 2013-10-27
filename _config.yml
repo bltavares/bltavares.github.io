@@ -1,6 +1,7 @@
 # General Jekyll Config
 pygments: true
 url: http://blog.bltavares.com
+permalink: pretty
 lsi: true
 exclude: [LICENSE, CNAME, README.md, .gitignore]
 markdown: redcarpet
