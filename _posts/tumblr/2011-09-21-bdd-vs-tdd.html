@@ -1,0 +1,49 @@
+---
+layout: post
+title: BDD vs TDD
+tags: 
+---
+<p>No ultimo <a href="http://www.facebook.com/event.php?eid=259399660758409" target="_blank">#DevDojo</a>, apareceu uma discussão interessante entre as diferenças entre o BDD e o TDD.</p>
+<p>A melhor técnica para entender melhor algo é realizando ela na pratica. Decidi aplicar as duas técnicas para resolver o mesmo problema.</p>
+<p><strong>O problema</strong></p>
+<p>O problema é bem simples.</p>
+<p>Quero um objeto Calculadora que some, subtraia, multiplique e divida dois números. A única peculiaridade é que a divisão deve retornar números decimais e que lance uma exception na divisão por 0 e não Infinito, como ocorre com divisão de decimais.</p>
+<p>O resultado pode ser visto aqui &lt;<a href="https://github.com/bltavares/BDD-vs-TDD" target="_blank"><a href="https://github.com/bltavares/BDD-vs-TDD">https://github.com/bltavares/BDD-vs-TDD</a></a>&gt;.</p>
+<p><strong>As semelhanças</strong></p>
+<p>Ambas as técnicas geram confiança no desenvolvimento. O código se torna algo saudável de manter e de desenvolver novas funcionalidades.</p>
+<p>Uma coisa interessante é a implementação feita pelo minitest do bdd.</p>
+<p>Uma expectativa é um assert renomeado.</p>
+<p><img alt="image" src="http://media.tumblr.com/tumblr_lrup4hhiGf1qamcq2.png"/></p>
+<p><em>Então, eles são iguais?</em></p>
+<p><strong>As diferenças</strong></p>
+<p>Se vocês seguirem os commits de cada branch, com os testes e os códigos lado a lado, verá que a maior diferença entre as duas técnicas está na organização e expressividade.</p>
+<p>Desenvolvendo em bdd, senti que entendia melhor o motivo de um método existir e o que ele deveria fazer. A forma que você se aproxima do problema e suas soluções parecem ficar mais claras.</p>
+<p>O código se torna mais organizado, mostrando o comportamento dos objetos e não apenas um teste dele sobre uma condição específica.</p>
+<p>O tdd é mais rápido, mas me senti em dúvida sobre como deveria nomear metodos de acordo com o nome do teste. Ele não tornou claro para mim qual a especificação do objeto eu estava demonstrando.</p>
+<p><strong>As ferramentas</strong></p>
+<p>Utilizei o testunit para o TDD e o RSpec para o bdd. Vou apontar algumas características que afetam os frames e não as técnicas.</p>
+<p>O testunit possui implementado tanto um framework de bdd quanto de tdd, permitindo que o dev escolha qual ele irá usar.</p>
+<p>Uma coisa MUITO bacana dele é que os testes rodam de forma aleatória cada vez que você testa. Isso garante que nenhum dos casos esteja afetando outro caso.</p>
+<p>Ele é bastante rápido, mas a saida de erro dele não foi muito interessante.</p>
+<p><em>Código</em></p>
+<p><img alt="image" src="http://media.tumblr.com/tumblr_lrupriOovH1qamcq2.png"/></p>
+<p><em>Teste errado</em></p>
+<p><img alt="image" src="http://media.tumblr.com/tumblr_lrups5uFEi1qamcq2.png"/></p>
+<p>Instalando um novo tipo de output, consegui melhorar um pouco a saida de erro</p>
+<p><img alt="image" src="http://media.tumblr.com/tumblr_lruptccD7N1qamcq2.png"/></p>
+<p>Com a nova saida, e tudo ok.</p>
+<p><img alt="image" src="http://media.tumblr.com/tumblr_lrupuwCAtG1qamcq2.png"/></p>
+<p>Com o rspec, acho bem mais espressivo a saida em formato de documentação, além de que, com um describe apenas é possivel setar o metodo subject como a instancia da classe sobre teste.</p>
+<p><em>Ao descrever uma classe, o metodo subject instancia ela por padrão para você</em></p>
+<p><em><img alt="image" src="http://media.tumblr.com/tumblr_lruq74NDvX1qamcq2.png"/><br/></em></p>
+<p><em>Código</em></p>
+<p><img alt="image" src="http://media.tumblr.com/tumblr_lrupzc9i3O1qamcq2.png"/></p>
+<p><em>Teste errado</em></p>
+<p><em><img alt="image" src="http://media.tumblr.com/tumblr_lruq14FUpp1qamcq2.png"/></em></p>
+<p><em>Teste ok</em></p>
+<p><em><img alt="image" src="http://media.tumblr.com/tumblr_lruq2nsmf11qamcq2.png"/></em></p>
+<p><strong>Conclusão</strong></p>
+<p>Apesar que os testes em tdd sejam bem mais rápidos, acho que vale a pena utilizar o bdd.</p>
+<p>A melhor expressividade que essa aproximação para testes oferece ajuda a pensasr no problema real e não apenas no código, facilitando a comunicação de requerimentos entre programadores-stackholders, e inclusive programadores-programadores.</p>
+<p>As duas formas são muito boas e bastante parecidas, cabendo ao dev escolher qual encaixa melhor ao seu estilo.</p>
+<p>Mas o mais importante que trago desta experiência é: TEST IT!</p>

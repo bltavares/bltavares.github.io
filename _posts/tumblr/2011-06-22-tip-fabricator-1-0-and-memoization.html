@@ -1,0 +1,45 @@
+---
+layout: post
+title: ! 'Tip: Fabricator 1.0 and memoization'
+tags:
+- ruby
+- rails
+- fabricator
+---
+<p>Last night I faced a bug on my tests using Fabricator and decided to share it. It took some time to solve a problem using memoizations and Fabricator together.</p>
+<p><strong>Some context:</strong></p>
+<p>I got users on teams, and teams has many memberships. I wanted to cache the accepted members to improve performace. When I was testing, the cache always returned empty, even changing the name of variables or using diferent techniques to cache.</p>
+<p>And I became suprised when I tested it the memoized code on console and it was running perfectly</p>
+<p>The fabricator of user is something like that:</p>
+<blockquote>
+<p>Fabricator(:user) do</p>
+<p>  name { Faker::Name.name}</p>
+<p>  email { |person| &#8220;#{person.name.parameterize}@example.com&#8221; }</p>
+<p>  password &#8220;123&#8221;</p>
+<p>   teams [Fabricate(:team)]</p>
+<p>end</p>
+</blockquote>
+<p>And the Fabricator of Team is:</p>
+<blockquote>
+<p>Fabricator(:team) do</p>
+<p>  name { Faker::Name.name }</p>
+<p>end</p>
+</blockquote>
+<p><strong>The problem:</strong></p>
+<p>I was using the already created team by the fabricator relationship to create more memberships. But somehow, when I cached things, either using instance variables or ActiveSupport::Memoizeable I always got an empty {}.</p>
+<p>So, after turning this:</p>
+<blockquote>
+<p>@user = Fabricate(:user)</p>
+<p>@second_user = Fabricate(:user, teams: [])</p>
+<p>@team = @user.teams.first</p>
+<p>@team.members &#171;&#160;@second_user</p>
+</blockquote>
+<p>to that:</p>
+<blockquote>
+<p>@user = Fabricate(:user)</p>
+<p>@second_user = Fabricate(:user, teams: [])</p>
+<p>@team = @user.teams.create!({ name: &#8220;Teste&#8221;})</p>
+<p>@team.members &#171;&#160;@second_user</p>
+</blockquote>
+<p>things worked like a charm on the tests.</p>
+<p>(:</p>

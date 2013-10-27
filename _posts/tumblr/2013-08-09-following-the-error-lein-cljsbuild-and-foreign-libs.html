@@ -1,0 +1,61 @@
+---
+layout: post
+title: ! 'Following the error: lein-cljsbuild and :foreign-libs'
+tags:
+- followin the error
+---
+<p>Everyday we stumble across cryptical error messages and complicated stack traces. Some of them requires you to go to different websites and documentation, and if it keeps getting in the way, check the source code to finally understand the Why.</p>
+
+<p>I want to document my line of thoughts when I come across those little problems that really make you sad.</p>
+
+<p>Todays problem was when I was trying out Clojurescript. I started out with a simple `lein new project` and added the cljsbuild &lt; <a href="https://github.com/emezeske/lein-cljsbuild">https://github.com/emezeske/lein-cljsbuild</a> &gt; plugin to start the fun.</p>
+
+<h3>Some context before the error happens</h3>
+<p>I wanted to play around with some graphics and I just start drawing squares on a &lt;canvas&gt; tag. No libraries required so far, just some old js functions to grab elements and draw on the canvas.</p>
+<p>I realised that I would need another way to draw on the browser. The canvas won&#8217;t get mouse events unless I keep track of it and that was too cumbersome for me.</p>
+<p>SVG sounded better, but the api to work with it in the browser is not so fun. A quick google search and raphaeljs.com is on the way.</p>
+
+<h3>Investigating the Clojurescript integration with different libraries</h3>
+<p><em>"Raphael.js is an awesome graphical library for JavaScript. Let&#8217;s see how it integrates with clojurescript".</em></p>
+
+<p>The first search for clojurescript and raphael takes me to the blogpost &lt; <a href="http://lukevanderhart.com/2011/09/30/using-javascript-and-clojurescript.html">http://lukevanderhart.com/2011/09/30/using-javascript-and-clojurescript.html</a> &gt;</p>
+<p>It is a very complete blog post that gives you different examples of how to integrate cljs with other js libs.</p>
+
+<p>"Wow. it is just one line, let me add this :foreign-libs"</p>
+
+<h3>Let the error hunt begin</h3>
+<p><em>"But I followed all the instructions" said the baffled developer.</em></p>
+
+<p>Going to raphaeljs website there is a big button to download the code. Right-click and copy url. Paste on the proper space on the project.clj and we should be good. Right?!</p>
+<p>After that, no code was downloaded. &#8220;Well, I forgot the require&#8221;. Ok, added on the file and we have an error on the webpage.</p>
+<p><em>"goog.require raphael.core is not found"</em></p>
+<p>That lead me to understand better the integration of Clojurecsript and the Google Closure framework.</p>
+<p>On the blog post of Luke VanderHart, there is a comment about the version where the :foreign-libs was introduced. The code is not so complicated and reading the changeset gives us a nice insight &lt; <a href="https://github.com/clojure/clojurescript/commit/96b38e2c951ef07b397e9d">https://github.com/clojure/clojurescript/commit/96b38e2c951ef07b397e9d</a> &gt;</p>
+<p>"Well, the code should inject that remote file when compiling everything together".  `ack raphael` and no files are reported on the directory, but the project.clj and the require&#8217;s statements.</p>
+
+<h3>Approaching the light</h3>
+<p><em>'That is super weird. I need more help.'</em></p>
+
+<p>I thought something was configured wrong. Reading the sources, documentations and everything seems to be on the right place. But what was wrong? At this point, asking other people is the best way to get better ideas.</p>
+<p><span>IRC app. /j #clojure. HALP!</span></p>
+<p><span>dnolen suggested to try using a local file. &#8216;IT WORKS!&#8217;. But it works is not enough. Why it didn&#8217;t work before?</span></p>
+<h3><span>First step: Is the error related to using a remote file?</span></h3>
+<p><span>`python -m SimpleHTTPServer` and changing the project.clj to point to http://localhost:8000/raphael-min.js</span></p>
+<p><span>Works. Yay! But why the other one does not work?</span></p>
+<p><span> </span></p>
+<h3><span>Second step: What is the status of the file I am pointing to?</span></h3>
+<p><span>`wget &lt;raphael-url&gt;` gave me some redirects. This might be related. First I get a 301. Moved permanently. To the HTTPS version.</span></p>
+<p><span>Interesting&#8230; redirects&#8230;</span></p>
+<h3><span>Third step: Why a redirect does not work?</span></h3>
+<p><span>Reading the source, cljsbuild generate a InputStream for that content. InputStream is part of java. This is not in the plugin anymore.</span></p>
+<p><span>With some search, we end up on this bug report </span><a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4620571">http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4620571</a></p>
+<p>Quoting the reply of java&#8217;s engineers:</p>
+<blockquote>
+<div>After discussion among Java Networking engineers, it is felt that we shouldn&#8217;t automatically follow redirect from one protocol to another, for instance, from http to https and vise versa, doing so may have serious security consequences. Thus the fix is to return the server responses for redirect. Check response code and Location header field value for redirect information. It&#8217;s the application&#8217;s responsibility to follow the redirect</div>
+</blockquote>
+<p><span> </span></p>
+<p><span>The error happened because of the protocol change not being followed, as we are used to have in the browser.</span></p>
+<p><span>Ah, now I can sleep.</span></p>
+<p><span> </span></p>
+
+<p></p>

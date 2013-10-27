@@ -1,0 +1,13 @@
+---
+layout: post
+title: Rails migration and column names
+tags:
+- ruby
+- rails
+---
+<p>After creating a migration on Rails, I discovered you can&#8217;t set a column name as type.</p>
+<p><em>It will break.</em></p>
+<p>To fix it, pick the number on the begining of the migration file name and run:</p>
+<blockquote>
+<p>rake db:migrate:down VERSION={the number you found}</p>
+</blockquote>

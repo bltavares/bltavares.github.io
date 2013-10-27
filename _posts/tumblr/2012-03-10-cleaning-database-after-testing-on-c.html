@@ -1,0 +1,21 @@
+---
+layout: post
+title: Cleaning database after testing on C#
+tags: 
+---
+<p>Hi there.</p>
+<p>Some times you need to test your queries to know that you are bring the correct data.</p>
+
+<p>But it&#8217;s so boring to setup the data on the database and then clean-up everything else, then do it over and over again.</p>
+
+<p>There must be a simpler way to do it! We may create the data on the test and delete it again.</p>
+<p>What if the data is automatically removed?</p>
+
+<p>In this case, I&#8217;m using Entity Framework and <span>Microsoft&#8217;s Test Unit tools.</span></p>
+<p>We can achieve it using transactions. We&#8217;ll be using .Net&#8217;s <span>TransactionScope do do it.</span></p>
+<p><span>First, we create a TransactionalTest class.</span></p>
+<p><span><br/></span></p>
+<script src="https://gist.github.com/2008502.js?file=TransactionalTest.cs" type="text/javascript"></script><p><span><br/></span></p>
+<p><span>To test this class, I created a test case and then setup a Ordered Test list.</span></p>
+<p><span><br/></span></p>
+<script src="https://gist.github.com/2008502.js?file=TestTransactionClass.cs" type="text/javascript"></script><p><span>It worked for my needs (:</span></p>

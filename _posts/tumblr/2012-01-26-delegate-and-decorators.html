@@ -1,0 +1,18 @@
+---
+layout: post
+title: Delegate and Decorators
+tags: 
+---
+<p>After reading <a href="http://avdi.org/devblog/2011/11/15/early-access-beta-of-objects-on-rails-now-available-2/">Object on Rails</a> and some blog posts (like <a href="http://robots.thoughtbot.com/post/14825364877/evaluating-alternative-decorator-implementations-in">Thoughtbot&#8217;s</a> one) I started playing with the Ruby&#8217;s delegate lib.</p>
+<p>Let&#8217;s suppose I want to decorate an object, to wrap some instance methods. An simple inheritance from SimpleDelegator would to it</p>
+<p>But now, let&#8217;s suppose I want to decorate and object and it&#8217;s class, to wrap some instance methods <em>AND</em> some class methods.</p>
+<p>Like this pseudo code (It won&#8217;t work)</p>
+
+<p><strong>#UPDATE</strong></p>
+<p>Now, I got some tested code, deployed as gem if you want.</p>
+<p>Check it out <a href="https://github.com/bltavares/delegate-class"><a href="https://github.com/bltavares/delegate-class">https://github.com/bltavares/delegate-class</a></a></p>
+
+<p>I also found it useful to wrap ActiveRecord models and use the rails methods that require it to be an instance of ActievRecord, like #form_for</p>
+<script src="https://gist.github.com/1682339.js"> </script><p><del>After playing with DelegateClass, I ended up with this &lt;<a href="https://gist.github.com/1680411"><a href="https://gist.github.com/1680411">https://gist.github.com/1680411</a></a>&gt; code.</del></p>
+<script src="https://gist.github.com/1680411.js"> </script><p><del>It works but I still don&#8217;t know if there is a real reason to use it.</del></p>
+<p><del>But</del> I&#8217;m happily playing with delegates. Maybe it is useful to someone (:</p>

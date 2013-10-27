@@ -1,0 +1,73 @@
+---
+layout: post
+title: ! 'Following the error: Spring Autowired and bean collectors'
+tags:
+- followin the error
+- spring
+- java
+---
+<p>Hi there,</p>
+
+<p>Today&#8217;s following the error will feature Spring dependency injection framework. Spring is very popular in the Java world, and have a bunch of helpful classes.</p>
+<p>There is a lot of documentation &lt; <a href="http://static.springsource.org/spring/docs/2.5.3/reference/beans.html"><a href="http://static.springsource.org/spring/docs/2.5.3/reference/beans.html">http://static.springsource.org/spring/docs/2.5.3/reference/beans.html</a> </a>&gt;</p>
+
+<p>Lets start setting up some context.</p>
+
+<p><strong><em>Beans&#8230; BEANS&#8230;</em></strong></p>
+<p><strong><em><br/></em></strong>Imagine this scenario: You want a program that will have Extractor&#8217;s, and a class that will pick all those Extractor&#8217;s and run it. It is quite simple.</p>
+<p>So, to use it with Sprin beans, which are components that can be injected around your code, you annotate it with @Component. @Autowired annotations will try to assign components that match that type.</p>
+
+<script src="https://gist.github.com/bltavares/6273600.js?file=ObjectsExtractor.java" type="text/javascript"></script><p></p>
+<p>The get an object with the variables annotated filled with values you rely on the Spring Context.</p>
+
+<script src="https://gist.github.com/bltavares/6273600.js?file=Main.java" type="text/javascript"></script><p><em>I wont be explaining much of the context.xml, but that is what Spring will read to setup the beans and scan your code for @Component&#8217;s annotations.</em></p>
+
+<p><strong><em>Oh&#8230; So Spring can do that?!</em></strong></p>
+<p><strong><em><br/></em></strong>So far, so good. Now we just need to feed that list of Extractor&#8217;s to the component. But how to do that?</p>
+<p>A cool thing of the dependency injection system that Springs implements is that when you @Autowire a List, it will select all the beans that match the type of the List and put it there.</p>
+<p>It means that if I create several different extractors, all of then will be injected into that list.</p>
+<p>We just need to create our different beans to get our little app working.</p>
+<p>That is pretty cool. </p>
+
+<p><strong>And the requirement changes.</strong></p>
+<p><strong><br/></strong>We were happy that everything was coming up together, and the world changes. We need to have different Extractor&#8217;s for different Spring Profiles. We have one profile that includes 3 extractors, and another one that have 0.</p>
+<p>"That is pretty easy. You just need to skip the creation of the beans."</p>
+<p>Yes.</p>
+
+<p><strong>Let the errors begin.</strong></p>
+<p><strong><br/></strong>No. A stack trace. *phh*</p>
+<p>We face that big pile of red lines. </p>
+
+<script src="https://gist.github.com/bltavares/6273600.js?file=no-extractors.log" type="text/javascript"></script><p></p>
+<p>Let&#8217;s see. Hum, no matching bean type. Oh, there is no Extractor&#8217;s now. It requires an Extractor to inject. But what I want is an empty list if it does not exist.</p>
+<p>Lets see if we can say &#8220;Hey, that is not required&#8221;.</p>
+
+<p><strong>@Autowired( required = false )</strong></p>
+<p><strong><br/></strong>We discover that the @Autowired annotation have an option to say it is not required. &#8220;Yes&#8221; - you say.</p>
+<p>Ok, let&#8217;s try it out.</p>
+<script src="https://gist.github.com/bltavares/6273600.js?file=autowired-false.log" type="text/javascript"></script>
+<p>Not again&#8230; &#8220;But I just said it is not required&#8221;.</p>
+<p>I tried searching on the documentation about another ways to say something is not required. There is a @Required tag, but it is only possible to use on fields, not on methods or type annotations.</p>
+
+<p><strong>Lets dive in the code.</strong></p>
+<p><strong><br/></strong>After spending some time struggling with annotations and tweaking configurations I decide to take a look on the source code for Spring.</p>
+<p>It is a big framework, but the last stacktrace have some clues on where to start digging.</p>
+<p><span>org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:774)</span></p>
+<p>That is where I start. The code is a bit dense to read, and after a while, reading both the code and the documentation I understand what the @Autowired( required = false ) means.</p>
+<p>On the url &lt; <a href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/beans/factory/annotation/Autowired.html%20"><a href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/beans/factory/annotation/Autowired.html">http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/beans/factory/annotation/Autowired.html</a> </a>&gt; you see that you can have multiple @Autowired&#8217;s constructors.</p>
+<p>On the documentation there is this line &lt;<a href="%20http://static.springsource.org/spring/docs/3.0.0.M3/reference/html/ch04s11.html%20"> http://static.springsource.org/spring/docs/3.0.0.M3/reference/html/ch04s11.html </a>&gt;</p>
+<blockquote>
+<p><span>but multiple non-required constructors can be annotated. In that case, each will be considered among the candidates and Spring will use the </span><span class="emphasis"><em>greediest</em></span><span> constructor whose dependencies can be satisfied.</span></p>
+</blockquote>
+<p><span> Reading the code something clicks in my mind. Saying that @Autowired is not require only means that it will skip the injection of the beans in case of failure, but because it is the constructor, it cannot create the component at all if it skips.</span></p>
+<p><strong><span> </span></strong></p>
+<p><strong><span>Fixing the code</span></strong></p>
+<p><span>We need to fix to things to keep coding. One is to create the component if there is no components and the other is to keep an empty list for the Extractor&#8217;s list.</span></p>
+<p><span> </span></p>
+<p><span>To create a component without @Autowired, Spring tries to use the default constructor for the object.  We create a constructor and annotate it with @Deprecated in order to inform other people that you shouldn&#8217;t use that constructor.</span></p>
+<p><span>Spring is happily creating our component now.</span></p>
+<p><span> </span></p>
+<p><span>Now that we know that a @Autowired(required = false) do, we can use it.</span></p>
+<p><span>Because it will skip the initialisation using that method due to the error on the missing bean, Spring will fallback to the default constructor only in this case.</span></p>
+<p><span>Then, we can initialise the list with an empty list, as we wanted before.</span></p>
+<script src="https://gist.github.com/bltavares/6273600.js?file=final-ObjectsExtractor.java" type="text/javascript"></script>

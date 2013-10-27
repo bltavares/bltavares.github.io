@@ -1,0 +1,55 @@
+---
+layout: post
+title: ! 'Kata problem: Git wrong commit'
+tags:
+- git
+- coding dojo
+- code
+- kata
+---
+<p>Hi there,</p>
+<p>This is a Git problem I put up to the office and I really liked practicing the various different ways that people came up with.</p>
+<p><span>I thought to share this, as it could be used in a Git dojo to get the feeling of rewriting the commit history.</span></p>
+
+<p><strong>As lots of my colleagues pointed out</strong>: this is easy to be done because it is a offline branch.</p>
+<p>When you share this code with a remote repository it is really complicated to rewrite history, because you need to force the new history on the remote, which can corrupt or lose commits that already exist there and are not in sync.</p>
+
+<p>Here is the problem:</p>
+<p><!-- more --></p>
+<p><em>Me and my pair was working with one project on my machine. It uses git to keep track of the files.</em></p>
+<p><em>The workflow of the project is that the master is always green, we have features on branches to keep track of the work, but we merge it back often.</em></p>
+<p><em>We were playing one story and it was merged on master already. After we moved the story to validation, we picked up a new story.</em></p>
+<p><em>One of the QA&#8217;s found an IE misalignment on the feature, really simply to fix. So we fixed the issue and committed.</em></p>
+<p><em>But we forgot to change the branch to master before committing.</em></p>
+<p><em>We ended up with this state:</em></p>
+
+<p><em>$ git branch</em></p>
+<blockquote>
+<p><em>  master* search_project</em></p>
+</blockquote>
+
+<p><em>$ git log &#8212;graph &#8212;decorate &#8212;oneline &#8212;branches</em></p>
+<blockquote>
+<p><em>* 7ff891f (<strong>HEAD</strong>, <strong>search_project</strong>) [USL-107] Fix css alignment of the user search box</em></p>
+<p><em>* 7c5b3c1 [USL-108] Use autocomplete when searching projects</em></p>
+<p><em>* 7fa2aef [USL-108] Search projects</em></p>
+<p><em>* 8655896 (<strong>master</strong>) [USL-107] Search users using autocomplete</em></p>
+</blockquote>
+
+<p><em>The challenge here is to move the commit we created to the right branch.</em></p>
+<p><em>The end state should be this:</em></p>
+
+<p><em>$ git branch</em></p>
+<blockquote>
+<p><em>  master* search_project</em></p>
+</blockquote>
+<p><em>$ git log &#8212;graph &#8212;decorate &#8212;oneline &#8212;branches</em></p>
+<blockquote>
+<p><em>* 3e8322a (<strong>HEAD</strong>, <strong>search_project</strong>) [USL-108] Search projects</em></p>
+<p><em>* 1090110 [USL-107] Fix css alignment of the user search box</em></p>
+<p><em>* cfc2c36 (<strong>master</strong>) [USL-108] Use autocomplete when searching projects</em></p>
+<p><em>* 8655896 [USL-107] Search users using autocomplete</em></p>
+</blockquote>
+
+<p><em><a href="http://ubuntuone.com/5J4Nfg54q8ELCn9gtXDeeF" target="_blank">Here</a> is the repo in the initial state.</em></p>
+<p><em>Have fun.</em></p>

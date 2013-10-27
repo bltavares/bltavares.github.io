@@ -1,0 +1,31 @@
+---
+layout: post
+title: How I’ve setup Git for continuous deployment on a PHP project
+tags: 
+---
+<p>I&#8217;ve been amazed with git&#8217;s powers lately. After using svn, bzr and hg, I can understand why there is so much talking about git.</p>
+<p>Let me talk about this php project. It&#8217;s been built by 3 dev and a designer, versioned under SVN.</p>
+<p><strong>WHAT?! Is it about GIT or SVN?</strong></p>
+<p>That&#8217;s one of the reasons I&#8217;ve been amazed with Git. I got a few problems with the integration, so there are some tips:</p>
+<ul><li>From time to time run &#8216;git fsck&#8217; to check your expository&#8217;s health</li>
+<li>Some times, &#8216;git commit &#8212;amend&#8217; require you to rebase your project before commiting it to SVN.</li>
+<li>Never use &#8216;git checkout &#8212;force&#8217;! I lost half of my code doing it ):</li>
+<li>Listen to what Git says. Don&#8217;t skip the messages about what is happening. I broke all my object database once trying to pull changes from the SVN without reading the messages.</li>
+</ul><p><strong>Let me introduce the problems that I solved with Git and RSync</strong></p>
+<p>After a lot of local testing, the team gave me the instruction to deploy the project every day at 5:00pm on the outside testing environment.</p>
+<p>So, for 3 days at 5:00pm a had task to upload everything using FTP, change the configuration files and check the system. All those .snv folders, images and stuff were such slow.</p>
+<p><em>It was boring!</em></p>
+<p>I decided to give a try to Git-Svn and set up a deploy branch to let the configurations ready to deploy. The .svn folders were gone and the problem was solved, right?</p>
+<p><strong>No, it was slow </strong><strong>still </strong><strong>):</strong></p>
+<p>On the other day, the project migrated to another host. I was now on beta stage. And now the server has ssh. I got a smile on my face (:</p>
+<p><strong>RSync: It&#8217;s really fast!</strong></p>
+<p>With the deploy branch set up with the correct configurations, some continuous merges and a small bash script, the continuous deployment was ready to go.</p>
+<p>The rule: <em>Master is good and always can be deployed.</em></p>
+<p>The steps:</p>
+<ol><li>ssh-copy-id user@host #we don&#8217;t want that boring password prompt</li>
+<li>write deploy.sh¹</li>
+<li>run it and be happy</li>
+</ol><p>Now, every change made on the project are almost instantly on production.</p>
+<p>You should give a try to those &#8220;native&#8221; tools on *nix some times (:</p>
+<p>¹</p>
+<script src="https://gist.github.com/1221081.js"></script>
