@@ -1,24 +1,31 @@
 # General Jekyll Config
 pygments: true
-url: http://example.com
-lsi: false
+url: http://blog.bltavares.com
+lsi: true
 exclude: [LICENSE, CNAME, README.md, .gitignore]
+markdown: redcarpet
+redcarpet:
+    extensions:
+      - hard_wrap
+      - no_intra_emphasis
+      - autolink
+      - strikethrough
+      - fenced_code_blocks
 
 # Theme customization - please change from the defaults!
 theme:
   # Color for top bar, links, etc
-  highlight_color: '#3498db'
+  highlight_color: '#859900'
 
   # Profile links on the left sidebar, leave blank to ignore
   social:
-    github: swanson
-    twitter: _swanson
-    hacker_news: swanson
+    github: bltavares
+    twitter: bltavares
 
   # "Hi, I'm _______"
-  name: Matt Swanson
-  email: test@example.com
-  tagline: "weak opinions, strongly held"
+  name: Bruno Tavares
+  email: contato@bltavares.com
+  tagline: "blog"
 
   # Google Analytics key, leave blank to ignore
   google_analytics_key: UA-xxxx-x
