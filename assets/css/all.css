@@ -6,8 +6,18 @@
 {% include css/screen.css %}
 {% include css/layout.css %}
 {% include css/syntax.css %}
+
 #post p {
   line-height: 1.5em;
   font-family: serif;
   font-size: 1.2em;
+}
+
+@media only screen and (max-width: 959px) {
+  ul.posts span {
+    display: block;
+  }
+  ul.posts li {
+    margin: 10px 0;
+  }
 }
