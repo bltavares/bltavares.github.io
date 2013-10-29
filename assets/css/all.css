@@ -6,3 +6,8 @@
 {% include css/screen.css %}
 {% include css/layout.css %}
 {% include css/syntax.css %}
+#post p {
+  line-height: 1.5em;
+  font-family: serif;
+  font-size: 1.2em;
+}
