@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Comments on Single Responsabilit Principle
+title: Comments on Single Responsability Principle
 tags:
 - coding
 - design
