@@ -3,7 +3,7 @@ highlighter: pygments
 url: http://blog.bltavares.com
 permalink: pretty
 lsi: true
-exclude: [LICENSE, CNAME, README.md, .gitignore]
+exclude: [LICENSE, CNAME, README.md, .gitignore, _posts/*.org]
 markdown: redcarpet
 redcarpet:
     extensions:
