@@ -1,5 +1,5 @@
 # General Jekyll Config
-pygments: true
+highlighter: pygments
 url: http://blog.bltavares.com
 permalink: pretty
 lsi: true
