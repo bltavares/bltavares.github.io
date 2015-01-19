@@ -5,6 +5,7 @@ permalink: pretty
 lsi: true
 exclude: [LICENSE, CNAME, README.md, .gitignore, _posts/*.org]
 markdown: redcarpet
+timezone: America/Sao_Paulo
 redcarpet:
     extensions:
       - no_intra_emphasis
