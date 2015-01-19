@@ -11,7 +11,7 @@ Se você der uma lida na [documentação](http://clojure.org/special_forms) do C
 encontrando `binding-form` escrito em alguns lugares que permite você
 associar valores a símbolos, como no caso do `let` e do `defn`.
 
-No Clojure, existe o conceito de `forms`, que se referi ao formato da
+No Clojure, existe o conceito de `forms`, que se refere ao formato da
 estrutura de dados que aquela função ou macro aceita.
 Lembrando que código também é dado em Clojure, então formas podem se
 referir a forma da interface de um método ou macro.
