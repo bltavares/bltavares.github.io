@@ -1,10 +1,13 @@
 #+OPTIONS: toc:nil
 #+BEGIN_HTML
-title: clojure
-template: post
+---
+layout: post
+title: Criação de variáveis e contextos léxicos em Clojure
 tags:
-  - clojure
-  - coding
+- coding
+- design
+- clojure
+---
 #+END_HTML
 
 Clojure é uma linguagem funcional, em que podemos tratar funções como
