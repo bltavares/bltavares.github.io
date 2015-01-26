@@ -209,7 +209,7 @@ pouco como valores são associados a símbolos em Clojure.
    faz sentido estar no contexto do namespace, o atalho ~defn~ é um
    idioma bem comum e bem útil.
 
-   ~(fn função [arg] arg)~ é uma variação de ~fn~ que da um nome a função.
+   ~(fn função [arg] arg)~ é uma variação de ~fn~ que dá um nome a função.
    Esse nome estará disponível dentro do contexto criado pela função,
    referenciando ela mesma.
 
@@ -238,8 +238,8 @@ pouco como valores são associados a símbolos em Clojure.
 
    #+END_SRC
 
-   O exemplo acima chama cria um alerta em 5 segundos, e registra
-   outro chamada para executar de novo no final.
+   O exemplo acima cria um alerta em 5 segundos, e registra outro
+   chamada para executar de novo no final.
 
    Casos de recursão da mesma função fazem melhor uso de ~recur~ ao
    invés de função nomeada. Com ~recur~, nos vamos evitar de chegar no
