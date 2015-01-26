@@ -168,7 +168,7 @@ pouco como valores são associados a símbolos em Clojure.
 
    Criar uma função também introduz um novo contexto léxico, de uma
    forma similar ao ~let~. Os argumentos terão o valor associado quando
-   a função for chamada, mas o contexto ainda retem acesso aos valores
+   a função for chamada, mas o contexto ainda retém acesso aos valores
    dos escopos em que ele foi criado.
 
    Para demonstrar, vou criar uma função dentro de um outro contexto, e
@@ -185,7 +185,7 @@ pouco como valores são associados a símbolos em Clojure.
     valor ;; => Erro
    #+END_SRC
 
-   Quando nos chamamos a ~função~, as expressões que vamos executar
+   Quando nós chamamos a ~função~, as expressões que vamos executar
    terão os valores passados associado aos argumentos, além do contexto
    que possui o ~valor~.
 
