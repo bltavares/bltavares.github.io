@@ -5,7 +5,6 @@ layout: post
 title: Criação de variáveis e contextos léxicos em Clojure
 tags:
 - coding
-- design
 - clojure
 ---
 #+END_HTML
@@ -16,20 +15,20 @@ retornos e salvando em estruturas de dados.
 
 Como funções são tão importantes, nós iremos criar diversas delas nos
 nossos programas.  Mas qual a diferença entre criar uma função com
-~(defn funcao [arg] arg)~ e ~(fn funcao [arg] arg)~ ?
+~(defn função [arg] arg)~ e ~(fn função [arg] arg)~ ?
 
 Antes de tentar responder essa questão, eu gostaria de explorar um
 pouco como valores são associados a símbolos em Clojure.
 
 ** Associando valores em namespaces
 
-   Quando falamos de váriaveis em Clojure, nos estamos nos referindo
+   Quando falamos de váriaveis em Clojure, nós estamos nos referindo
    ao valor que esta associado a um simbolo em um escopo.  Quando
    criamos um arquivo e adicionamos um namespace no topo, nos estamos
    mudando qual o contexto atual que iremos associar nossos valores.
 
-   Podemos fazer uns exemplos em um REPL para explorar um pouco a idea
-   de variáveis.
+   Podemos fazer uns exemplos em um REPL para explorar um pouco a
+   ideia de variáveis.
 
    Primeiro, vamos criamos nosso namespace ~exemplo~, e para associar
    o valor ~"exemplo"~ e recuperar ele de volta, podemos fazer o
@@ -68,10 +67,10 @@ pouco como valores são associados a símbolos em Clojure.
      +----------------------+
    #+END_EXAMPLE
 
-   O valores associados ao namespace serão exportados com ele, permitindo
-   que outros namespaces façam uso daqueles valores. É assim que você
-   pode usar uma função definida em ~clojure.string~ ou qualquer
-   outra biblioteca.
+   Os valores associados ao namespace serão exportados com ele,
+   permitindo que outros namespaces façam uso daqueles valores. É
+   assim que você pode usar uma função definida em ~clojure.string~ ou
+   qualquer outra biblioteca.
 
    Como incluir outros namespaces na caminho de procura sem
    qualificadores nos símbolos merece um post separado, que envolve
@@ -172,26 +171,26 @@ pouco como valores são associados a símbolos em Clojure.
    a função for chamada, mas o contexto ainda retem acesso aos valores
    dos escopos em que ele foi criado.
 
-   Para demonstrar, vou criar uma funcao dentro de um outro contexto, e
-   atribuir ela a um simbolo no meu namespace com o ~def~.
+   Para demonstrar, vou criar uma função dentro de um outro contexto, e
+   atribuir ela a um símbolo no meu namespace com o ~def~.
 
    #+BEGIN_SRC clojure
-    (def funcao (let [valor 1]
+    (def função (let [valor 1]
                   (fn [outro] (+ outro valor))))
 
-    funcao ;; => Referencia a funcao
-    (funcao 2) ;; => 3
-    (funcao 3) ;; => 4
+    função ;; => Referencia a função
+    (função 2) ;; => 3
+    (função 3) ;; => 4
 
     valor ;; => Erro
    #+END_SRC
 
-   Quando nos chamamos a ~funcao~, as expressões que vamos executar
+   Quando nos chamamos a ~função~, as expressões que vamos executar
    terão os valores passados associado aos argumentos, além do contexto
    que possui o ~valor~.
 
    Se você quiser explorar mais sobre como essa propriedade de manter
-   os contextos em que a funcao foi criada para escrever programas, dê
+   os contextos em que a função foi criada para escrever programas, dê
    uma pesquisada em closures. Falar sobre isso também mereceria um
    outro post.
 
@@ -202,22 +201,22 @@ pouco como valores são associados a símbolos em Clojure.
    os contextos para salvar valores podemos voltar a pergunta.
 
    Qual a diferença entre criar uma função com
-   ~(defn funcao [arg] arg)~ e ~(fn funcao [arg] arg)~ ?
+   ~(defn função [arg] arg)~ e ~(fn função [arg] arg)~ ?
 
-   ~(defn funcao [arg] arg)~ é um atalho para ~(def funcao (fn [arg] arg.
+   ~(defn função [arg] arg)~ é um atalho para ~(def função (fn [arg] arg.
    Como vamos criar diversas funções no nosso namespace, para
    bibliotecas, para ser utilizado em outros módulos, ou porque apenas
    faz sentido estar no contexto do namespace, o atalho ~defn~ é um
    idioma bem comum e bem útil.
 
-   ~(fn funcao [arg] arg)~ é uma variação de ~fn~ que da um nome a funcao.
+   ~(fn função [arg] arg)~ é uma variação de ~fn~ que da um nome a função.
    Esse nome estará disponível dentro do contexto criado pela função,
    referenciando ela mesma.
 
-   Fora daquele escopo, você ainda não tem o valor associado a funcao
+   Fora daquele escopo, você ainda não tem o valor associado a função
    que você criou.
 
-   Na maior parte do tempo que você quiser criar uma funcao com um
+   Na maior parte do tempo que você quiser criar uma função com um
    nome, você vai acabar usando ~defn~, já que assim ela estará
    disponível em todo o namespace.
 
@@ -232,9 +231,9 @@ pouco como valores são associados a símbolos em Clojure.
 
    #+BEGIN_SRC clojure
      (setTimeout
-      (fn funcao []
+      (fn função []
         (alert "Hello")
-        (setTimeout funcao 5000))
+        (setTimeout função 5000))
       5000)
 
    #+END_SRC
@@ -242,12 +241,12 @@ pouco como valores são associados a símbolos em Clojure.
    O exemplo acima chama cria um alerta em 5 segundos, e registra
    outro chamada para executar de novo no final.
 
-   Casos de recursão da mesma funcao fazem melhor uso de ~recur~ ao
-   inves de funcao nomeada. Com ~recur~, nos vamos evitar de chegar no
-   limite máximo de chamadas de funcao (StackOverflow)
+   Casos de recursão da mesma função fazem melhor uso de ~recur~ ao
+   invés de função nomeada. Com ~recur~, nos vamos evitar de chegar no
+   limite máximo de chamadas de função (StackOverflow)
 
    #+BEGIN_SRC clojure
-     ;; Ao inves de utilizar funcoes nomeadas
+     ;; Ao invés de utilizar funções nomeadas
      ((fn recursiva [index]
         (if (= index 0)
           "Done"
@@ -262,6 +261,6 @@ pouco como valores são associados a símbolos em Clojure.
 
 #  LocalWords:  namespace callbacks Clojure namespaces váriaveis REPL
 #  LocalWords:  idea BEGIN SRC clojure ns def variavel OPTIONS toc fn
-#  LocalWords:  HTML title post tags coding END defn funcao arg let
+#  LocalWords:  HTML title post tags coding END defn função arg let
 #  LocalWords:  váriaveis qualified symbol EXAMPLE println binding
 #  LocalWords:  form closures map filter
