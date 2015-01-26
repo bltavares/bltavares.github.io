@@ -1,8 +1,10 @@
 #+OPTIONS: toc:nil
 #+BEGIN_HTML
---- title: clojure template: post tags:
-- clojure
-- coding
+title: clojure
+template: post
+tags:
+  - clojure
+  - coding
 #+END_HTML
 
 Clojure é uma linguagem funcional, em que podemos tratar funções como
@@ -13,63 +15,77 @@ Como funções são tão importantes, nós iremos criar diversas delas nos
 nossos programas.  Mas qual a diferença entre criar uma função com
 ~(defn funcao [arg] arg)~ e ~(fn funcao [arg] arg)~ ?
 
-Antes de tentar responder essa questao, eu gostaria de explorar um
-pouco como valores sao associados a simbolos em Clojure.
+Antes de tentar responder essa questão, eu gostaria de explorar um
+pouco como valores são associados a símbolos em Clojure.
 
 ** Associando valores em namespaces
-   
+
    Quando falamos de váriaveis em Clojure, nos estamos nos referindo
    ao valor que esta associado a um simbolo em um escopo.  Quando
    criamos um arquivo e adicionamos um namespace no topo, nos estamos
    mudando qual o contexto atual que iremos associar nossos valores.
-   
+
    Podemos fazer uns exemplos em um REPL para explorar um pouco a idea
-   de variaveis.
-   
+   de variáveis.
+
    Primeiro, vamos criamos nosso namespace ~exemplo~, e para associar
-   o valor ~"exemplo"~ e recuparar ele de volta, podemos fazer o
+   o valor ~"exemplo"~ e recuperar ele de volta, podemos fazer o
    seguinte:
-   
+
    #+BEGIN_SRC clojure
      (ns 'exemplo)
 
-     (def variavel "exemplo") variavel ;; => "examplo"
+     (def variavel "exemplo") variavel ;; => "exemplo"
    #+END_SRC
-   
+
    ~def~ é uma forma especial para você atribuir valores dentro do
    namespace.  Quando digitamos apenas um simbolo, fora de um macro, o
    clojure irá tentar buscar a referencia no namespace atual.  Nos
-   tambem podemos especificar com um qualificador de namespace, qual
+   também podemos especificar com um qualificador de namespace, qual
    simbolo nos queremos nos referir explicitamente.
-   
+
    #+BEGIN_SRC clojure
-    variavel ;; => "exemplo" exemplo/variavel ;; => "exemplo"
+    variavel ;; => "exemplo" 
+    exemplo/variavel ;; => "exemplo"
    #+END_SRC
-   
+
    O que estiver antes do ~/~ no simbolo sera considerado o namespace,
-   tambem chamado de simbolo qualificado (qualified symbol).
-   
+   também chamado de simbolo qualificado (qualified symbol).
+
+   De forma gráfica, podemos imaginar o contexto como uma tabela que
+   utilizamos para consultar os valores.
+
+   #+BEGIN_EXAMPLE
+     +----------------------+
+     |ns exemplo            |
+     +----------------------+
+     |variavel = "exemplo"  |
+     |                      |
+     |                      |
+     +----------------------+
+   #+END_EXAMPLE
+
    O valores associados ao namespace serão exportados com ele, permitindo
    que outros namespaces façam uso daqueles valores. É assim que você
    pode usar uma função definida em ~clojure.string~ ou qualquer
    outra biblioteca.
-   
+
    Como incluir outros namespaces na caminho de procura sem
-   qualificadores nos simbolos merece um post separado, que involve
+   qualificadores nos símbolos merece um post separado, que envolve
    algumas formas mais especificas na hora de definir qual o namespace
-   atual com on ~ns~.
-   
+   atual com o ~ns~.
+
 ** Outras formas de criar escopos
-   
-   Alem do escopo do namespace, nos temos a possibilidade de criar
+
+   Além do escopo do namespace, nos temos a possibilidade de criar
    escopos locais.
    Nem sempre nos queremos definir um valor que faz sentido de ser
-   exportado, como por exemplo, variaveis locais em uma função.
-   
-   A forma especial ~let~ permite criar um novo escopo, extendendo o
-   escopo atual.  Alem de termos acesso aos valores associados no
+   exportado, como por exemplo, variáveis locais em uma função.
+
+   A forma especial ~let~ permite criar um novo escopo, estendendo o
+   escopo atual.  Além de termos acesso aos valores associados no
    escopo atual, nos teremos novos valores para fazer a consulta.
-   
+
    #+BEGIN_SRC clojure
      (def variavel 1)
 
@@ -79,16 +95,35 @@ pouco como valores sao associados a simbolos em Clojure.
      variavel ;; => 1
      nova-variavel ;; => Erro
    #+END_SRC
-   
+
    A forma do ~let~ aceita um vetor de pares entre binding-form e
-   valor, que estarão disponiveis nas expressões seguintes, ainda
+   valor, que estarão disponíveis nas expressões seguintes, ainda
    dentro do ~let~.
-   
-   É possivel criar escopos dentro de escopos tambem.
-   
-   As atribuições introduzidas pelo novo escopo tem precendencia na
-   consulta do valor, podendo obscurecer simbolos associados previamente.
-   
+
+   Uma visualização gráfica possível para os contextos acima seria algo assim:
+
+   #+BEGIN_EXAMPLE
+     +-------------------------------------+
+     | ns exemplo                          |
+     +-------------------------------------+
+     | variavel = 1                        |
+     |                                     |
+     |   +---------------------------------+
+     |   | let                             |
+     |   +---------------------------------+
+     |   | nova-variavel = 2               |
+     |   |                                 |
+     |   |                                 |
+     |   | (println                        |
+     |   |     (+ variavel nova-variavel)) |
+     |   |                                 |
+     +---+---------------------------------+
+   #+END_EXAMPLE
+
+   É possível criar escopos dentro de escopos também.
+   As atribuições introduzidas pelo novo escopo tem precendência na
+   consulta do valor, podendo obscurecer símbolos associados previamente.
+
    #+BEGIN_SRC clojure
      (def exemplo 1) 
 
@@ -100,21 +135,43 @@ pouco como valores sao associados a simbolos em Clojure.
 
      (println exemplo)
    #+END_SRC
-   
+
+   Para não deixar faltar, vamos visualizar graficamente os contextos.
+
+   #+BEGIN_EXAMPLE
+     +------------------------------+
+     |ns exemplo                    |
+     +------------------------------+
+     |exemplo = 1                   |
+     |                              |
+     |   +--------------------------+
+     |   |let                       |
+     |   +--------------------------+
+     |   |nova-variavel = 2         |
+     |   |                          |
+     |   |   +----------------------+
+     |   |   | let                  |
+     |   |   +----------------------+
+     |   |   | outra-variavel = 3   |
+     |   |   | exemplo = 4          |
+     |   |   |                      |
+     |   |   | (println ...)        |
+     +---+---+----------------------+
+   #+END_EXAMPLE
+
    Dentro do primeiro ~let~, o valor para ~exemplo~ continua sendo o do
    contexto anterior. Dentro do segundo ~let~ nos associamos outro
-   valor para ~exemplo~, e assim que saimos dos ~let~s vemos que o
+   valor para ~exemplo~, e assim que saímos dos ~let~s vemos que o
    valor em ~exemplo~ continua o mesmo.
-   
-   
-   Criar uma função também introduz um novo contexto lexico, de uma
+
+   Criar uma função também introduz um novo contexto léxico, de uma
    forma similar ao ~let~. Os argumentos terão o valor associado quando
    a função for chamada, mas o contexto ainda retem acesso aos valores
    dos escopos em que ele foi criado.
-   
+
    Para demonstrar, vou criar uma funcao dentro de um outro contexto, e
    atribuir ela a um simbolo no meu namespace com o ~def~.
-   
+
    #+BEGIN_SRC clojure
     (def funcao (let [valor 1]
                   (fn [outro] (+ outro valor))))
@@ -125,51 +182,51 @@ pouco como valores sao associados a simbolos em Clojure.
 
     valor ;; => Erro
    #+END_SRC
-   
-   Quando nos chamamos a ~funcao~, as expressoes que vamos executar
-   terão os valores passados associado aos argumentos, alem do contexto
+
+   Quando nos chamamos a ~funcao~, as expressões que vamos executar
+   terão os valores passados associado aos argumentos, além do contexto
    que possui o ~valor~.
-   
-   Se voce quiser explorar mais sobre como essa propriedade de manter
+
+   Se você quiser explorar mais sobre como essa propriedade de manter
    os contextos em que a funcao foi criada para escrever programas, dê
-   uma pesquisada em closures. Falar sobre isso tambem mereceria um
+   uma pesquisada em closures. Falar sobre isso também mereceria um
    outro post.
-   
-   
+
+
 ** Voltando a pergunta sobre as diferenças de criar funções
-   
+
    Acho que agora que entendemos um pouco melhor como o Clojure utiliza
    os contextos para salvar valores podemos voltar a pergunta.
-   
+
    Qual a diferença entre criar uma função com
    ~(defn funcao [arg] arg)~ e ~(fn funcao [arg] arg)~ ?
-   
+
    ~(defn funcao [arg] arg)~ é um atalho para ~(def funcao (fn [arg] arg.
-   Como vamos criar diversas funcoes no nosso namespace, para
-   bibliotecas, para ser utilizado em outros modulos, ou porque apenas
-   fz sentido estar no contexto do namespace, o atalho ~defn~ é um
-   idioma bem comum e bem util.
-   
+   Como vamos criar diversas funções no nosso namespace, para
+   bibliotecas, para ser utilizado em outros módulos, ou porque apenas
+   faz sentido estar no contexto do namespace, o atalho ~defn~ é um
+   idioma bem comum e bem útil.
+
    ~(fn funcao [arg] arg)~ é uma variação de ~fn~ que da um nome a funcao.
-   Esse nome estará disponivel dentro do contexto criado pela função,
+   Esse nome estará disponível dentro do contexto criado pela função,
    referenciando ela mesma.
-   
+
    Fora daquele escopo, você ainda não tem o valor associado a funcao
-   que voce criou.
-   
-   Na maior parte do tempo que voce quiser criar uma funcao com um
-   nome, voce vai acabar usando ~defn~, ja que assim ela estara
-   disponivel em todo o namespace.
-   
-   O proximo caso de criar funcoes mais comum sera funcoes anonimas,
-   como callbacks ou funcoes de alta ordem (map, filter). Sao funcoes
-   importantes para o contexto local, e nao serao utilizadas em outros
+   que você criou.
+
+   Na maior parte do tempo que você quiser criar uma funcao com um
+   nome, você vai acabar usando ~defn~, já que assim ela estará
+   disponível em todo o namespace.
+
+   O próximo caso de criar funções mais comum sera funções anonimas,
+   como callbacks ou funções de alta ordem (map, filter). São funções
+   importantes para o contexto local, e não serão utilizadas em outros
    lugares do seu namespace.
-   
-   Funcoes com nomes, como ~(fn nome [])~ sao uteis para identificar
-   intencao ou ajudar a se localizar quando execoes acontecerem, ou
+
+   Funções com nomes, como ~(fn nome [])~ são uteis para identificar
+   intenção ou ajudar a se localizar quando exceções acontecerem, ou
    para casos recursivos de callbacks.
-   
+
    #+BEGIN_SRC clojure
      (setTimeout
       (fn funcao []
@@ -178,14 +235,14 @@ pouco como valores sao associados a simbolos em Clojure.
       5000)
 
    #+END_SRC
-   
+
    O exemplo acima chama cria um alerta em 5 segundos, e registra
    outro chamada para executar de novo no final.
-   
-   Casos de recursao da mesma funcao fazem melhor uso de ~recur~ ao
+
+   Casos de recursão da mesma funcao fazem melhor uso de ~recur~ ao
    inves de funcao nomeada. Com ~recur~, nos vamos evitar de chegar no
-   limite maximo de chamadas de funcao (StackOverflow)
-   
+   limite máximo de chamadas de funcao (StackOverflow)
+
    #+BEGIN_SRC clojure
      ;; Ao inves de utilizar funcoes nomeadas
      ((fn recursiva [index]
@@ -199,3 +256,9 @@ pouco como valores sao associados a simbolos em Clojure.
           "Done"
           (recur (dec index)))) Integer/MAX_VALUE) 
    #+END_SRC
+
+#  LocalWords:  namespace callbacks Clojure namespaces váriaveis REPL
+#  LocalWords:  idea BEGIN SRC clojure ns def variavel OPTIONS toc fn
+#  LocalWords:  HTML title post tags coding END defn funcao arg let
+#  LocalWords:  váriaveis qualified symbol EXAMPLE println binding
+#  LocalWords:  form closures map filter
