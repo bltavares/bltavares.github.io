@@ -271,6 +271,8 @@ pouco como valores são associados a símbolos em Clojure.
 - [[http://clojure.org/special_forms#Special%20Forms--(let%20%5Bbindings*%20%5D%20exprs*)][Documentacao do Clojure sobre o let]]
 - [[http://clojure.org/special_forms#Special%20Forms--(fn%20name?%20%5Bparams*%20%5D%20condition-map?%20exprs*)][Documentacao do Clojure sobre o fn]]
 - [[http://clojure.org/special_forms#Special%20Forms--(recur%20exprs*)][Documentacao do Clojure sobre o recur]]
+ 
+Obrigado [[https://twitter.com/mariane_sm][Mariane]], [[https://twitter.com/erickpintor][Erick]] e [[https://github.com/renanreismartins][Renan]] pelo review.
 
 #  LocalWords:  namespace callbacks Clojure namespaces váriaveis REPL
 #  LocalWords:  idea BEGIN SRC clojure ns def variavel OPTIONS toc fn
