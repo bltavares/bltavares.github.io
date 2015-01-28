@@ -31,7 +31,7 @@ pouco como valores são associados a símbolos em Clojure.
    ideia de variáveis.
 
    Primeiro, vamos criamos nosso namespace ~exemplo~, e para associar
-   o valor ~"exemplo"~ e recuperar ele de volta, podemos fazer o
+   o valor "exemplo" e recuperar ele de volta, podemos fazer o
    seguinte:
 
    #+BEGIN_SRC clojure
@@ -164,7 +164,7 @@ pouco como valores são associados a símbolos em Clojure.
 
    Dentro do primeiro ~let~, o valor para ~exemplo~ continua sendo o do
    contexto anterior. Dentro do segundo ~let~ nos associamos outro
-   valor para ~exemplo~, e assim que saímos dos ~let~s vemos que o
+   valor para ~exemplo~, e assim que saímos dos ~let~'s vemos que o
    valor em ~exemplo~ continua o mesmo.
 
    Criar uma função também introduz um novo contexto léxico, de uma
@@ -204,7 +204,7 @@ pouco como valores são associados a símbolos em Clojure.
    Qual a diferença entre criar uma função com
    ~(defn funcao [arg] arg)~ e ~(fn funcao [arg] arg)~ ?
 
-   ~(defn funcao [arg] arg)~ é um atalho para ~(def função (fn [arg] arg.
+   ~(defn funcao [arg] arg)~ é um atalho para ~(def funcao (fn [arg] arg))~.
    Como vamos criar diversas funções no nosso namespace, para
    bibliotecas, para ser utilizado em outros módulos, ou porque apenas
    faz sentido estar no contexto do namespace, o atalho ~defn~ é um
