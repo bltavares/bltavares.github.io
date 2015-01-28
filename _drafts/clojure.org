@@ -15,7 +15,7 @@ retornos e salvando em estruturas de dados.
 
 Como funções são tão importantes, nós iremos criar diversas delas nos
 nossos programas.  Mas qual a diferença entre criar uma função com
-~(defn função [arg] arg)~ e ~(fn função [arg] arg)~ ?
+~(defn funcao [arg] arg)~ e ~(fn funcao [arg] arg)~ ?
 
 Antes de tentar responder essa questão, eu gostaria de explorar um
 pouco como valores são associados a símbolos em Clojure.
@@ -176,12 +176,12 @@ pouco como valores são associados a símbolos em Clojure.
    atribuir ela a um símbolo no meu namespace com o ~def~.
 
    #+BEGIN_SRC clojure
-    (def função (let [valor 1]
+    (def funcao (let [valor 1]
                   (fn [outro] (+ outro valor))))
 
-    função ;; => Referencia a função
-    (função 2) ;; => 3
-    (função 3) ;; => 4
+    funcao ;; => Referencia a função
+    (funcao 2) ;; => 3
+    (funcao 3) ;; => 4
 
     valor ;; => Erro
    #+END_SRC
@@ -202,15 +202,15 @@ pouco como valores são associados a símbolos em Clojure.
    os contextos para salvar valores podemos voltar a pergunta.
 
    Qual a diferença entre criar uma função com
-   ~(defn função [arg] arg)~ e ~(fn função [arg] arg)~ ?
+   ~(defn funcao [arg] arg)~ e ~(fn funcao [arg] arg)~ ?
 
-   ~(defn função [arg] arg)~ é um atalho para ~(def função (fn [arg] arg.
+   ~(defn funcao [arg] arg)~ é um atalho para ~(def função (fn [arg] arg.
    Como vamos criar diversas funções no nosso namespace, para
    bibliotecas, para ser utilizado em outros módulos, ou porque apenas
    faz sentido estar no contexto do namespace, o atalho ~defn~ é um
    idioma bem comum e bem útil.
 
-   ~(fn função [arg] arg)~ é uma variação de ~(fn [arg] arg)~ que dá um nome a função.
+   ~(fn funcao [arg] arg)~ é uma variação de ~(fn [arg] arg)~ que dá um nome a função.
    Esse nome estará disponível dentro do contexto criado pela função,
    referenciando ela mesma.
 
@@ -237,7 +237,7 @@ pouco como valores são associados a símbolos em Clojure.
 
    #+BEGIN_SRC clojure
      (onChangeIdentified
-      (fn função []
+      (fn funcao []
         (notify "admin@example.com")
         (onChangeIdentified função)))
    #+END_SRC
@@ -274,6 +274,6 @@ pouco como valores são associados a símbolos em Clojure.
 
 #  LocalWords:  namespace callbacks Clojure namespaces váriaveis REPL
 #  LocalWords:  idea BEGIN SRC clojure ns def variavel OPTIONS toc fn
-#  LocalWords:  HTML title post tags coding END defn função arg let
+#  LocalWords:  HTML title post tags coding END defn funcao arg let
 #  LocalWords:  váriaveis qualified symbol EXAMPLE println binding
 #  LocalWords:  form closures map filter
