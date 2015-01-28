@@ -82,7 +82,7 @@ pouco como valores são associados a símbolos em Clojure.
 
    Além do escopo do namespace, nos temos a possibilidade de criar
    escopos locais.
-   Nem sempre nos queremos definir um valor que faz sentido de ser
+   Nem sempre queremos definir um valor que faz sentido de ser
    exportado, como por exemplo, variáveis locais em uma função.
 
    A forma especial ~let~ permite criar um novo escopo, estendendo o
@@ -239,7 +239,7 @@ pouco como valores são associados a símbolos em Clojure.
      (onChangeIdentified
       (fn funcao []
         (notify "admin@example.com")
-        (onChangeIdentified função)))
+        (onChangeIdentified funcao)))
    #+END_SRC
 
    O exemplo acima notifica um administrador assim que uma mudança no
