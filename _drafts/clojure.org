@@ -77,6 +77,7 @@ pouco como valores são associados a símbolos em Clojure.
    algumas formas mais especificas na hora de definir qual o namespace
    atual com o ~ns~.
 
+
 ** Outras formas de criar escopos
 
    Além do escopo do namespace, nos temos a possibilidade de criar
@@ -209,7 +210,7 @@ pouco como valores são associados a símbolos em Clojure.
    faz sentido estar no contexto do namespace, o atalho ~defn~ é um
    idioma bem comum e bem útil.
 
-   ~(fn função [arg] arg)~ é uma variação de ~fn~ que dá um nome a função.
+   ~(fn função [arg] arg)~ é uma variação de ~(fn [arg] arg)~ que dá um nome a função.
    Esse nome estará disponível dentro do contexto criado pela função,
    referenciando ela mesma.
 
@@ -259,6 +260,7 @@ pouco como valores são associados a símbolos em Clojure.
           (recur (dec index)))) Integer/MAX_VALUE) 
    #+END_SRC
    
+
 ** Links
 
 - [[http://clojure.org/special_forms#Special Forms--(def symbol init?)][Documentacao do Clojure sobre o def]]
