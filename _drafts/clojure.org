@@ -230,17 +230,21 @@ pouco como valores são associados a símbolos em Clojure.
    intenção ou ajudar a se localizar quando exceções acontecerem, ou
    para casos recursivos de callbacks.
 
-   #+BEGIN_SRC clojure
-     (setTimeout
-      (fn função []
-        (alert "Hello")
-        (setTimeout função 5000))
-      5000)
+   Vamos supor que temos uma função que permite identificar uma
+   mudança no sistema e executa um callback. Assim que o callback for
+   executado, nos precisamos registrar que estamos interessado em
+   identificar mudanças novamente.
 
+   #+BEGIN_SRC clojure
+     (onChangeIdentified
+      (fn função []
+        (notify "admin@example.com")
+        (onChangeIdentified função)))
    #+END_SRC
 
-   O exemplo acima cria um alerta em 5 segundos, e registra outro
-   chamada para executar de novo no final.
+   O exemplo acima notifica um administrador assim que uma mudança no
+   sistema for identificada, e logo depois registra outra chamada para
+   executar de novo no final.
 
    Casos de recursão da mesma função fazem melhor uso de ~recur~ ao
    invés de função nomeada. Com ~recur~, nos vamos evitar de chegar no
