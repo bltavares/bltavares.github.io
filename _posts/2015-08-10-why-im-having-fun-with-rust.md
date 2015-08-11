@@ -18,15 +18,15 @@ liking the language and the community.
 I've been on web development for a while already. Working on Garbage
 Collected languages under the HTTP Request Response cycle, both on
 the client side and the backend means that many of the times I
-barelly need to worry about memory stuff.
+barely need to worry about memory stuff.
 
-Having to learn about differences beteewn having a value on the Heap
+Having to learn about differences between having a value on the Heap
 or the Stack is something new to me. And it is really fun. Knowing
 that there are different allocation and dis-allocation times and how
 dependent values may behave, while the compiler has your back on it
 is fun.
 
-As Rust also output binaries and have interop with C. This means I'm
+As Rust also output binaries and have inter-op with C. This means I'm
 learning about compilers, runtime dependencies, libraries and
 embedding. There are people on the community that consider a 14kb
 binary too big. That is so far from what I'm used to, which means
