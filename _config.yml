@@ -30,3 +30,16 @@ theme:
 
   # Toggle "Postings are my own" disclaimer in footer
   show_disclaimer: true
+
+## GitHub Defaults that we can change
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+## GitHub Defaults that we cannot change
+lsi: false
+safe: true
+incremental: false
+highlighter: rouge
+gist:
+  noscript: false
