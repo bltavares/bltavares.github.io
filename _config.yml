@@ -1,10 +1,7 @@
 # General Jekyll Config
-highlighter: pygments
 url: http://blog.bltavares.com
 permalink: pretty
-lsi: true
 exclude: [LICENSE, CNAME, README.md, .gitignore, _posts/*.org]
-markdown: redcarpet
 timezone: America/Sao_Paulo
 redcarpet:
     extensions:
