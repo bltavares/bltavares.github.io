@@ -4,9 +4,9 @@
 layout: post
 title: Expressando o dominio atraves do sistema de tipos
 tags:
-- github
-- git
-- practies
+- rust
+- design
+- fp
 ---
 #+END_HTML
 (Note: This post should be Google Translate friendly. I've refrained from using slangs to help with that.)
