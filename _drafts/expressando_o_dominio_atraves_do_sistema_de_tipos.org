@@ -22,7 +22,7 @@ Quando eu falo sobre sistema de tipos expressivos eu me refiro a um conjunto de 
 
 O resultado final desse post poderia ser, por exemplo, a arquitetura implementada em outra linguagem, mesmo com um sistema de tipos como o do JavaScript, Python ou Ruby.
 
-Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas vantagens dos tipos estáticos e sem compará-los diretamente - talvez isso seja um assunto para outro artigo. Eu demonstrarei a seguinr um dos aspectos de um sistema de tipo mais restritivo e como aproveitar o investimento que é "definir melhor o seu programa" - mesmo que isso queira dizer um pouco mais verboso e enrigecido.
+Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas vantagens dos tipos estáticos e sem compará-los diretamente - talvez isso seja um assunto para outro artigo. Eu demonstrarei a seguir um dos aspectos de um sistema de tipo mais restritivo e como aproveitar o investimento que é "definir melhor o seu programa" - mesmo que isso queira dizer um pouco mais verboso e enrigecido.
 
 ** Qual "Sistema estático" vou utilizar?
 
@@ -403,7 +403,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
  }
    #+END_SRC
 
-** Trazendo o mesmo conceito(?) de possível falha para iniciar uma sessão
+** Trazendo o mesmo conceito de possível falha para iniciar uma sessão
 
    Assim como haviamos aprendido com o passo anterior, temos espaços para introduzir o conceito de possíveis falhas à funções anteriores.
 
@@ -411,7 +411,10 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    então podemos ter erros e falhas que deveriam ser comunicados ao desenvolvedor para
    que o mesmo possa tomar um decisão sobre o que fazer.
 
-   Diferente de criar um pedido, as razões de erro podem ser inúmeras: podemos ter um erro ao fazer o parsing do /JSON/, ou a nossa conexão cair.
+   Diferente de criar um pedido, as razões de erro podem ser inúmeras: podemos
+   ter um erro ao fazer o parsing do /JSON/, ou a nossa conexão cair, por
+   exemplo.
+
    Vamos aproveitar e criar um =enum= para cada um dos possíveis erros que
    gostariamos de comunicar através da nossa assinatura.
 
@@ -594,7 +597,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    Uma grande vantagem de utilizar a estrutura /Result/ que vem na standard lib, é que o compilador entende a semântica de erros.
    Nosso código esta fazendo uma chamada que pode falhar ao enviar o pedido, mas nunca está verificando se tudo aconteceu como esperado.
 
-   O compilador sabe que /Result/ tem a semanta (seria semântica?) de uma operação que pode falhar, e nos avisa se não utilizamos o valor. Obrigado =rustc=.
+   O compilador sabe que /Result/ tem a semântica de uma operação que pode falhar, e nos avisa se não utilizamos o valor. Obrigado =rustc=.
    Vamos ignorar alguns /warnings/ do compilador por não implementarmos nenhuma das funções e não usar nenhuma parte interna das estruturas.
 
    #+BEGIN_SRC
