@@ -773,4 +773,6 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    informação que a assinatura convém, não cheguei a explorar como TDD pode nos
    ajudar a evoluir nosso design. Isso pode ser material para oturo post.
 
-   Espero que você tenha gostado da ideia e que consiga explorar esta ideia nas suas implementações futuras. Me enviem um post-resposta para discutirmos mais sobre este tema!
+   Espero que você tenha gostado da ideia e que consiga explorar esta ideia nas
+   suas implementações futuras. Me enviem um post-resposta para discutirmos mais
+   sobre este tema! (Mesmo em outro idioma :)
