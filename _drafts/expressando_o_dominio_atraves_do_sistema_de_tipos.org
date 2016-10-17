@@ -479,9 +479,9 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
 
    Podemos trocar a assinatura do argumento /order/ de =&Order= para =Order= para transmitir nossa intenção.
 
-   Este é o inverso do que temos definido para o token.
-   O token deveria ser compartilhado ao fazer vários pedidos. O pedido precisa não pode ser compartilhado (não entendi essa frase!).
-   Nesse caso eu gosto de pensar que o pedido foi "consumido" por /send_order/, invalidando qualquer outra tentativa de utilizar a estrutura por outros meios (quais outros meios).
+   Nosso caso para o pedido é o inverdo do que esperamos para o token ao enviar o pedido.
+   Nós gostariamos de poder compartilhar o mesmo token com vários envios, mas o mesma estrutura de pedido não deveria ser reutilizada.
+   Nesse caso eu gosto de pensar que o pedido foi "consumido" por /send_order/, invalidando que outras partes do código, como uma thread ou um callback, utilize um valor já enviado.
 
    Na maioria dos casos, os problemas irão preferir utilizar o valor "emprestado",
    mas as nossas regras arbitrárias geraram esse cenário e gostaria de compartilhar
