@@ -23,12 +23,12 @@ Por isso, acho interessante a leitura de um Gist escrito pelo Gary Bernhardt sob
 
 O resultado final desse post poderia ser muito bem a arquitetura implementada em outra linguagem, mesmo com um sistema de tipos como o do JavaScript, Python ou Ruby.
 
-Sistemas de tipos mais dinamicos possuem suas vantagens, mas eu gostaria de focar nas vantagens dos tipos estáticos, sem comparar (talvez isso seja um assunto para outro post).
+Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu gostaria de focar nas vantagens dos tipos estáticos, sem compará-los diretamente (talvez isso seja um assunto para outro post).
 Eu gostaria de demonstrar um dos aspectos de um sistema de tipo mais restritivo, e como aproveitar o investimento que é "definir melhor o seu programa", mesmo que isso queira dizer um pouco mais verboso e enrigecido.
 
 ** Qual "Sistema estático" vou utilizar?
 
-   Esse post foi pensado em Rust, que tem algumas caracteristicas um pouco peculiares, se comparados com o sistema de tipos estático mais mainstream (Java ou C#).
+   Esse post foi pensado em Rust, que tem algumas características um pouco peculiares, se comparados com o sistema de tipos estático mais mainstream (Java ou C#).
 
    - /Null/ não é um habitante de todos os /Tipos/.
 
@@ -54,12 +54,12 @@ Eu gostaria de demonstrar um dos aspectos de um sistema de tipo mais restritivo,
 
    - É possível expressar que um valor será invalidado após uma operação
 
-   Como Rust possui o conceito de [[https://doc.rust-lang.org/book/ownership.html][propriedade do valor]], é possível definir que uma função preciso do ser dona de um valor, invalidando qualquer outra referencia, caso não seja possivel copiar ou clonar o dado.
+   Como Rust possui o conceito de [[https://doc.rust-lang.org/book/ownership.html][propriedade do valor]] (em inglês, *ownership*), é possível definir que uma função precisa do ser dona de um valor, invalidando qualquer outra referência, caso não seja possível copiar ou clonar o dado.
    Isso traz mais expressividade, mas ao mesmo tempo um conceito a mais para aprender.
 
-   Como sempre são escolhas de beneficio x valor. Vamos ver o que é possível expressar sem ler o corpo das funções.
+   Como sempre, são escolhas de benefício x valor. Vamos ver o que é possível expressar sem ler o corpo das funções.
 
-** Dominio do problema
+** Domínio do problema
 
    Vou escolher problemas em um domínio que acontece quase sempre, mas com algumas caractrísticas arbitrárias para poder exercitar melhor os conceitos que o sistema de tipos de Rust possui.
 
@@ -68,12 +68,12 @@ Eu gostaria de demonstrar um dos aspectos de um sistema de tipo mais restritivo,
    - Nossos pedidos acontecem por uma API em um servidor
    - Um pedido não pode ter quantidades negativas
    - Como podemos ficar fora de estoque, em caso de erro devemos voltar ao produto com uma mensagem
-     - É preciso inciar o processo todo de novo e nenhuma outra thread poderia usar nosso pedido
+     - É preciso inciar o processo inteiro novamente e nenhuma outra thread poderia usar nosso pedido
    - Toda transação precisa receber um token de sessão
    - Toda sessão é iniciada por um token de autorização
 
    Depois dessas regras arbitrárias, vamos lá ver o que é possível descrever do nosso domínio apenas pelo sistema de tipos e regras de visiblidade.
-   A implementação das funções não importam no momento, vamos observar quais informações podemos tirar das assinaturas, como se estivessimos utilizando uma biblioteca de um terceiro.
+   A implementação das funções não importa no momento. Vamos observar quais informações podemos tirar das assinaturas, como se estivéssemos utilizando uma biblioteca de um terceiro.
 
 ** Implementação inicial
 
@@ -94,7 +94,7 @@ Eu gostaria de demonstrar um dos aspectos de um sistema de tipo mais restritivo,
    }
    #+END_SRC
 
-   Essa é uma implementação bem inocente e inicial.
+   Essa é uma implementação inicial pode ser amadurecida.
 
    Temos nossa função principal do problema, =send_order=, com os conceitos de quantidade, produto, token de sessão.
    Existe uma função que pode gerar um token de sessão.
@@ -128,13 +128,13 @@ Eu gostaria de demonstrar um dos aspectos de um sistema de tipo mais restritivo,
    A nossa estrutura =SessionToken= faz a conexão entre o retorno de =authorize=
    com a entrada de =send_order=.
 
-   Se analizarmos as assinaturas, a conexão entre as duas funções agora vai além
+   Se analisarmos as assinaturas, a conexão entre as duas funções agora vai além
    dos nomes e começa a entrar no nível de estruturas de dados que o compilador
    pode verificar.
 
    Nosso código de uso no =main= se manteve o mesmo.
-   Mas agora, programas que tentarem passar uma string arbitrária para a função =send_order= não poderam ser mais compilados.
-   Menos um erro de runtime, a não ser que forçemos a criação do /SessionToken/ com uma /String/ ruim.
+   Mas agora, programas que tentarem passar uma string arbitrária para a função =send_order= não poderão mais ser compilados.
+   Menos um erro de runtime, a não ser que forcemos a criação do /SessionToken/ com uma /String/ ruim.
 
 ** Reutilizando o Session Token
 
@@ -171,8 +171,7 @@ Eu gostaria de demonstrar um dos aspectos de um sistema de tipo mais restritivo,
    Da forma que a assinatura da nossa função está escrita, temos que enviar todo o valor, junto com a propriedade para fazer um pedido.
    O valor do token pertence a variável em /main/. Ao chamarmos a função /send_order/ pela primeira vez, esse valor é movido e perde a disponibilidade para chamarmos mais uma vez.
 
-   Como a função /session_token/ so precisa do valor [[https://doc.rust-lang.org/book/references-and-borrowing.html][/emprestado/]],  para enviar pela rede.
-   Precisamos mudar a assinatura da nossa função para demonstrar a intenção que queremos o valor emprestado, e que não vamos reescrever ou alterar o token, só vamos pegar emprestado para poder fazer o pedido.gqq:w
+   Como a função /session_token/ só precisa do valor [[https://doc.rust-lang.org/book/references-and-borrowing.html][/emprestado/]] (em inglês, *borrowing*),  para enviar pela rede, precisamos mudar a assinatura da nossa função a fim de demonstrar a intenção que queremos o valor emprestado, e que não vamos reescrever ou alterar o token, só vamos pegar emprestado para poder fazer o pedido.
 
    A mudança é pequena na assinatura, trocando de =SessionToken= para =&SessionToken=, e corrigindo como passamos o argumento do token.
    Temos agora definido que não vamos alterar o valor da variável /session_token/
