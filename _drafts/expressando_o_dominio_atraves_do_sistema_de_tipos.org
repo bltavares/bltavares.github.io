@@ -30,7 +30,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
 
    - /Null/ não é um habitante de todos os /Tipos/.
 
-     Em Java, por exemplo, a seguinte assinatura de função requer que o corpo da função seja inspecionado para descobrir se ~null~ pode ser retornado.
+     Em Java, por exemplo, a seguinte assinatura de método requer que o corpo da função seja inspecionado para descobrir se ~null~ pode ser retornado.
 
      #+BEGIN_SRC java
     public static class File {
@@ -101,7 +101,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    Eu poderia chamar a função =send_order= com uma /String/ arbitrária, e ter um erro de parsing, validação ou qualquer outra coisa.
    Vamos deixar nosso programa melhor definido escrevendo mais código.
 
-** COMMENT Extraindo o conceito de Session Token
+** Extraindo o conceito de Session Token
 
    #+BEGIN_SRC rust
      pub struct SessionToken(String);
@@ -141,8 +141,8 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    #+BEGIN_SRC rust
  fn main() {
      let session_token = authorize("My initial token".into());
-     send_order(&session_token, 10, "Bananas".into());
-     send_order(&session_token, 5, "Peras".into());
+     send_order(session_token, 10, "Bananas".into());
+     send_order(session_token, 5, "Peras".into());
  }
    #+END_SRC
 
@@ -164,7 +164,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
  error: aborting due to previous error
    #+END_SRC
 
-   Todo essa mensagem de erro está relacionada ao conceito de [[https://doc.rust-lang.org/book/ownership.html][propriedade do valor]] que Rust tem.
+   Toda essa mensagem de erro está relacionada ao conceito de [[https://doc.rust-lang.org/book/ownership.html][propriedade do valor]] que Rust tem.
 
    Da forma que a assinatura da nossa função está escrita, temos que enviar todo o valor, junto com a propriedade para fazer um pedido.
    O valor do token pertence à variável em /main/. Ao chamarmos a função /send_order/ pela primeira vez, esse valor é movido e perde a disponibilidade para chamarmos mais uma vez.
@@ -256,7 +256,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    validações necessárias.
 
    Vamos precisar de alguns passos intermediários para poder chegar lá.
-   Primeiro, vamos criar uma estrutura que encapsula o conceite de pedido, chamada /Order/.
+   Primeiro, vamos criar uma estrutura que encapsula o conceito de pedido, chamada /Order/.
 
    #+BEGIN_SRC rust
  mod lib {
@@ -345,7 +345,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    2. Retornar uma estrutura de dados que indica a possibilidade de falha da nossa operação
 
    A opção 1 é não é nada ideal. Eu não gostaria que meu programa morrese completamente apenas por ter um pedido inválido.
-   Além do mais, nossas regras de negócio possui instruções sobre o que fazer em caso de erro. Logo, eu preciso lidar com pedidos inválidos.
+   Além do mais, nossas regras de negócio possuem instruções sobre o que fazer em caso de erro. Logo, eu preciso lidar com pedidos inválidos.
 
    Vamos aproveitar uma estrutura chamada [[https://doc.rust-lang.org/std/result/index.html][/Result/]] que está disponível na =stdlib= da linguagem.
    Nós poderiamos reescrever essa estrutura nós mesmos, mas já existem várias funcionalidades que ganhamos ao utilizar uma estrutura standard.
@@ -407,7 +407,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
 
    Assim como haviamos aprendido com o passo anterior, temos espaços para introduzir o conceito de possíveis falhas à funções anteriores.
 
-   Pedir um token de sessão envolve fazer uma chamada a um outro pedido,
+   Pedir um token de sessão envolve fazer uma chamada a um serviço,
    então podemos ter erros e falhas que deveriam ser comunicados ao desenvolvedor para
    que o mesmo possa tomar um decisão sobre o que fazer.
 
@@ -479,7 +479,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
 
    Podemos trocar a assinatura do argumento /order/ de =&Order= para =Order= para transmitir nossa intenção.
 
-   Nosso caso para o pedido é o inverdo do que esperamos para o token ao enviar o pedido.
+   Nosso caso para o pedido é o inverso do que esperamos para o token ao enviar o pedido.
    Nós gostariamos de poder compartilhar o mesmo token com vários envios, mas o mesma estrutura de pedido não deveria ser reutilizada.
    Nesse caso eu gosto de pensar que o pedido foi "consumido" por /send_order/, invalidando que outras partes do código, como uma thread ou um callback, utilize um valor já enviado.
 
@@ -539,7 +539,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    Nosso domínio traz regras sobre o que fazer em caso de erro ao fazer um pedido.
    Nossa interface deveria refletir as nossas intenções e demonstrar que existe uma resposta ao tentar fazer um pedido.
 
-   Vamos criar uma estrutura para converter a responsta em /JSON/ para uma estrutura com os campos a serem preenchidos.
+   Vamos criar uma estrutura para converter a resposta em /JSON/ para uma estrutura com os campos a serem preenchidos.
    Também vamos demonstrar que nosso envio do pedido pode falhar, assim como acontece ao iniciar uma sessão.
 
    #+BEGIN_SRC rust
@@ -611,7 +611,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
 
 ** Definindo possíveis status de um pedido
 
-   Podemos aproveitar e definar mais ainda quais os possíveis estados um resultado de pedido pode estar.
+   Podemos aproveitar e definir mais ainda quais os possíveis estados um resultado de pedido pode estar.
 
    Ao invés de aceitar qualquer tipo de /String/, podemos criar um =enum= com todos os possíveis estados que nos importamos.
    Isso torna nosso modelo mais expressivo, e como consumidor, não precisamos nos
@@ -770,7 +770,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    como o de Rust.
 
    Como não cheguei a implementar o corpo das funções e quis apenas focar na
-   informação que a assinatura convém, não cheguei a explorar como TDD pode nos
+   informação que a assinatura contem, não cheguei a explorar como TDD pode nos
    ajudar a evoluir nosso design. Isso pode ser material para oturo post.
 
    Espero que você tenha gostado da ideia e que consiga explorar esta ideia nas
