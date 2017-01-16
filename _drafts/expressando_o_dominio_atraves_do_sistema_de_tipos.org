@@ -1,36 +1,54 @@
 #+OPTIONS: toc:nil
-#+BEGIN_HTML
+#+BEGIN_EXPORT html
 ---
 layout: post
 title: Expressando o domínio através do sistema de tipos
 tags:
 - rust
 - design
+- architecture
 - fp
 ---
-#+END_HTML
+#+END_EXPORT
+
 (Note: This post should be Google Translate friendly. I've refrained from using slangs to help with that.)
 
-Algumas vezes eu conversei com algumas pessoas sobre como é possível aproveitar
-o sistema de tipos para poder expressar melhor o domínio de uma aplicação.
-
 Esse post é para que eu possa desenvolver melhor a ideia e mostrar um pouco, de
-forma mais prática, as vantagens de se ter um sistema de tipos (expressivo), em
+forma mais prática, as vantagens de utilizar um sistema de tipos expressivo, em
 relação a sistemas de tipos mais simples.
 
-Quando eu falo sobre sistema de tipos expressivos eu me refiro a um conjunto de linguagens com algumas abstrações e conceitos um pouco fora do do padrão utilizado em outras aplicações. O Gary Bernhardt escreveu um Gist interessante sobre [[https://gist.github.com/garybernhardt/122909856b570c5c457a6cd674795a9c]["Types"]] em que é possível entender diferentes aspectos de cada linguagem.
+Mas antes de tudo, vamos definir um pouco quais tipos entrariam na categoria de
+sistema de tipos expressivo.
+Muitos dos sistemas de tipo que considero expressivo geralmente não são os que
+estamos acostumados, e que geralmente vem na nossa mente, como Java ou C#.
 
-O resultado final desse post poderia ser, por exemplo, a arquitetura implementada em outra linguagem, mesmo com um sistema de tipos como o do JavaScript, Python ou Ruby.
+O Gary Bernhardt escreveu um Gist interessante sobre [[https://gist.github.com/garybernhardt/122909856b570c5c457a6cd674795a9c]["Types"]] em que é possível
+entender diferentes aspectos de cada linguagem.
 
-Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas vantagens dos tipos estáticos e sem compará-los diretamente - talvez isso seja um assunto para outro artigo. Eu demonstrarei a seguir um dos aspectos de um sistema de tipo mais restritivo e como aproveitar o investimento que é "definir melhor o seu programa" - mesmo que isso queira dizer um pouco mais verboso e enrigecido.
+Esse não é um post para dizer que utilizando uma linguagem como JavaScript,
+Python ou Ruby não poderiamos chegar na mesma arquitetura. É um post para
+analisar como a existência do sistema de tipos estimula um outro tipo de design.
+
+Sistemas de tipos mais dinâmicos possuem suas vantagens, mas vou focar nas
+vantagens dos tipos estáticos e sem compará-los diretamente - talvez isso seja
+um assunto para outro artigo.
+
+Demonstrarei a seguir um dos aspectos de um sistema de tipo mais restritivo e
+como aproveitar o investimento que é "definir melhor o seu programa" - mesmo que
+isso queira dizer um pouco mais verboso e enrigecido.
 
 ** Qual "Sistema estático" vou utilizar?
 
-   Esse post foi pensado em Rust, que tem algumas características um pouco peculiares, se comparados com o sistema de tipos estático mais comuns (Java ou C#).
+   Esse post foi pensado em Rust, que tem algumas características um pouco
+   peculiares, se comparados com o sistema de tipos estático mais comuns (Java
+   ou C#).
+
+   Algumas das características peculiares se comparado com outras linguagens:
 
    - /Null/ não é um habitante de todos os /Tipos/.
 
-     Em Java, por exemplo, a seguinte assinatura de método requer que o corpo da função seja inspecionado para descobrir se ~null~ pode ser retornado.
+     Em Java, por exemplo, a seguinte assinatura de método requer que o corpo da
+     função seja inspecionado para descobrir se ~null~ pode ser retornado.
 
      #+BEGIN_SRC java
     public static class File {
@@ -40,7 +58,10 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
     }
      #+END_SRC
 
-     Em Rust, funções que poderiam retornar ~null~ ou valores não definidos precisam ter isso declarado na sua assinatura, alertando sobre o possível problema.
+     Em Rust, não temos ~null~.
+     As funções que poderiam retornar ~null~ em outras linguagens precisam ter
+     isso declarado na sua assinatura em Rust, alertando sobre o possível
+     problema.
 
      #+BEGIN_SRC rust
       mod file {
@@ -52,14 +73,30 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
 
    - É possível expressar que um valor será invalidado após uma operação.
 
-   Como Rust possui o conceito de [[https://doc.rust-lang.org/book/ownership.html][propriedade do valor]] (em inglês, *ownership*), é possível definir que uma função precisa ser dona de um valor, invalidando qualquer outra referência, caso não seja possível copiar ou clonar o dado.
-   Isso traz mais expressividade, mas ao mesmo tempo um conceito a mais para aprender.
+     Como Rust possui o conceito de [[https://doc.rust-lang.org/book/ownership.html][posse do valor]] (em inglês, *ownership*), é
+     possível definir que uma função precisa ser dona de um valor, invalidando
+     qualquer outra referência, caso não seja possível copiar ou clonar o dado.
+     Isso traz mais expressividade, mas ao mesmo tempo um conceito a mais para
+     aprender.
 
-   Como sempre, são escolhas de benefício x valor. Vamos ver o que é possível expressar sem ler o corpo das funções.
+     Esse é um conceito de posse do valor é um conceito novo que Rust traz como
+     novidade em comparação a outras linguagens, e que para mim é um ótimo motivo
+     para estudar a linguagem. O conceito é um pouco difícil, inclusive por ser
+     novidade, e mais pra frente no texto trarei alguns exemplos.
+
+
+   Tratar essas peculiaridades como benefícios, como sempre, são escolhas de
+   benefício x valor. Vamos ver o que é possível expressar utilizando essas
+   características, para podermos considerar o valor.
+
+   Para isso, vamos escrever código e observar o que é possível entender do
+   domínio, inclusive sem ter o corpo das funções.
 
 ** Domínio do problema
 
-   Vou escolher problemas em um domínio com algumas caractrísticas arbitrárias (descritas abaixo) para poder exercitar melhor os conceitos que o sistema de tipos de Rust possui.
+   Vou escolher problemas em um domínio com algumas caractrísticas arbitrárias
+   (descritas abaixo) para poder exercitar melhor os conceitos que o sistema de
+   tipos de Rust possui.
 
    Estamos escrevendo um sistema de pedidos.
 
@@ -70,40 +107,58 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    - Toda transação precisa receber um token de sessão
    - Toda sessão é iniciada por um token de autorização
 
-   Depois dessas regras arbitrárias, vamos ver o que é possível descrever do nosso domínio apenas pelo sistema de tipos e regras de visiblidade.
-   A implementação das funções não importa no momento. Vamos observar quais informações podemos tirar das assinaturas, como se estivéssemos utilizando uma biblioteca de um terceiro.
+   Depois dessas regras arbitrárias, vamos ver o que é possível descrever do
+   nosso domínio apenas pelo sistema de tipos e regras de visiblidade.
+
+   A implementação das funções não importa no momento.
+
+   Vamos observar quais informações podemos extrair das assinaturas, como se
+   estivéssemos utilizando uma biblioteca de um terceiro.
 
 ** Implementação inicial
 
-   #+BEGIN_SRC rust
-   pub fn authorize(auth_token: String) -> String {
-       unimplemented!()
-   }
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_01.rs
+     pub fn authorize(auth_token: String) -> String {
+         unimplemented!()
+     }
 
-   pub fn send_order(session_token: String,
-                     amount: u8,
-                     product: String) {
-       unimplemented!()
-   }
+     pub fn send_order(session_token: String,
+                       amount: u8,
+                       product: String) {
+         unimplemented!()
+     }
 
-   fn main() {
-       let session_token = authorize("My initial token".into());
-       send_order(session_token, 10, "Bananas".into())
-   }
+     fn main() {
+         let session_token = authorize("My initial token".into());
+         send_order(session_token, 10, "Bananas".into())
+     }
    #+END_SRC
 
    Essa é uma implementação inicial e pode ser amadurecida.
 
-   Temos nossa função principal do problema, =send_order=, com os conceitos de: quantidade, produto e token de sessão.
-   Existe uma função que pode gerar um token de sessão.
-   Mas de nenhuma forma estou definindo no programa que essas duas funções tem uma relação bem próximas.
+   - Temos nossa função principal do problema, =send_order=, com os conceitos de: quantidade, produto e token de sessão.
+   - Existe uma função que pode gerar um token de sessão.
 
-   Eu poderia chamar a função =send_order= com uma /String/ arbitrária, e ter um erro de parsing, validação ou qualquer outra coisa.
+   Estamos com essas duas funções, mas de nenhuma forma estou definindo no
+   programa que essas duas funções tem uma relação bem próximas.
+
+   Sem essa definição, uma outra pessoa:
+
+   - Poderia chamar =send_order= sem chamar a função =authorize=
+   - Poderia chamar a função =send_order= com uma /String/ arbitrária como token, e ter um erro de parsing, validação ou qualquer outra coisa.
+
    Vamos deixar nosso programa melhor definido escrevendo mais código.
 
 ** Extraindo o conceito de Session Token
 
-   #+BEGIN_SRC rust
+   Temos um relacionamento entre a =String= de saida do =authorize=, e a entrada
+   do =send_order=.
+   No nosso dominio, isso é o token da sessão.
+
+   Vamos fazer uma pequena alteração no código, e extrair o conceito do token da
+   sessão em uma estrutura retornada ao iniciar a sessão.
+
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_02.rs :exports none
      pub struct SessionToken(String);
 
      pub fn authorize(auth_token: String) -> SessionToken {
@@ -122,6 +177,34 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
      }
    #+END_SRC
 
+   Vou mostrar um diff da mudança, e um [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/][link para o codigo pronto para ser compilado.]]
+
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index order_01.rs order_02.rs | dos2unix
+   #+END_SRC
+
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_01.rs b/order_02.rs
+   index cfce64f..9b95b16 100644
+   --- a/order_01.rs
+   +++ b/order_02.rs
+   @@ -1,8 +1,10 @@
+   -pub fn authorize(auth_token: String) -> String {
+   +pub struct SessionToken(String);
+   +
+   +pub fn authorize(auth_token: String) -> SessionToken {
+        unimplemented!()
+    }
+
+   -pub fn send_order(session_token: String,
+   +pub fn send_order(session_token: SessionToken,
+                      amount: u8,
+                      product: String) {
+        unimplemented!()
+   #+END_SRC
+
    Sem se ater muito aos detalhes, esse novo snippet introduz uma estrutura que encapsula uma /String/.
    A nossa estrutura =SessionToken= faz a conexão entre o retorno de =authorize=
    com a entrada de =send_order=.
@@ -131,17 +214,26 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    pode verificar.
 
    Nosso código de uso no =main= se manteve o mesmo.
-   Mas agora, programas que tentarem passar uma string arbitrária para a função =send_order= não poderão mais ser compilados.
-   Menos um erro de runtime, a não ser que forcemos a criação do /SessionToken/ com uma /String/ ruim.
+
+   Agora, programas que tentarem passar uma string arbitrária para a função =send_order= não poderão mais ser compilados.
+   Fica mais intuitivo (e com a ajuda de um auto-complete) associar as duas funções. Menos um erro de runtime.
+
+   Ainda podemos progmaticamente chamar a nossa função com uma /String/ arbitrária, caso seja necessário, como em um teste.
+
+   #+BEGIN_SRC rust
+     send_order(SessionToken("My test token".into()));
+   #+END_SRC
 
 ** Reutilizando o Session Token
 
-   Um problema interessante acontece se tentarmos fazer dois pedidos com o código anterior:
+   Um problema interessante acontece se tentarmos fazer dois pedidos
+   compartilhando o mesmo token com o código anterior:
 
    #+BEGIN_SRC rust
  fn main() {
      let session_token = authorize("My initial token".into());
      send_order(session_token, 10, "Bananas".into());
+     // Adicionamos mais um pedido
      send_order(session_token, 5, "Peras".into());
  }
    #+END_SRC
@@ -164,62 +256,109 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
  error: aborting due to previous error
    #+END_SRC
 
-   Toda essa mensagem de erro está relacionada ao conceito de [[https://doc.rust-lang.org/book/ownership.html][propriedade do valor]] que Rust tem.
+   Toda essa mensagem de erro está relacionada ao conceito de [[https://doc.rust-lang.org/book/ownership.html][posse do valor]] que Rust tem.
 
-   Da forma que a assinatura da nossa função está escrita, temos que enviar todo o valor, junto com a propriedade para fazer um pedido.
-   O valor do token pertence à variável em /main/. Ao chamarmos a função /send_order/ pela primeira vez, esse valor é movido e perde a disponibilidade para chamarmos mais uma vez.
+   Da forma que a assinatura da nossa função está escrita, temos que enviar todo
+   o valor, junto com o registro /posse/ do =SessionToken= para fazer um pedido.
 
-   Como a função /session_token/ só precisa do valor [[https://doc.rust-lang.org/book/references-and-borrowing.html][/emprestado/]] (em inglês, *borrowing*),  para enviar pela rede, precisamos mudar a assinatura da nossa função a fim de demonstrar a intenção que queremos o valor emprestado e que não vamos reescrever ou alterar o token, só vamos pegar emprestado para poder fazer o pedido.
+   O valor do token pertence à variável em /main/.
+   Ao chamarmos a função /send_order/ pela primeira vez, esse valor é movido para
+   a primeira chamada de =send_order= e não está mais disponível para mais um
+   pedido.
 
-   A mudança é pequena na assinatura: trocando de =SessionToken= para =&SessionToken= e corrigindo como passamos o argumento do token.
-   Temos agora definido que não vamos alterar o valor da variável /session_token/
-   ao chamar o /send_order/ e que um mesmo token pode ser reutilizado, inclusive
-   compartilhado por várias threads ao realizar o pedido.
+   Como a função =session_token= só precisa do token [[https://doc.rust-lang.org/book/references-and-borrowing.html][/emprestado/]] (em inglês,
+   *borrowing*), precisamos mudar a assinatura da nossa função a fim de
+   demonstrar a intenção que queremos o valor temporariamente e que não vamos
+   reescrever ou alterar o token, só vamos pegar /emprestado/ para poder fazer o
+   pedido.
 
-   #+BEGIN_SRC rust
- pub struct SessionToken(String);
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_03.rs :exports none
+     pub struct SessionToken(String);
 
- pub fn authorize(auth_token: String) -> SessionToken {
-     unimplemented!()
- }
+     pub fn authorize(auth_token: String) -> SessionToken {
+         unimplemented!()
+     }
 
- pub fn send_order(session_token: &SessionToken,
-                   amount: u8,
-                   product: String) {
-     unimplemented!()
- }
+     pub fn send_order(session_token: &SessionToken,
+                       amount: u8,
+                       product: String) {
+         unimplemented!()
+     }
 
- fn main() {
-     let session_token = authorize("My initial token".into());
-     send_order(&session_token, 10, "Bananas".into());
-     send_order(&session_token, 5, "Peras".into());
- }
+     fn main() {
+         let session_token = authorize("My initial token".into());
+         send_order(&session_token, 10, "Bananas".into());
+         send_order(&session_token, 5, "Peras".into());
+     }
    #+END_SRC
+
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index order_02.rs order_03.rs | dos2unix
+   #+END_SRC
+
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_02.rs b/order_03.rs
+   index 9b95b16..f3f939e 100644
+   --- a/order_02.rs
+   +++ b/order_03.rs
+   @@ -4,7 +4,7 @@ pub fn authorize(auth_token: String) -> SessionToken {
+        unimplemented!()
+    }
+
+   -pub fn send_order(session_token: SessionToken,
+   +pub fn send_order(session_token: &SessionToken,
+                      amount: u8,
+                      product: String) {
+        unimplemented!()
+   @@ -12,5 +12,6 @@ pub fn send_order(session_token: SessionToken,
+
+    fn main() {
+        let session_token = authorize("My initial token".into());
+   -    send_order(session_token, 10, "Bananas".into())
+   +    send_order(&session_token, 10, "Bananas".into());
+   +    send_order(&session_token, 5, "Peras".into());
+    }
+   #+END_SRC
+
+   A mudança é pequena na assinatura: trocando de =SessionToken= para
+   =&SessionToken= e corrigindo como passamos o argumento do token.
+   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_03.rs][Segue o link para copiar e compilar o código completo.]]
+
+   Temos agora definido no nível da assinatura que não vamos alterar o valor da
+   variável =session_token= ao chamar =send_order= e que um mesmo token pode ser
+   reutilizado, inclusive compartilhado por várias threads ao realizar o pedido.
 
 ** Expondo apenas uma maneira de criar um Session Token válido
 
-   Ainda lidando com o conceito de /SessionToken/, senti a necessidade te tornar o
-   relacinamento entre /authorize/ e /send_order/ mais forte.
+   Ainda lidando com o conceito de =SessionToken=, senti a necessidade te tornar o
+   relacinamento entre ~authorize~ e ~send_order~ mais forte.
 
    Com o código anterior, seria bem possível criar um token inválido:
 
    #+BEGIN_SRC rust
-  fn main() {
-      send_order(SessionToken("ASDF".into()), 10, "Bananas".into());
-  }
+     fn main() {
+         // Session tokens precisam serguir um formato específico
+         // ASDF não deveria ser um token válido
+         send_order(SessionToken("ASDF".into()), 10, "Bananas".into());
+     }
    #+END_SRC
 
-   A estrutura /SessionToken/ tem um token inválido, o que poderia causar erros ao ser utilizado por outras APIs.
-   Se utilizarmos uma restrição na visibilidade do que é exportado, podemos definir que /SessionTokens/ sejam criados só se forem válidos.
+   A estrutura =SessionToken= tem um token inválido, em um formato que não seria
+   aceito pelas APIs.
+   Se utilizarmos uma restrição na visibilidade do que é exportado, podemos
+   definir que =SessionTokens= sejam criados só se forem válidos.
 
-   Podemos criar um módulo no nosso arquivo, tornar as propiedados do nosso
-   construtor privadas, e ter a função /authorize/ como a única função que retorna
-   um /SessionToken/.
+   Como temos todo o código no mesmo arquivo, todas os construtores e funções
+   estarão disponíveis para a função =main=.
 
-   Assim, caso o desenvolvedor queira um /SessionToken/, é preciso chamar /authorize/.
-   E como /send_order/ precisa de um token, a relação entre as duas funções é mais forte e validada pelo compilador.
+   Em Rust, além de podermos utilizar um outro arquivo para criar módulos, é
+   possível criar um modulo no mesmo arquivo.
+   Vamos introduzir um modulo para controlarmos melhor quais construtores
+   estarão visíveis.
 
-   #+BEGIN_SRC rust
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_04.rs :exports none
  mod lib {
      pub struct SessionToken(String);
 
@@ -237,14 +376,93 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
  pub use lib::*;
 
  fn main() {
-     // let s = SessionToken("ASDF".into());
      let session_token = authorize("My initial token".into());
      send_order(&session_token, 10, "Bananas".into());
      send_order(&session_token, 5, "Peras".into());
  }
    #+END_SRC
 
-   Experimentem descomentar a linha comentada no /main/, e ver o erro.
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index -w order_03.rs order_04.rs | dos2unix
+   #+END_SRC
+
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_03.rs b/order_04.rs
+   index f3f939e..c31b445 100644
+   --- a/order_03.rs
+   +++ b/order_04.rs
+   @@ -1,3 +1,4 @@
+   +mod lib {
+        pub struct SessionToken(String);
+
+        pub fn authorize(auth_token: String) -> SessionToken {
+   @@ -9,6 +10,9 @@ pub fn send_order(session_token: &SessionToken,
+                          product: String) {
+            unimplemented!()
+        }
+   +}
+   +
+   +pub use lib::*;
+
+    fn main() {
+        let session_token = authorize("My initial token".into());
+   #+END_SRC
+
+   Criamos um módulo ~lib~ ao redor do nosso código, e no escopo do arquivo,
+   importamos apenas as funções públicas com ~pub use lib::*~.
+
+   Apesar da nossa estrutura ser publica, o campo interno de dados não é.
+
+   #+BEGIN_SRC
+error[E0450]: cannot invoke tuple struct constructor with private fields
+  --> ~/order.rs:18:15
+   |
+2  |     pub struct SessionToken(String);
+   |                             ------- private field declared here
+...
+18 |       let s = SessionToken("ASDF".into());
+   |               ^^^^^^^^^^^^ cannot construct with a private field
+
+error: aborting due to previous error
+   #+END_SRC
+
+   Tanto o acesso para leitura e escrita dos campos privados da estrutura só
+   estarão disponíveis para as funções dentro do módulo.
+   Assim, caso o desenvolvedor queira um =SessionToken=, é preciso chamar
+   ~authorize~.
+
+   E como ~send_order~ precisa de um token, a relação entre as duas funções é
+   mais forte e validada pelo compilador.
+
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_05.rs :exports none
+     mod lib {
+         pub struct SessionToken(String);
+
+         pub fn authorize(auth_token: String) -> SessionToken {
+             unimplemented!()
+         }
+
+         pub fn send_order(session_token: &SessionToken,
+                           amount: u8,
+                           product: String) {
+             unimplemented!()
+         }
+     }
+
+     pub use lib::*;
+
+     fn main() {
+         // Tente descomentar a linha
+         // let s = SessionToken("ASDF".into());
+         let session_token = authorize("My initial token".into());
+         send_order(&session_token, 10, "Bananas".into());
+         send_order(&session_token, 5, "Peras".into());
+     }
+   #+END_SRC
+
+   Experimentem descomentar a linha comentada no [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_04.rs][exemplo]] no /main/, e ver o erro.
 
 ** Extraindo o conceito de Pedido
 
@@ -344,7 +562,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
    1. Abortar o programa inteiro (eg: panic!)
    2. Retornar uma estrutura de dados que indica a possibilidade de falha da nossa operação
 
-   A opção 1 é não é nada ideal. Eu não gostaria que meu programa morrese completamente apenas por ter um pedido inválido.
+   A opção 1 é não é nada ideal. Eu não gostaria que meu programa falhase completamente apenas por ter um pedido inválido.
    Além do mais, nossas regras de negócio possuem instruções sobre o que fazer em caso de erro. Logo, eu preciso lidar com pedidos inválidos.
 
    Vamos aproveitar uma estrutura chamada [[https://doc.rust-lang.org/std/result/index.html][/Result/]] que está disponível na =stdlib= da linguagem.
@@ -528,6 +746,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
 
          if let Ok(order) = first_order {
              send_order(&session_token, order);
+             // Tente descomentar para falhar
              // send_order(&session_token, order);
          }
      }
@@ -687,10 +906,10 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
 
 ** Dando um nome mais bonito para nossas respostas da API
 
-   Assim que começarmos a criar mais e mais funções que utilizão comunição com
+   Assim que começarmos a criar mais e mais funções que utilizam comunição com
    nossa API, veremos o tipo =Result<T, ApiError>=, várias e várias vezes.
 
-   Podemos criar um tipo =ApiRespose= para que todos saibam que essa é uma chamada
+   Podemos criar um tipo =ApiResponse= para que todos saibam que essa é uma chamada
    para a API, e que todas as respostas que tem esse tipo, terão os mesmo possíveis
    erros para se preocupar.
 
@@ -771,7 +990,7 @@ Sistemas de tipos mais dinâmicos possuem suas vantagens, mas eu vou focar nas v
 
    Como não cheguei a implementar o corpo das funções e quis apenas focar na
    informação que a assinatura contem, não cheguei a explorar como TDD pode nos
-   ajudar a evoluir nosso design. Isso pode ser material para oturo post.
+   ajudar a evoluir nosso design. Isso pode ser material para outro post.
 
    Espero que você tenha gostado da ideia e que consiga explorar esta ideia nas
    suas implementações futuras. Me enviem um post-resposta para discutirmos mais
