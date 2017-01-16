@@ -11,7 +11,7 @@ redcarpet:
       - fenced_code_blocks
 
 # Theme customization - please change from the defaults!
-theme:
+data:
   # Color for top bar, links, etc
   highlight_color: '#859900'
 
@@ -43,3 +43,5 @@ incremental: false
 highlighter: rouge
 gist:
   noscript: false
+kramdown:
+  math_engine: mathjax
