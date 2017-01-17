@@ -93,6 +93,21 @@ isso queira dizer um pouco mais verboso e enrigecido.
    Para isso, vamos escrever código e observar o que é possível entender do
    domínio, inclusive sem ter o corpo das funções.
 
+*** Como compilar os exemplos de código
+
+    Trarei exemplos de código em Rust, com links para o exemplo completo de cada
+    transformação.
+
+    É preciso ter instalado no seu computador o compilador do Rust e recomendo
+    seguir as instruções do [[https://www.rustup.rs/][rustup.rs]] para ter instalado o =rustc=.
+
+    Pela linha de comando você então poderá chamar o compilador de uma das
+    seguint maneiras:
+
+    #+BEGIN_SRC shell
+      rustc exemplo.rs
+    #+END_SRC
+
 ** Domínio do problema
 
    Vou escolher problemas em um domínio com algumas caractrísticas arbitrárias
