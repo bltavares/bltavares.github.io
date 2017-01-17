@@ -11,7 +11,8 @@ tags:
 ---
 #+END_EXPORT
 
-(Note: This post should be Google Translate friendly. I've refrained from using slangs to help with that.)
+(Note: This post should be Google Translate friendly. I've refrained from using
+slangs to help with that.)
 
 Esse post é para que eu possa desenvolver melhor a ideia e mostrar um pouco, de
 forma mais prática, as vantagens de utilizar um sistema de tipos expressivo, em
@@ -177,7 +178,7 @@ isso queira dizer um pouco mais verboso e enrigecido.
      }
    #+END_SRC
 
-   Vou mostrar um diff da mudança, e um [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/][link para o codigo pronto para ser compilado.]]
+   Vou mostrar um diff da mudança, e um [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/][link para o código pronto para ser compilado.]]
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
      cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
@@ -462,21 +463,23 @@ error: aborting due to previous error
      }
    #+END_SRC
 
-   Experimentem descomentar a linha comentada no [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_04.rs][exemplo]] no /main/, e ver o erro.
+   Experimentem descomentar a linha comentada no [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_04.rs][exemplo]] no ~main~, e ver o erro.
 
 ** Extraindo o conceito de Pedido
 
-   Uma regra do dominio que está escrita nas entrelinhas é que temos o conceito de um pedido válido.
-   Deveriamos ter apenas pedidos com números positivos.
+   Uma regra do dominio que está escrita nas entrelinhas é que temos o conceito
+   de um pedido válido.
+   Deveriamos ter apenas pedidos com números positivos, já que não podemos
+   entregar -10 maçãs.
 
-   Podemos aprender um pouco com os passos anteriores, e ir ao caminho de extrair o
-   conceito de /Order/, e ter apenas uma forma de criar um /Order/, que faz as
-   validações necessárias.
+   Como no passo anterior, podemos extrair o conceito de /Pedido/ em uma estrutura,
+   e prover apenas uma maneira de criar essa estrutura que requer validação dos dados.
 
    Vamos precisar de alguns passos intermediários para poder chegar lá.
-   Primeiro, vamos criar uma estrutura que encapsula o conceito de pedido, chamada /Order/.
 
-   #+BEGIN_SRC rust
+   Primeiro, vamos criar uma estrutura que encapsula o conceito de pedido, chamada ~Order~.
+
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_06.rs :exports none
  mod lib {
      pub struct SessionToken(String);
 
@@ -505,19 +508,68 @@ error: aborting due to previous error
  }
    #+END_SRC
 
-** Restringindo o conceito de Pedido válido
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index order_04.rs order_06.rs | dos2unix
+   #+END_SRC
 
-   Agora com nossa estrutura sendo utilizada pelo /main/ e pelo /send_order/,
-   podemos tornar parte interna da estrutura privada, tornando a função
-   /create_order/ a única forma permitida para criar nossa estrutura.
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_04.rs b/order_06.rs
+   index c31b445..47f56d9 100644
+   --- a/order_04.rs
+   +++ b/order_06.rs
+   @@ -1,13 +1,17 @@
+    mod lib {
+        pub struct SessionToken(String);
 
-   Podemos então colocar toda a regra de validações dentro da unica maneira de
-   criar a estrutura requeria pela função /send_order/.
+   +    pub struct Order {
+   +        pub amount: u8,
+   +        pub name: String,
+   +    }
+   +
+        pub fn authorize(auth_token: String) -> SessionToken {
+            unimplemented!()
+        }
 
-   Criamos um relacionamento forte entra a saida de /create_order/ com a entrada de
-   /send_order/, assim como haviamos feito anteriormente.
+        pub fn send_order(session_token: &SessionToken,
+   -                      amount: u8,
+   -                      product: String) {
+   +                      order: &Order) {
+            unimplemented!()
+        }
+    }
+   @@ -16,6 +20,7 @@ pub use lib::*;
 
-   #+BEGIN_SRC rust
+    fn main() {
+        let session_token = authorize("My initial token".into());
+   -    send_order(&session_token, 10, "Bananas".into());
+   -    send_order(&session_token, 5, "Peras".into());
+   +
+   +    let first_order = Order { amount: 10, name: "Bananas".into() };
+   +    send_order(&session_token, &first_order);
+    }
+   #+END_SRC
+
+   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_06.rs][O código completo para compilar está aqui.]]
+
+** Criando apenas Pedidos válidos
+
+   Agora com nossa estrutura sendo utilizada pelo ~main~ e pelo ~send_order~,
+   podemos agora permitir que pedidos tenham uma quantidade válida antes de
+   fazer qualquer chamada.
+
+   Assim como fizemos com a estrutura do ~SessionToken~, podemos transformar a
+   estrutura interna privada, e apenas uma função dentro do módulo poderia
+   acessar os campos.
+
+   Vamos criar uma função ~send_order~, que valida e retorna nossa estrutura
+   ~Order~.
+   Isso seria como um construtor, mas que inclui as regras de validação.
+   Com as regras de visibilidade, esse será o único método que retorna a
+   estrutura ~Order~.
+
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_07.rs :exports none
  mod lib {
      pub struct SessionToken(String);
 
@@ -553,34 +605,161 @@ error: aborting due to previous error
  }
    #+END_SRC
 
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index order_06.rs order_07.rs | dos2unix
+   #+END_SRC
+
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_06.rs b/order_07.rs
+   index 47f56d9..a13f381 100644
+   --- a/order_06.rs
+   +++ b/order_07.rs
+   @@ -2,8 +2,15 @@ mod lib {
+        pub struct SessionToken(String);
+
+        pub struct Order {
+   -        pub amount: u8,
+   -        pub name: String,
+   +        amount: u8,
+   +        name: String,
+   +    }
+   +
+   +    pub fn create_order(amount: u8, name: String) -> Order {
+   +        if amount <= 0 {
+   +            unimplemented!()
+   +        }
+   +        unimplemented!()
+        }
+
+        pub fn authorize(auth_token: String) -> SessionToken {
+   @@ -21,6 +28,6 @@ pub use lib::*;
+    fn main() {
+        let session_token = authorize("My initial token".into());
+
+   -    let first_order = Order { amount: 10, name: "Bananas".into() };
+   +    let first_order = create_order(10, "Bananas".into());
+        send_order(&session_token, &first_order);
+    }
+   #+END_SRC
+
+   Criamos um relacionamento forte entra a saida de ~create_order~ com a entrada de
+   ~send_order~, assim como haviamos feito anteriormente.
+
+   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_07.rs][O código completo para compilar está aqui.]]
+
 ** Indicando que um pedido pode ser inválido
 
-   Uma pergunta ficou com o código anterior: o que acontece se a validação falhar?
+   Uma pergunta surgiu com o código anterior: O que acontece se a validação falhar?
 
-   Como eu não posso retornar nulos (Rust não tem nulo) e nem mandar exceções (Rust não tem exceções), tenho duas opções:
+   Como eu não posso retornar nulos (Rust não tem nulo) e nem lançar exceções
+   (Rust não tem exceções), tenho duas opções:
 
    1. Abortar o programa inteiro (eg: panic!)
    2. Retornar uma estrutura de dados que indica a possibilidade de falha da nossa operação
 
-   A opção 1 é não é nada ideal. Eu não gostaria que meu programa falhase completamente apenas por ter um pedido inválido.
-   Além do mais, nossas regras de negócio possuem instruções sobre o que fazer em caso de erro. Logo, eu preciso lidar com pedidos inválidos.
+   A opção 1 é não é ideal.
+   Eu não gostaria que meu programa falhase completamente apenas por ter um pedido inválido.
+   Além do mais, nossas regras de negócio possuem instruções sobre o que fazer em caso de erro.
+
+   Precisamos de estratégias para lidar com pedidos inválidos.
 
    Vamos aproveitar uma estrutura chamada [[https://doc.rust-lang.org/std/result/index.html][/Result/]] que está disponível na =stdlib= da linguagem.
-   Nós poderiamos reescrever essa estrutura nós mesmos, mas já existem várias funcionalidades que ganhamos ao utilizar uma estrutura standard.
+   Nós poderiamos reescrever essa estrutura nós mesmos, mas já existem várias
+   funcionalidades que ganhamos ao utilizar a estrutura da =stdlib=.
 
-   O conceito de /Result/ é uma estrutura que tem duas variações de tipos. Caso a operação tenha dado certo, temos um dos tipos.
+   O conceito de ~Result<T, U>~ é uma estrutura que tem duas variações de tipos.
+   Temos o ~Result::Ok(T)~, que envolve o valor em caso de sucesso, e o
+   ~Result::Err(U)~ com o valor em caso de erro.
 
    Um valor com tipo =Result<Order, String>= significaria que caso a operação tenha
-   dado certo (Result::Ok), você poderá extrair um valor do tipo /Order/ e caso
-   tenha dado errado (Result::Err), você tera um valor do tipo /String/.
+   dado certo, ~Result::Ok(Order)~, você poderá extrair um valor do tipo =Order= e caso
+   tenha dado errado, ~Result::Err(String)~, você tera um valor do tipo =String=.
+
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_08.rs :exports none
+     mod lib {
+         pub struct SessionToken(String);
+
+         pub struct Order {
+             amount: u8,
+             name: String,
+         }
+
+         pub fn create_order(amount: u8, name: String) -> Result<Order, String> {
+             if amount <= 0 {
+                 unimplemented!()
+             }
+             unimplemented!()
+         }
+
+         pub fn authorize(auth_token: String) -> SessionToken {
+             unimplemented!()
+         }
+
+         pub fn send_order(session_token: &SessionToken,
+                           order: &Order) {
+             unimplemented!()
+         }
+     }
+
+     pub use lib::*;
+
+     fn main() {
+         let session_token = authorize("My initial token".into());
+
+         let first_order = create_order(10, "Bananas".into());
+
+         if let Ok(order) = first_order {
+             send_order(&session_token, &order);
+         }
+     }
+   #+END_SRC
+
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index -w order_07.rs order_08.rs | dos2unix
+   #+END_SRC
+
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_07.rs b/order_08.rs
+   index a13f381..8521912 100644
+   --- a/order_07.rs
+   +++ b/order_08.rs
+   @@ -6,7 +6,7 @@ mod lib {
+            name: String,
+        }
+
+   -    pub fn create_order(amount: u8, name: String) -> Order {
+   +    pub fn create_order(amount: u8, name: String) -> Result<Order, String> {
+            if amount <= 0 {
+                unimplemented!()
+            }
+   @@ -29,5 +29,8 @@ fn main() {
+        let session_token = authorize("My initial token".into());
+
+        let first_order = create_order(10, "Bananas".into());
+   -    send_order(&session_token, &first_order);
+   +
+   +    if let Ok(order) = first_order {
+   +        send_order(&session_token, &order);
+   +    }
+    }
+   #+END_SRC
+
+   Com a assinatura atualizada, sou obrigado a utilizar alguma estratégia para
+   verificar se o pedido foi criado corretamente.
+   Vou utilizar /pattern matching/, e apenas enviar o pedido caso eu tenha um resultado /Ok/ no =main=.
+
+   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_08.rs][O código completo para compilar está aqui.]]
 
    Vou aproveitar e criar uma estrutura bem específica para que possamos comunicar qual tipo de erro aconteceu ao criar nosso pedido.
-   A estrututura chamada /InvalidOrder/ terá a uma mensagem de erro, e encapsula bem o domínio do possível erro na nossa função.
+   Assim, a assinatura do nosso metodo fica mais explicita sobre os possíveis tipos de erro, ao invés de ser uma /String/ qualquer.
 
-   Com a assinatura atualizada, sou obrigado a utilizar alguma estratégia para verificar se a estrutura foi criada.
-   Vou utilizar =pattern matching=, e apenas enviar o pedido caso eu tenha um resultado =Ok= no /main/.
+   A estrututura chamada ~InvalidOrder~ terá a uma mensagem de erro, e encapsula bem o domínio do possível erro na nossa função.
 
-   #+BEGIN_SRC rust
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_09.rs :exports none
  mod lib {
      pub struct SessionToken(String);
 
@@ -620,98 +799,272 @@ error: aborting due to previous error
      }
  }
    #+END_SRC
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index -w order_08.rs order_09.rs | dos2unix
+   #+END_SRC
 
-** Trazendo o mesmo conceito de possível falha para iniciar uma sessão
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_08.rs b/order_09.rs
+   index 8521912..8d9b087 100644
+   --- a/order_08.rs
+   +++ b/order_09.rs
+   @@ -1,12 +1,14 @@
+    mod lib {
+        pub struct SessionToken(String);
 
-   Assim como haviamos aprendido com o passo anterior, temos espaços para introduzir o conceito de possíveis falhas à funções anteriores.
+   +    pub struct InvalidOrder(String);
+   +
+        pub struct Order {
+            amount: u8,
+            name: String,
+        }
 
-   Pedir um token de sessão envolve fazer uma chamada a um serviço,
-   então podemos ter erros e falhas que deveriam ser comunicados ao desenvolvedor para
-   que o mesmo possa tomar um decisão sobre o que fazer.
+   -    pub fn create_order(amount: u8, name: String) -> Result<Order, String> {
+   +    pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+            if amount <= 0 {
+                unimplemented!()
+            }
+   #+END_SRC
 
-   Diferente de criar um pedido, as razões de erro podem ser inúmeras: podemos
-   ter um erro ao fazer o parsing do /JSON/, ou a nossa conexão cair, por
-   exemplo.
+   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_09.rs][O código completo para compilar está aqui.]]
 
-   Vamos aproveitar e criar um =enum= para cada um dos possíveis erros que
-   gostariamos de comunicar através da nossa assinatura.
+** Trazendo o mesmo conceito de possível falha ao iniciar uma sessão
 
-   Essa mudança na assinatura também requer uma mudança no /main/.
-   Como eu só posso continuar e fazer o pedido caso a autorização estaja /Ok/, vou
-   utilizar a mesma estratégia de /pattern matching/ que utilizamos no resultado ao
-   criar um pedido.
+   Aprendemos no passo anterior que é possível expressar possíveis falhas como
+   parte da assinatura das funções.
 
-   #+BEGIN_SRC rust
- mod lib {
-     pub struct SessionToken(String);
+   Pedir um token de sessão envolve fazer uma chamada a um serviço, então
+   podemos ter erros e falhas que deveriam ser comunicados ao desenvolvedor para
+   que tomem uma decisão sobre o que fazer.
 
-     pub struct InvalidOrder(String);
+   As razões de erro podem ser inúmeras nesse caso.
+   Por exemplo, podemos ter um erro ao fazer o parsing do /JSON/ ou a nossa conexão
+   cair.
 
-     pub enum TokenResponseError {
-         ParsingError(String),
-         IoError(String),
-     }
+   Essa enumeração dos erros que vamos nos preocupar pode ser descrita por um
+   [[https://doc.rust-lang.org/book/enums.html][/enum/]].
 
-     pub struct Order {
-         amount: u8,
-         name: String,
-     }
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_10.rs :exports none
+     mod lib {
+         pub struct SessionToken(String);
 
-     pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
-         if amount <= 0 {
+         pub struct InvalidOrder(String);
+
+         pub enum ApiError {
+             ParsingError(String),
+             IoError(String),
+         }
+
+         pub struct Order {
+             amount: u8,
+             name: String,
+         }
+
+         pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+             if amount <= 0 {
+                 unimplemented!()
+             }
              unimplemented!()
          }
-         unimplemented!()
+
+         pub fn authorize(auth_token: String) -> SessionToken {
+             unimplemented!()
+         }
+
+         pub fn send_order(session_token: &SessionToken,
+                           order: &Order) {
+             unimplemented!()
+         }
      }
 
-     pub fn authorize(auth_token: String) -> Result<SessionToken, TokenResponseError> {
-         unimplemented!()
-     }
+     pub use lib::*;
 
-     pub fn send_order(session_token: &SessionToken,
-                       order: &Order) {
-         unimplemented!()
-     }
- }
+     fn main() {
+         let session_token = authorize("My initial token".into());
 
- pub use lib::*;
-
- fn main() {
-     if let Ok(session_token) = authorize("My initial token".into()) {
          let first_order = create_order(10, "Bananas".into());
 
          if let Ok(order) = first_order {
              send_order(&session_token, &order);
          }
      }
- }
    #+END_SRC
+
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index -w order_09.rs order_10.rs | dos2unix
+   #+END_SRC
+
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_09.rs b/order_10.rs
+   index 8d9b087..b6290cb 100644
+   --- a/order_09.rs
+   +++ b/order_10.rs
+   @@ -3,6 +3,11 @@ mod lib {
+
+        pub struct InvalidOrder(String);
+
+   +    pub enum ApiError {
+   +        ParsingError(String),
+   +        IoError(String),
+   +    }
+   +
+        pub struct Order {
+            amount: u8,
+            name: String,
+   #+END_SRC
+
+   #+BEGIN_SRC diff
+   diff --git a/order_09.rs b/order_10.rs
+   index 8d9b087..d87db05 100644
+   --- a/order_09.rs
+   +++ b/order_10.rs
+   @@ -3,6 +3,11 @@ mod lib {
+
+        pub struct InvalidOrder(String);
+
+   +    pub enum ApiError {
+   +        ParsingError(String),
+   +        IoError(String),
+   +    }
+   +
+        pub struct Order {
+            amount: u8,
+            name: String,
+   #+END_SRC
+
+   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_10.rs][O código completo para compilar está aqui.]]
+
+   Com a nossa lista de possíveis erros, agora podemos fazer alterar a
+   assinatura do método para descrever que pedir um token pode falhar.
+
+   Essa mudança na assinatura também requer uma mudança no ~main~.
+
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_11.rs :exports none
+     mod lib {
+         pub struct SessionToken(String);
+
+         pub struct InvalidOrder(String);
+
+         pub enum ApiError {
+             ParsingError(String),
+             IoError(String),
+         }
+
+         pub struct Order {
+             amount: u8,
+             name: String,
+         }
+
+         pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+             if amount <= 0 {
+                 unimplemented!()
+             }
+             unimplemented!()
+         }
+
+         pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
+             unimplemented!()
+         }
+
+         pub fn send_order(session_token: &SessionToken,
+                           order: &Order) {
+             unimplemented!()
+         }
+     }
+
+     pub use lib::*;
+
+     fn main() {
+         if let Ok(session_token) = authorize("My initial token".into()) {
+
+             let first_order = create_order(10, "Bananas".into());
+
+             if let Ok(order) = first_order {
+                 send_order(&session_token, &order);
+             }
+         }
+     }
+   #+END_SRC
+
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index -w order_10.rs order_11.rs | dos2unix
+   #+END_SRC
+
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_10.rs b/order_11.rs
+   index d87db05..a33d1fc 100644
+   --- a/order_10.rs
+   +++ b/order_11.rs
+   @@ -20,7 +20,7 @@ mod lib {
+            unimplemented!()
+        }
+
+   -    pub fn authorize(auth_token: String) -> SessionToken {
+   +    pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
+            unimplemented!()
+        }
+
+   @@ -33,7 +33,7 @@ mod lib {
+    pub use lib::*;
+
+    fn main() {
+   -    let session_token = authorize("My initial token".into());
+   +    if let Ok(session_token) = authorize("My initial token".into()) {
+
+            let first_order = create_order(10, "Bananas".into());
+
+   @@ -41,3 +41,4 @@ fn main() {
+                send_order(&session_token, &order);
+            }
+        }
+   +}
+   #+END_SRC
+
+   Como eu só posso continuar com o processo e fazer o pedido caso a autorização
+   estaja ~Ok~, utilizamos a mesma estratégia de /pattern matching/ que
+   utilizamos ao criar o pedido.
 
 ** Invalidando uma ordem depois que ela é enviada
 
-   Revisando a lista de problemas que temos para resolver, temos bem claro que depois que um pedido é feito e temos um erro, deveríamos iniciar o fluxo novamente.
-   Isso pode ser interpretado da seguinte maneira: assim que eu enviar o pedido, independente do resultado, eu não deveria enviar o mesmo pedido.
+   Revisando a lista de problemas que temos para resolver:
 
-   Se imaginarmos que nosso código será usado em um ambiente com multi-thread, deveriamos trazer essa regra para a nossa assinatura.
-   Se uma thread enviar um pedido, outra thread não poderá enviar o mesmo pedido - inclusive a mesma thread.
+   - +Nossos pedidos acontecem por uma API em um servidor+
+   - +Um pedido não pode ter quantidades negativas+
+   - Como podemos ficar fora de estoque, em caso de erro devemos voltar ao produto com uma mensagem
+     - É preciso inciar o processo inteiro novamente e nenhuma outra thread poderia usar nosso pedido
+   - +Toda transação precisa receber um token de sessão+
+   - +Toda sessão é iniciada por um token de autorização+
 
-   Podemos trocar a assinatura do argumento /order/ de =&Order= para =Order= para transmitir nossa intenção.
+   Temos bem claro que depois que um pedido é feito e temos um erro, deveríamos iniciar o fluxo novamente.
+   Assim, não tentamos fazer o mesmo pedido com um número maior que o estoque, por exemplo.
 
-   Nosso caso para o pedido é o inverso do que esperamos para o token ao enviar o pedido.
-   Nós gostariamos de poder compartilhar o mesmo token com vários envios, mas o mesma estrutura de pedido não deveria ser reutilizada.
-   Nesse caso eu gosto de pensar que o pedido foi "consumido" por /send_order/, invalidando que outras partes do código, como uma thread ou um callback, utilize um valor já enviado.
+   Isso pode ser interpretado da seguinte maneira: assim que eu enviar o pedido,
+   independente do resultado, eu não deveria enviar o mesmo Pedido.
 
-   Na maioria dos casos, os problemas irão preferir utilizar o valor "emprestado",
-   mas as nossas regras arbitrárias geraram esse cenário e gostaria de compartilhar
-   um exemplo com vocês.
+   Se imaginarmos que nosso código será usado em um ambiente com multi-thread,
+   poderiamos trazer essa regra para a nossa assinatura e fazer com que o
+   compilador reforce essa regra.
+   Se uma thread enviar um pedido, outra thread não poderá enviar o mesmo
+   pedido.
 
-   #+BEGIN_SRC rust
+   Como em Rust temos o conceito de /ownership/ que falamos antes, podemos expressar isso pela assinatura.
+   Alterando a assinatura em ~send_order~, podemos ao invés de pegar
+   /emprestado/ o valor do Pedido, pedir a posse do valor.
+   De =&Order= para =Order=, transmitimos que o não estará mais disponível no contexto depois de chamar ~send_order~.
+
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_12.rs :exports none
  mod lib {
      pub struct SessionToken(String);
 
      pub struct InvalidOrder(String);
 
-     pub enum TokenResponseError {
+     pub enum ApiError {
          ParsingError(String),
          IoError(String),
      }
@@ -728,7 +1081,7 @@ error: aborting due to previous error
          unimplemented!()
      }
 
-     pub fn authorize(auth_token: String) -> Result<SessionToken, TokenResponseError> {
+     pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
          unimplemented!()
      }
 
@@ -742,26 +1095,225 @@ error: aborting due to previous error
 
  fn main() {
      if let Ok(session_token) = authorize("My initial token".into()) {
+
          let first_order = create_order(10, "Bananas".into());
 
          if let Ok(order) = first_order {
              send_order(&session_token, order);
-             // Tente descomentar para falhar
-             // send_order(&session_token, order);
          }
      }
  }
    #+END_SRC
 
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index -w order_11.rs order_12.rs | dos2unix
+   #+END_SRC
+
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_11.rs b/order_12.rs
+   index a33d1fc..e39aaef 100644
+   --- a/order_11.rs
+   +++ b/order_12.rs
+   @@ -25,7 +25,7 @@ mod lib {
+        }
+
+        pub fn send_order(session_token: &SessionToken,
+   -                      order: &Order) {
+   +                      order: Order) {
+            unimplemented!()
+        }
+    }
+   @@ -38,7 +38,7 @@ fn main() {
+            let first_order = create_order(10, "Bananas".into());
+
+            if let Ok(order) = first_order {
+   -            send_order(&session_token, &order);
+   +            send_order(&session_token, order);
+            }
+        }
+    }
+   #+END_SRC
+
+   Nosso caso para o pedido é o inverso do que esperamos para o token ao fazer um pedido.
+   Nós gostariamos de poder compartilhar o mesmo token com vários envios, mas o
+   mesma estrutura de pedido não deveria ser reutilizada.
+
+   Nesse caso eu gosto de pensar que o pedido foi "consumido" por ~send_order~,
+   invalidando que outras partes do código utilize um valor já enviado.
+
+   Na maioria dos casos, os problemas irão preferir utilizar o valor "emprestado",
+   mas as nossas regras arbitrárias geraram esse cenário e gostaria de compartilhar
+   esse exemplo com vocês.
+
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_13.rs :exports none
+     mod lib {
+         pub struct SessionToken(String);
+
+         pub struct InvalidOrder(String);
+
+         pub enum ApiError {
+             ParsingError(String),
+             IoError(String),
+         }
+
+         pub struct Order {
+             amount: u8,
+             name: String,
+         }
+
+         pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+             if amount <= 0 {
+                 unimplemented!()
+             }
+             unimplemented!()
+         }
+
+         pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
+             unimplemented!()
+         }
+
+         pub fn send_order(session_token: &SessionToken,
+                           order: Order) {
+             unimplemented!()
+         }
+     }
+
+     pub use lib::*;
+
+     fn main() {
+         if let Ok(session_token) = authorize("My initial token".into()) {
+
+             let first_order = create_order(10, "Bananas".into());
+
+             if let Ok(order) = first_order {
+                 send_order(&session_token, order);
+                 // Descomente para falhar
+                 // send_order(&session_token, order);
+             }
+         }
+     }
+   #+END_SRC
+
+   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_13.rs][O código completo para compilar está aqui.]]
+   Descomente a linha no exemplo para ver o compilador reforçando que nosso pedido não pode mais ser utilizado.
+
+   #+BEGIN_SRC
+   $ rustc -A unused_variables -A dead_code ~/order.rs
+error[E0382]: use of moved value: `order`
+  --> ~/order_13.rs:43:28
+   |
+41 |             send_order(&session_token, order);
+   |                                        ----- value moved here
+42 |             // Tente descomentar para falhar
+43 | send_order(&session_token, order);
+   |                            ^^^^^ value used here after move
+   |
+   = note: move occurs because `order` has type `lib::Order`, which does not implement the `Copy` trait
+
+error: aborting due to previous error
+   #+END_SRC
+
 ** Trazendo uma resposta sobre o resultado do Pedido
 
-   Nosso domínio traz regras sobre o que fazer em caso de erro ao fazer um pedido.
-   Nossa interface deveria refletir as nossas intenções e demonstrar que existe uma resposta ao tentar fazer um pedido.
+   Nosso domínio traz regras sobre o que fazer em caso de erro ao fazer um
+   pedido.
+   Nossa assinatura deveria refletir as nossas intenções e demonstrar que existe
+   uma resposta e possível falha ao fazer um pedido.
 
-   Vamos criar uma estrutura para converter a resposta em /JSON/ para uma estrutura com os campos a serem preenchidos.
+   Vamos converter a resposta em /JSON/ para uma estrutura na linguagem.
+
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_14.rs :exports none
+     mod lib {
+         pub struct SessionToken(String);
+
+         pub struct InvalidOrder(String);
+
+         pub enum ApiError {
+             ParsingError(String),
+             IoError(String),
+         }
+
+         pub struct Order {
+             amount: u8,
+             name: String,
+         }
+
+         pub struct OrderResponse {
+             pub name: String,
+             pub status: String,
+             pub amount: u8,
+         }
+
+         pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+             if amount <= 0 {
+                 unimplemented!()
+             }
+             unimplemented!()
+         }
+
+         pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
+             unimplemented!()
+         }
+
+         pub fn send_order(session_token: &SessionToken,
+                           order: Order) -> OrderResponse {
+             unimplemented!()
+         }
+     }
+
+     pub use lib::*;
+
+     fn main() {
+         if let Ok(session_token) = authorize("My initial token".into()) {
+
+             let first_order = create_order(10, "Bananas".into());
+
+             if let Ok(order) = first_order {
+                 send_order(&session_token, order);
+             }
+         }
+     }
+   #+END_SRC
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index -w order_12.rs order_14.rs | dos2unix
+   #+END_SRC
+
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_12.rs b/order_14.rs
+   index dbae30a..4277e4c 100644
+   --- a/order_12.rs
+   +++ b/order_14.rs
+   @@ -13,6 +13,12 @@ mod lib {
+            name: String,
+        }
+
+   +    pub struct OrderResponse {
+   +        pub name: String,
+   +        pub status: String,
+   +        pub amount: u8,
+   +    }
+   +
+        pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+            if amount <= 0 {
+                unimplemented!()
+   @@ -25,7 +31,7 @@ mod lib {
+        }
+
+        pub fn send_order(session_token: &SessionToken,
+   -                      order: Order) {
+   +                      order: Order) -> OrderResponse {
+            unimplemented!()
+        }
+    }
+   #+END_SRC
+
    Também vamos demonstrar que nosso envio do pedido pode falhar, assim como acontece ao iniciar uma sessão.
 
-   #+BEGIN_SRC rust
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_15.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -804,6 +1356,7 @@ error: aborting due to previous error
 
      fn main() {
          if let Ok(session_token) = authorize("My initial token".into()) {
+
              let first_order = create_order(10, "Bananas".into());
 
              if let Ok(order) = first_order {
@@ -813,11 +1366,39 @@ error: aborting due to previous error
      }
    #+END_SRC
 
-   Uma grande vantagem de utilizar a estrutura /Result/ que vem na standard lib, é que o compilador entende a semântica de erros.
-   Nosso código esta fazendo uma chamada que pode falhar ao enviar o pedido, mas nunca está verificando se tudo aconteceu como esperado.
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index -w order_14.rs order_15.rs | dos2unix
+   #+END_SRC
 
-   O compilador sabe que /Result/ tem a semântica de uma operação que pode falhar, e nos avisa se não utilizamos o valor. Obrigado =rustc=.
-   Vamos ignorar alguns /warnings/ do compilador por não implementarmos nenhuma das funções e não usar nenhuma parte interna das estruturas.
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_14.rs b/order_15.rs
+   index 4277e4c..dee3edd 100644
+   --- a/order_14.rs
+   +++ b/order_15.rs
+   @@ -31,7 +31,7 @@ mod lib {
+        }
+
+        pub fn send_order(session_token: &SessionToken,
+   -                      order: Order) -> OrderResponse {
+   +                      order: Order) -> Result<OrderResponse, ApiError> {
+            unimplemented!()
+        }
+    }
+   #+END_SRC
+
+   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_15.rs][O código completo para compilar está aqui.]]
+
+   Uma grande vantagem de utilizar a estrutura /Result/ que vem junto da
+   =stdlib=, é que o compilador entende a semântica de erros.
+   Nosso código esta fazendo uma chamada que pode falhar ao enviar o pedido, mas
+   nunca está verificando se a resposta está Ok.
+
+   O compilador sabe que =Result= tem a semântica de uma operação que pode
+   falhar, e nos avisa se não utilizamos o valor.
+
+   Obrigado =rustc=!
 
    #+BEGIN_SRC
  $ rustc -A unused_variables -A dead_code ~/order.rs
@@ -830,168 +1411,272 @@ error: aborting due to previous error
 
 ** Definindo possíveis status de um pedido
 
-   Podemos aproveitar e definir mais ainda quais os possíveis estados um resultado de pedido pode estar.
+   Ainda aproveitando para demonstrar a expressividade do sistema de tipos,
+   podemos definir melhor quais os possíveis estados um resultado de pedido pode
+   estar.
 
-   Ao invés de aceitar qualquer tipo de /String/, podemos criar um =enum= com todos os possíveis estados que nos importamos.
-   Isso torna nosso modelo mais expressivo, e como consumidor, não precisamos nos
-   preocupar se devemos utilizar números, strings em minúsculo, strings em
-   maiúsculo, capitalizadas, etc.
+   Ao invés de aceitar qualquer tipo de =String=, podemos criar uma enumeração
+   com todos os possíveis estados que nos importamos.
 
-   Além de tornar o nosso modelo mais expressivo, permitindo que alguém que esteja
-   explorando a documentação saiba os possíveis estados, isto permite que o compilador
-   verifique exaustivamente pattern matchings em cima do estado, delegando a
-   responsabilidade de transformar os valores a serem transmitidos e parseados para
-   a parte que faz a comunicação no programa.
+   Como desenvolvedores, não precisamos nos preocupar se devemos utilizar números,
+   strings em minúsculo, strings em maiúsculo, capitalizadas, etc.
 
-   Vamos introduzir a estrutura /OrderStatus/.
+   Agora também estamos permitindo que alguém que esteja explorando a
+   documentação saiba os possíveis estados, que o compilador verifique se
+   cobrimos todos os casos em um /pattern match/, delegamos a responsabilidade
+   de transformar os valores a serem transmitidos e parseados para a parte que
+   faz a comunicação no programa independente de como representamos no nosso
+   código.
 
-   #+BEGIN_SRC rust
- mod lib {
-     pub struct SessionToken(String);
+   Vamos introduzir a estrutura ~OrderStatus~ no nosso código.
 
-     pub struct InvalidOrder(String);
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_16.rs :exports none
+     mod lib {
+         pub struct SessionToken(String);
 
-     pub enum ApiError {
-         ParsingError(String),
-         IoError(String),
-     }
+         pub struct InvalidOrder(String);
 
-     pub struct Order {
-         amount: u8,
-         name: String,
-     }
+         pub enum ApiError {
+             ParsingError(String),
+             IoError(String),
+         }
 
-     pub struct OrderResponse {
-         pub name: String,
-         pub status: OrderStatus,
-         pub amount: u8,
-     }
+         pub struct Order {
+             amount: u8,
+             name: String,
+         }
 
-     pub enum OrderStatus {
-         Waiting,
-         Shipping,
-         Shipped,
-         Delivered,
-     }
+         pub struct OrderResponse {
+             pub name: String,
+             pub status: OrderStatus,
+             pub amount: u8,
+         }
 
-     pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
-         if amount <= 0 {
+         pub enum OrderStatus {
+             Waiting,
+             Shipping,
+             Shipped,
+             Delivered,
+         }
+
+         pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+             if amount <= 0 {
+                 unimplemented!()
+             }
              unimplemented!()
          }
-         unimplemented!()
-     }
 
-     pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
-         unimplemented!()
-     }
+         pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
+             unimplemented!()
+         }
 
-     pub fn send_order(session_token: &SessionToken,
-                       order: Order) -> Result<OrderResponse, ApiError> {
-         unimplemented!()
-     }
- }
-
- pub use lib::*;
-
- fn main() {
-     if let Ok(session_token) = authorize("My initial token".into()) {
-         let first_order = create_order(10, "Bananas".into());
-
-         if let Ok(order) = first_order {
-             send_order(&session_token, order);
+         pub fn send_order(session_token: &SessionToken,
+                           order: Order) -> Result<OrderResponse, ApiError> {
+             unimplemented!()
          }
      }
- }
+
+     pub use lib::*;
+
+     fn main() {
+         if let Ok(session_token) = authorize("My initial token".into()) {
+
+             let first_order = create_order(10, "Bananas".into());
+
+             if let Ok(order) = first_order {
+                 send_order(&session_token, order);
+             }
+         }
+     }
    #+END_SRC
+
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index order_15.rs order_16.rs | dos2unix
+   #+END_SRC
+
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_15.rs b/order_16.rs
+   index dee3edd..b4b6269 100644
+   --- a/order_15.rs
+   +++ b/order_16.rs
+   @@ -15,10 +15,17 @@ mod lib {
+
+        pub struct OrderResponse {
+            pub name: String,
+   -        pub status: String,
+   +        pub status: OrderStatus,
+            pub amount: u8,
+        }
+
+   +    pub enum OrderStatus {
+   +        Waiting,
+   +        Shipping,
+   +        Shipped,
+   +        Delivered,
+   +    }
+   +
+        pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+            if amount <= 0 {
+                unimplemented!()
+   #+END_SRC
+
+   [[file:~/repos/bltavares.github.io/_drafts][Link para o código pronto para ser compilado.]]
 
 ** Dando um nome mais bonito para nossas respostas da API
 
    Assim que começarmos a criar mais e mais funções que utilizam comunição com
    nossa API, veremos o tipo =Result<T, ApiError>=, várias e várias vezes.
+   Inclusive, já temos duas funções com esse retorno na assinatura.
 
-   Podemos criar um tipo =ApiResponse= para que todos saibam que essa é uma chamada
+   Vamos criar um tipo =ApiResponse= para que todos saibam que essa é uma chamada
    para a API, e que todas as respostas que tem esse tipo, terão os mesmo possíveis
    erros para se preocupar.
 
-   #+BEGIN_SRC rust
- mod lib {
-     pub struct SessionToken(String);
+   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_17.rs :exports none
+     mod lib {
+         pub struct SessionToken(String);
 
-     pub struct InvalidOrder(String);
+         pub struct InvalidOrder(String);
 
-     pub enum ApiError {
-         ParsingError(String),
-         IoError(String),
-     }
+         pub enum ApiError {
+             ParsingError(String),
+             IoError(String),
+         }
 
-     pub struct Order {
-         amount: u8,
-         name: String,
-     }
+         pub struct Order {
+             amount: u8,
+             name: String,
+         }
 
-     pub struct OrderResponse {
-         name: String,
-         status: OrderStatus,
-         amount: u8,
-     }
+         pub struct OrderResponse {
+             pub name: String,
+             pub status: OrderStatus,
+             pub amount: u8,
+         }
 
-     pub enum OrderStatus {
-         Waiting,
-         Shipping,
-         Shipped,
-         Delivered,
-     }
+         pub enum OrderStatus {
+             Waiting,
+             Shipping,
+             Shipped,
+             Delivered,
+         }
 
-     pub type ApiResponse<T> = Result<T, ApiError>;
+         pub type ApiResponse<T> = Result<T, ApiError>;
 
-     pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
-         if amount <= 0 {
+         pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+             if amount <= 0 {
+                 unimplemented!()
+             }
              unimplemented!()
          }
-         unimplemented!()
-     }
 
-     pub fn authorize(auth_token: String) -> ApiResponse<SessionToken> {
-         unimplemented!()
-     }
+         pub fn authorize(auth_token: String) -> ApiResponse<SessionToken> {
+             unimplemented!()
+         }
 
-     pub fn send_order(session_token: &SessionToken,
-                       order: Order) -> ApiResponse<OrderResponse> {
-         unimplemented!()
-     }
- }
-
- pub use lib::*;
-
- fn main() {
-     if let Ok(session_token) = authorize("My initial token".into()) {
-         let first_order = create_order(10, "Bananas".into());
-
-         if let Ok(order) = first_order {
-             send_order(&session_token, order);
+         pub fn send_order(session_token: &SessionToken,
+                           order: Order) -> ApiResponse<OrderResponse> {
+             unimplemented!()
          }
      }
- }
+
+     pub use lib::*;
+
+     fn main() {
+         if let Ok(session_token) = authorize("My initial token".into()) {
+
+             let first_order = create_order(10, "Bananas".into());
+
+             if let Ok(order) = first_order {
+                 send_order(&session_token, order);
+             }
+         }
+     }
    #+END_SRC
 
-** Conclusão
-   O resultado do nosso programa está bem mais definido do que no início, mas bem maior ao mesmo tempo.
-   Trocamos verbosidade e tamanho de código por um programa mais bem definido e expressando melhor nosso domínio.
+   #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
+     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     git --no-pager diff --no-index order_16.rs order_17.rs | dos2unix
+   #+END_SRC
 
-   Algumas categorias de erro, como passar um token inválido ao fazer o pedido, foram completamente removidos.
+   #+RESULTS:
+   #+BEGIN_SRC diff
+   diff --git a/order_16.rs b/order_17.rs
+   index b4b6269..c064e9c 100644
+   --- a/order_16.rs
+   +++ b/order_17.rs
+   @@ -26,6 +26,8 @@ mod lib {
+            Delivered,
+        }
+
+   +    pub type ApiResponse<T> = Result<T, ApiError>;
+   +
+        pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+            if amount <= 0 {
+                unimplemented!()
+   @@ -33,12 +35,12 @@ mod lib {
+            unimplemented!()
+        }
+
+   -    pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
+   +    pub fn authorize(auth_token: String) -> ApiResponse<SessionToken> {
+            unimplemented!()
+        }
+
+        pub fn send_order(session_token: &SessionToken,
+   -                      order: Order) -> Result<OrderResponse, ApiError> {
+   +                      order: Order) -> ApiResponse<OrderResponse> {
+            unimplemented!()
+        }
+    }
+   #+END_SRC
+
+   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_17.rs][Aqui temos o codigo com o resultado final, pronto para ser compilado]]
+
+** Conclusão
+   Depois de todos esses passos, o dominio no nosso programa está bem mais
+   definido do que no início, mas com mais linhas de código também.
+
+   Trocamos verbosidade e tamanho de código por um programa expressando melhor
+   nosso domínio.
+
+   Começamos com um programa bem simples que resolvia nosso problema e fomos
+   evoluindo aos poucos para trazer algumas das suposições e expectativas que
+   mantinhamos na nossa cabeça como algo verificável pelo compilador.
+
+   Poucas das vezes tivemos que alterar o código no =main=.
+   Quando isso foi necessário alterar código no =main=, era para tratar com
+   alguma estratégia que antes não estava definida e que o padrão seria abortar
+   o programa.
+
+   Algumas categorias de erro em runtime foram removidos, como /null pointer
+   exception/ ou /undefined is not a function/.
+
+   Foi possível criar um relacionamento mais claro entre as saídas e entradas
+   das funções, tornando mais fácil navegar e definir a ordem das chamadas de
+   métodos.
 
    Mesmo sem escrever a implementação dos nosso metódos, podemos extrair algumas
-   informações sobre nosso dominio. Saber extrair e definir essas informações e
+   informações sobre nosso dominio.
+   Saber extrair e definir essas informações e
    intenções também é uma prática a ser melhor explorada pelos desenvolvedores.
 
-   Esse resultado final não está tão idiomático e pode melhorar. Mas já temos o
-   suficiente para explorar a expressividade de um sistema de tipos estáticos
-   como o de Rust.
+   É preciso conhecer a semantica e regras do sistema para poder extrair e
+   descrever melhor a intenção do código. Essa é uma habilidade que pode ser
+   desenvolvida, assim como a habilidade de interpretação de texto.
+
+   Esse resultado final não está tão idiomático e pode melhorar.
+   Mas já temos o suficiente para explorar a expressividade de um sistema de tipos
+   estáticos como o de Rust para o dominio através de código.
 
    Como não cheguei a implementar o corpo das funções e quis apenas focar na
    informação que a assinatura contem, não cheguei a explorar como TDD pode nos
-   ajudar a evoluir nosso design. Isso pode ser material para outro post.
+   ajudar a evoluir nosso design em conjunto dos tipos.
+   Isso pode ser material para outro post.
 
-   Espero que você tenha gostado da ideia e que consiga explorar esta ideia nas
-   suas implementações futuras. Me enviem um post-resposta para discutirmos mais
-   sobre este tema! (Mesmo em outro idioma :)
+   Espero que você tenha gostado do texto e que consiga explorar esta ideia nas
+   suas implementações futuras.
+   Me enviem um post-resposta para discutirmos mais sobre este tema!
+   (Mesmo em outro idioma :)
