@@ -60,13 +60,13 @@ A ideia de posse do valor é um conceito que Rust traz como novidade em compara�
 
 Tratar essas peculiaridades como benefícios, como sempre, são escolhas de benefício x valor. Vamos ver o que é possível expressar utilizando essas características, para podermos considerar o valor.
 
-Para isso, vamos escrever código e observar o que é possível entender do domínio, mesmo sem ter o corpo das funções.
+Para isso, vamos escrever código e observar o que é conseguimos entender do domínio, mesmo sem ter o corpo das funções.
 
 ## Como compilar os exemplos de código
 
 Trarei exemplos de código em Rust, com links para o exemplo completo de cada transformação.
 
-É preciso ter instalado no seu computador o compilador do Rust e recomendo seguir as instruções do [rustup.rs](https://www.rustup.rs/) para ter instalado o `rustc`.
+É preciso ter instalado no seu computador o compilador do Rust para compilar os exemplos e recomendo seguir as instruções do [rustup.rs](https://www.rustup.rs/) para ter instalado o `rustc`.
 
 Pela linha de comando você então poderá chamar o compilador de uma das seguinte maneiras:
 
@@ -80,7 +80,7 @@ rustc -A unused_variables -A dead_code exemplo.rs
 
 # Domínio do problema
 
-Vou escolher problemas em um domínio com algumas características arbitrárias (descritas abaixo) para poder exercitar melhor os conceitos que o sistema de tipos de Rust possui.
+Vou escolher problemas em um domínio com algumas características arbitrárias (descritas abaixo) para exercitar melhor os conceitos que o sistema de tipos de Rust possui.
 
 Estamos escrevendo um sistema de pedidos.
 
@@ -125,7 +125,7 @@ Essa é uma implementação inicial e pode ser amadurecida.
 -   Temos nossa função principal do problema, `send_order`, com os conceitos de: quantidade, produto e token de sessão.
 -   Existe uma função que pode gerar um token de sessão.
 
-Estamos com essas duas funções, mas de nenhuma forma estou definindo no programa que essas duas funções mantém uma relação bem próxima.
+Estamos com essas duas funções, mas de nenhuma forma estou definindo no programa que essas funções mantém uma relação bem próxima.
 
 Sem essa definição de relação, uma outra pessoa:
 
@@ -164,11 +164,11 @@ index cfce64f..9b95b16 100644
 
 Sem se ater muito aos detalhes, esse novo snippet introduz uma estrutura que encapsula uma *String*. A nossa estrutura `SessionToken` faz a conexão entre o retorno de `authorize` com a entrada de `send_order`.
 
-Ao analisarmos as assinaturas, a conexão entre as duas funções agora vai além dos nomes e começa a entrar no nível de estruturas de dados que o compilador pode verificar.
+Ao analisarmos as assinaturas, a conexão entre as duas funções agora vai além dos nomes e entra no nível de estruturas de dados que o compilador pode verificar.
 
 Nosso código de uso no `main` se manteve o mesmo.
 
-Agora, programas que tentarem passar uma string arbitrária para a função `send_order` não poderão mais ser compilados. Fica mais intuitivo (e com a ajuda de um auto-complete) associar as duas funções. Menos um erro de runtime.
+Fica mais intuitivo (e com a ajuda de um auto-complete) associar as duas funções. Menos um erro de runtime.
 
 Ainda podemos chamar a nossa função com uma *String* arbitrária, caso seja necessário, como em um teste.
 
@@ -210,7 +210,7 @@ Toda essa mensagem de erro está relacionada ao conceito de [posse do valor](htt
 
 Da forma que a assinatura da nossa função está escrita, temos que enviar todo o valor, junto com o registro *posse* do `SessionToken` para fazer um pedido.
 
-O valor do token pertence à variável em `main`. Ao chamarmos a função `send_order` pela primeira vez, esse valor é movido para a primeira chamada de `send_order` e não está mais disponível para mais um pedido.
+A posse do valor do token pertence à variável com o escopo em `main`. Ao chamarmos a função `send_order` pela primeira vez, esse valor é movido para o escopo na primeira chamada de `send_order` e não está mais disponível para fazermos mais um pedido.
 
 Como a função `session_token` só precisa do token [*emprestado*](https://doc.rust-lang.org/book/references-and-borrowing.html) (em inglês, **borrowing**), precisamos mudar a assinatura da nossa função a fim de demonstrar a intenção que queremos o valor temporariamente e que não vamos reescrever ou alterar o token, só vamos pegar *emprestado* para poder fazer o pedido.
 
@@ -246,7 +246,7 @@ Temos agora definido no nível da assinatura que não vamos alterar o valor da v
 
 Ainda lidando com o conceito de `SessionToken`, senti a necessidade de tornar o relacionamento entre `authorize` e `send_order` mais forte.
 
-Com o código anterior, seria bem possível criar um token inválido:
+Com o código anterior, ainda seria possível criar um token inválido:
 
 ```rust
 fn main() {
@@ -256,9 +256,9 @@ fn main() {
 }
 ```
 
-A estrutura `SessionToken` tem um token inválido, em um formato que não seria aceito pelas APIs. Se utilizarmos uma restrição na visibilidade do que é exportado, podemos definir que `SessionTokens` sejam criados só se forem válidos.
+A estrutura `SessionToken` no exemplo tem um token inválido, em um formato que não seria aceito pelas APIs. Se utilizarmos uma restrição na visibilidade do que é exportado, podemos definir que `SessionTokens` sejam criados só se forem válidos.
 
-Como temos todo o código no mesmo arquivo, todas os construtores e funções estarão disponíveis para a função `main`.
+Como temos todo o código no mesmo arquivo, todas os construtores e funções estarão disponíveis para a função `main` nesse momento.
 
 Em Rust, além de podermos utilizar um outro arquivo para criar módulos, é possível criar um módulo no mesmo arquivo. Vamos introduzir um módulo para controlarmos melhor quais construtores estarão visíveis.
 
@@ -311,7 +311,7 @@ Experimentem descomentar a linha comentada no [exemplo](http:/assets/expressando
 
 Uma regra do domínio que está escrita nas entrelinhas é que temos o conceito de um pedido válido. Deveríamos ter apenas pedidos com números positivos, já que não podemos entregar -10 maçãs.
 
-Como no passo anterior, podemos extrair o conceito de *Pedido* em uma estrutura, e prover apenas uma maneira de criar essa estrutura que requer validação dos dados.
+Como no passo anterior, podemos extrair o conceito de *Pedido* em uma estrutura, e prover apenas uma maneira de criar essa estrutura, que requer validação da quantidade.
 
 Vamos precisar de alguns passos intermediários para poder chegar lá.
 
@@ -358,11 +358,13 @@ index c31b445..47f56d9 100644
 
 # Criando apenas Pedidos válidos
 
-Agora com nossa estrutura sendo utilizada pelo `main` e pelo `send_order`, podemos agora permitir que pedidos tenham uma quantidade válida antes de fazer qualquer chamada.
+Agora com nossa estrutura sendo utilizada pelo `main` e pelo `send_order`, podemos permitir que pedidos tenham uma quantidade válida para criar um `Order`.
 
-Assim como fizemos com a estrutura do `SessionToken`, podemos transformar a estrutura interna privada, e apenas uma função dentro do módulo poderia acessar os campos.
+Da mesma maneira que fizemos com a estrutura do `SessionToken`, podemos transformar a estrutura interna privada, permitindo que apenas uma função dentro do módulo acessem os campos.
 
-Vamos criar uma função `send_order`, que valida e retorna nossa estrutura `Order`. Isso seria como um construtor, mas que inclui as regras de validação. Com as regras de visibilidade, esse será o único método que retorna a estrutura `Order`.
+Vamos criar uma função `send_order`, que valida, cria e retorna nossa estrutura `Order`. Isso seria como um construtor, mas que inclui as regras de validação.
+
+Com as regras de visibilidade, esse será o único método que retorna a estrutura `Order` no nosso módulo.
 
 ```diff
 diff --git a/order_06.rs b/order_07.rs
@@ -449,11 +451,11 @@ index a13f381..8521912 100644
  }
 ```
 
-Com a assinatura atualizada, sou obrigado a utilizar alguma estratégia para verificar se o pedido foi criado corretamente. Vou utilizar *pattern matching*, e apenas enviar o pedido caso eu tenha um resultado *Ok* no `main`.
+Com a assinatura atualizada, sou obrigado a considerar alguma estratégia para verificar se o pedido foi criado corretamente. A estratégia poderia ser falhar o programa em caso de erros chamando `.unwrap()`, mas vou utilizar *pattern matching*, e apenas enviar o pedido caso eu tenha um resultado *Ok* no `main`.
 
 [O código completo para compilar está aqui.](http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_08.rs)
 
-Vou aproveitar e criar uma estrutura bem específica para que possamos comunicar qual tipo de erro aconteceu ao criar nosso pedido. Assim, a assinatura do nosso método fica mais explícita sobre os possíveis tipos de erro, ao invés de ser uma *String* qualquer.
+Aproveitamos e criaremos uma estrutura bem específica para que possamos comunicar qual tipo de erro aconteceu ao criar nosso pedido. Assim, a assinatura do nosso método fica mais explícita sobre os possíveis tipos de erro, ao invés de ser uma *String* qualquer.
 
 A estrutura chamada `InvalidOrder` terá a uma mensagem de erro, e encapsula bem o domínio do possível erro na nossa função.
 
@@ -486,7 +488,7 @@ index 8521912..8d9b087 100644
 
 Aprendemos no passo anterior que é possível expressar possíveis falhas como parte da assinatura das funções.
 
-Pedir um token de sessão envolve fazer uma chamada a um serviço, então podemos ter erros e falhas que deveriam ser comunicados ao desenvolvedor para que tomem uma decisão sobre o que fazer.
+Pedir um token de sessão envolve fazer uma chamada a um serviço, então podemos ter falhas que deveriam ser comunicados ao desenvolvedor para que tomem uma decisão sobre o que fazer.
 
 As razões de erro podem ser inúmeras nesse caso. Por exemplo, podemos ter um erro ao fazer o parsing do *JSON* ou a nossa conexão cair.
 
@@ -513,7 +515,7 @@ index 8d9b087..b6290cb 100644
 
 [O código completo para compilar está aqui.](http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_10.rs)
 
-Com a nossa lista de possíveis erros, agora podemos fazer alterar a assinatura do método para descrever que pedir um token pode falhar.
+Com a nossa lista de possíveis erros, agora podemos alterar a assinatura do método para informar que pedir um token pode falhar.
 
 Essa mudança na assinatura também requer uma mudança no `main`.
 
@@ -547,7 +549,7 @@ index b6290cb..1958286 100644
 +}
 ```
 
-Como eu só posso continuar com o processo e fazer o pedido caso a autorização estaja `Ok`, utilizamos a mesma estratégia de *pattern matching* que utilizamos ao criar o pedido.
+Como só posso continuar com o processo e fazer o pedido caso a autorização estaja `Ok`, utilizamos a mesma estratégia de *pattern matching* que utilizamos ao criar o pedido.
 
 # Invalidando uma ordem depois que ela é enviada
 
@@ -570,9 +572,9 @@ Isso pode ser interpretado da seguinte maneira: assim que eu enviar o pedido, in
 
 Se imaginarmos que nosso código será usado em um ambiente com multi-thread, poderíamos trazer essa regra para a nossa assinatura e fazer com que o compilador reforce essa regra. Se uma thread enviar um pedido, outra thread não poderá enviar o mesmo pedido.
 
-Como em Rust temos o conceito de *ownership* que falamos antes, podemos expressar isso pela assinatura. Alterando a assinatura em `send_order`, podemos ao invés de pegar *emprestado* o valor do Pedido, pedir a posse do valor.
+Como em Rust temos o conceito de *ownership* que falamos antes, podemos expressar isso pela assinatura. Alterando a assinatura em `send_order`, ao invés de pegar *emprestado* o valor do *Pedido*, podemos pedir a posse do valor também.
 
-Com a mudança de `&Order` para `Order`, transmitimos que o não estará mais disponível no contexto depois de chamar `send_order`.
+Com a mudança de `&Order` para `Order`, transmitimos que o pedido não estará mais disponível depois de chamar `send_order`, dado que o valor da variável será movido para outro contexto.
 
 ```diff
 diff --git a/order_11.rs b/order_12.rs
@@ -599,9 +601,9 @@ index 1958286..dbae30a 100644
  }
 ```
 
-Nosso caso para o pedido é o inverso do que esperamos para o token ao fazer um pedido. Nós gostaríamos de poder compartilhar o mesmo token com vários envios, mas o mesma estrutura de pedido não deveria ser reutilizada.
+Nosso caso para o `Order` é o inverso do que esperamos para o token ao fazer um pedido. Nós gostaríamos de compartilhar o mesmo token com vários envios, mas o mesma estrutura de pedido não deveria ser reutilizada.
 
-Nesse caso eu gosto de pensar que o pedido foi "consumido" por `send_order`, invalidando que outras partes do código utilize um valor já enviado.
+Nesse caso, gosto de pensar que o pedido foi "consumido" por `send_order`, invalidando que outras partes do código utilize um valor já enviado.
 
 Na maioria dos casos, os problemas irão preferir utilizar o valor "emprestado", mas as nossas regras arbitrárias geraram esse cenário e gostaria de compartilhar esse exemplo com vocês.
 
@@ -625,9 +627,9 @@ error: aborting due to previous error
 
 # Trazendo uma resposta sobre o resultado do Pedido
 
-Nosso domínio traz regras sobre o que fazer em caso de erro ao fazer um pedido. Nossa assinatura deveria refletir as nossas intenções e demonstrar que existe uma resposta e possível falha ao fazer um pedido.
+Nosso domínio traz regras sobre o que fazer em caso de erro ao fazer um pedido. Nossa assinatura deveria refletir as nossas intenções e demonstrar que existe uma resposta e sobre a possível falha ao fazer um pedido.
 
-Vamos converter a resposta em *JSON* para uma estrutura na linguagem.
+Primeiro, vamos converter a resposta em *JSON* para uma estrutura na linguagem.
 
 ```diff
 diff --git a/order_12.rs b/order_14.rs
@@ -658,7 +660,7 @@ index dbae30a..4277e4c 100644
  }
 ```
 
-Também vamos demonstrar que nosso envio do pedido pode falhar, assim como acontece ao iniciar uma sessão.
+Também vamos indicar que nosso envio do pedido pode falhar, assim como acontece ao iniciar uma sessão.
 
 ```diff
 diff --git a/order_14.rs b/order_15.rs
@@ -688,20 +690,24 @@ Obrigado `rustc`!
 $ rustc -A unused_variables -A dead_code ~/order.rs
 warning: unused result which must be used, #[warn(unused_must_use)] on by default
   --> ~/order.rs:46:13
- |
+   |
 46 |         	send_order(&session_token, order);
- |         	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |         	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ```
 
 # Definindo possíveis status de um pedido
 
-Ainda aproveitando para demonstrar a expressividade do sistema de tipos, podemos definir melhor quais os possíveis estados um resultado de pedido pode estar.
+Ainda aproveitando para demonstrar a expressividade do sistema de tipos, podemos definir melhor quais os possíveis estados de um pedido.
 
-Ao invés de aceitar qualquer tipo de `String`, podemos criar uma enumeração com todos os possíveis estados que nos importamos.
+Ao invés de aceitar qualquer tipo de `String`, vamos criar uma enumeração com todos os possíveis estados que nos importamos.
 
-Como desenvolvedores, não precisamos nos preocupar se devemos utilizar números, strings em minúsculo, strings em maiúsculo, capitalizadas, etc.
+Uma vantagem de utilizar um enum é não precisamos nos preocupar se devemos utilizar números, strings em minúsculo, strings em maiúsculo, capitalizadas, etc. ao criar um pedido.
 
-Agora também estamos permitindo que alguém que esteja explorando a documentação saiba os possíveis estados, que o compilador verifique se cobrimos todos os casos em um *pattern match*, delegamos a responsabilidade de transformar os valores a serem transmitidos e parseados para a parte que faz a comunicação no programa independente de como representamos no nosso código.
+Agora também estamos permitindo que:
+
+-   alguém que esteja explorando a documentação saiba os possíveis estados;
+-   que o compilador verifique se cobrimos todos os casos em um *pattern match*;
+-   a responsabilidade de transformar os valores a serem transmitidos e parseados para a parte que seja delegada para a parte de comunicação do programa.
 
 Vamos introduzir a estrutura `OrderStatus` no nosso código.
 
@@ -780,17 +786,17 @@ Trocamos verbosidade e tamanho de código por um programa expressando melhor nos
 
 Começamos com um programa bem simples que resolveu nosso problema e evoluímos aos poucos para trazer algumas das suposições e expectativas que guardavamos em nossa cabeça como algo verificável pelo compilador.
 
-Poucas das vezes tivemos que alterar o código no `main`. Quando isso foi necessário alterar código no `main`, era para tratar com alguma estratégia que antes não estava definida e que o padrão seria abortar o programa.
+Poucas das vezes tivemos que alterar o código no `main`. As alterações necessárias aconteceram para definir estratégias que antes estava definidas implicitamente e que por padrão seria abortar o programa inteiro com um erro.
 
 Algumas categorias de erro em runtime foram removidos, como *null pointer exception* ou *undefined is not a function*.
 
-Foi possível criar um relacionamento mais claro entre as saídas e entradas das funções, tornando mais fácil navegar e definir a ordem das chamadas de métodos.
+Foi possível criar um relacionamento mais claro entre as saídas e entradas das funções, tornando mais fácil navegar pelo módulo e definir a ordem das chamadas de métodos.
 
 Mesmo sem escrever a implementação dos nosso metódos, podemos extrair algumas informações sobre nosso domínio. Saber extrair e definir essas informações e intenções também é uma prática a ser melhor explorada pelos desenvolvedores.
 
-É preciso conhecer a semântica e regras do sistema para poder extrair e descrever melhor a intenção do código. Essa é uma habilidade que pode ser desenvolvida, assim como a habilidade de interpretação de texto.
+É preciso conhecer a semântica e regras do sistema para poder extrair e descrever melhor a intenção do código. Essa é uma habilidade a ser desenvolvida, assim como a habilidade de interpretação de texto.
 
-Uma apresentação que trabalha a idea de limitar os estados impossíveis do domínio através do código é a apresentação ["Making Impossible States Impossible"](https://www.youtube.com/watch?v=IcgmSRJHu_8) pelo Richard Feldman, com exemplos em Elm. Recomendo assistir também, apesar de ser outra linguagem, no intuito de focar no conceito.
+Uma apresentação que trabalha a idea de limitar os estados impossíveis do domínio através do código é a ["Making Impossible States Impossible"](https://www.youtube.com/watch?v=IcgmSRJHu_8) pelo Richard Feldman, com exemplos em Elm. Recomendo assistir também, mesmo em outra linguagem, no intuito de focar no conceito.
 
 Esse resultado final não está tão idiomático e pode melhorar. Mas já temos o suficiente para explorar a expressividade de um sistema de tipos estáticos como o de Rust para o dominio através de código.
 

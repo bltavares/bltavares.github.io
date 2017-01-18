@@ -112,7 +112,7 @@ isso queira dizer um pouco mais verboso e enrijecido.
     benefício x valor. Vamos ver o que é possível expressar utilizando essas
     características, para podermos considerar o valor.
 
-    Para isso, vamos escrever código e observar o que é possível entender do
+    Para isso, vamos escrever código e observar o que é conseguimos entender do
     domínio, mesmo sem ter o corpo das funções.
 
 *** Como compilar os exemplos de código
@@ -120,8 +120,9 @@ isso queira dizer um pouco mais verboso e enrijecido.
     Trarei exemplos de código em Rust, com links para o exemplo completo de cada
     transformação.
 
-    É preciso ter instalado no seu computador o compilador do Rust e recomendo
-    seguir as instruções do [[https://www.rustup.rs/][rustup.rs]] para ter instalado o =rustc=.
+    É preciso ter instalado no seu computador o compilador do Rust para compilar
+    os exemplos e recomendo seguir as instruções do [[https://www.rustup.rs/][rustup.rs]] para ter instalado
+    o =rustc=.
 
     Pela linha de comando você então poderá chamar o compilador de uma das
     seguinte maneiras:
@@ -137,8 +138,8 @@ isso queira dizer um pouco mais verboso e enrijecido.
 ** Domínio do problema
 
    Vou escolher problemas em um domínio com algumas características arbitrárias
-   (descritas abaixo) para poder exercitar melhor os conceitos que o sistema de
-   tipos de Rust possui.
+   (descritas abaixo) para exercitar melhor os conceitos que o sistema de tipos
+   de Rust possui.
 
    Estamos escrevendo um sistema de pedidos.
 
@@ -184,7 +185,7 @@ isso queira dizer um pouco mais verboso e enrijecido.
    - Existe uma função que pode gerar um token de sessão.
 
    Estamos com essas duas funções, mas de nenhuma forma estou definindo no
-   programa que essas duas funções mantém uma relação bem próxima.
+   programa que essas funções mantém uma relação bem próxima.
 
    Sem essa definição de relação, uma outra pessoa:
 
@@ -255,13 +256,11 @@ isso queira dizer um pouco mais verboso e enrijecido.
    com a entrada de =send_order=.
 
    Ao analisarmos as assinaturas, a conexão entre as duas funções agora vai além
-   dos nomes e começa a entrar no nível de estruturas de dados que o compilador
-   pode verificar.
+   dos nomes e entra no nível de estruturas de dados que o compilador pode
+   verificar.
 
    Nosso código de uso no =main= se manteve o mesmo.
 
-   Agora, programas que tentarem passar uma string arbitrária para a função
-   =send_order= não poderão mais ser compilados.
    Fica mais intuitivo (e com a ajuda de um auto-complete) associar as duas
    funções. Menos um erro de runtime.
 
@@ -303,15 +302,16 @@ isso queira dizer um pouco mais verboso e enrijecido.
     error: aborting due to previous error
    #+END_SRC
 
-   Toda essa mensagem de erro está relacionada ao conceito de [[https://doc.rust-lang.org/book/ownership.html][posse do valor]] que Rust tem.
+   Toda essa mensagem de erro está relacionada ao conceito de [[https://doc.rust-lang.org/book/ownership.html][posse do valor]] que
+   Rust tem.
 
    Da forma que a assinatura da nossa função está escrita, temos que enviar todo
    o valor, junto com o registro /posse/ do =SessionToken= para fazer um pedido.
 
-   O valor do token pertence à variável em ~main~.
+   A posse do valor do token pertence à variável com o escopo em ~main~.
    Ao chamarmos a função ~send_order~ pela primeira vez, esse valor é movido para
-   a primeira chamada de =send_order= e não está mais disponível para mais um
-   pedido.
+   o escopo na primeira chamada de =send_order= e não está mais disponível para
+   fazermos mais um pedido.
 
    Como a função =session_token= só precisa do token [[https://doc.rust-lang.org/book/references-and-borrowing.html][/emprestado/]] (em inglês,
    *borrowing*), precisamos mudar a assinatura da nossa função a fim de
@@ -379,10 +379,10 @@ isso queira dizer um pouco mais verboso e enrijecido.
 
 ** Expondo apenas uma maneira de criar um Session Token válido
 
-   Ainda lidando com o conceito de =SessionToken=, senti a necessidade de tornar o
-   relacionamento entre ~authorize~ e ~send_order~ mais forte.
+   Ainda lidando com o conceito de =SessionToken=, senti a necessidade de tornar
+   o relacionamento entre ~authorize~ e ~send_order~ mais forte.
 
-   Com o código anterior, seria bem possível criar um token inválido:
+   Com o código anterior, ainda seria possível criar um token inválido:
 
    #+BEGIN_SRC rust
      fn main() {
@@ -392,13 +392,13 @@ isso queira dizer um pouco mais verboso e enrijecido.
      }
    #+END_SRC
 
-   A estrutura =SessionToken= tem um token inválido, em um formato que não seria
-   aceito pelas APIs.
-   Se utilizarmos uma restrição na visibilidade do que é exportado, podemos
-   definir que =SessionTokens= sejam criados só se forem válidos.
+   A estrutura =SessionToken= no exemplo tem um token inválido, em um formato
+   que não seria aceito pelas APIs. Se utilizarmos uma restrição na visibilidade
+   do que é exportado, podemos definir que =SessionTokens= sejam criados só se
+   forem válidos.
 
    Como temos todo o código no mesmo arquivo, todas os construtores e funções
-   estarão disponíveis para a função =main=.
+   estarão disponíveis para a função =main= nesse momento.
 
    Em Rust, além de podermos utilizar um outro arquivo para criar módulos, é
    possível criar um módulo no mesmo arquivo.
@@ -518,12 +518,14 @@ error: aborting due to previous error
    Deveríamos ter apenas pedidos com números positivos, já que não podemos
    entregar -10 maçãs.
 
-   Como no passo anterior, podemos extrair o conceito de /Pedido/ em uma estrutura,
-   e prover apenas uma maneira de criar essa estrutura que requer validação dos dados.
+   Como no passo anterior, podemos extrair o conceito de /Pedido/ em uma
+   estrutura, e prover apenas uma maneira de criar essa estrutura, que requer
+   validação da quantidade.
 
    Vamos precisar de alguns passos intermediários para poder chegar lá.
 
-   Primeiro, vamos criar uma estrutura que encapsula o conceito de pedido, chamada ~Order~.
+   Primeiro, vamos criar uma estrutura que encapsula o conceito de pedido,
+   chamada ~Order~.
 
    #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_06.rs :exports none
      mod lib {
@@ -566,35 +568,35 @@ error: aborting due to previous error
    --- a/order_04.rs
    +++ b/order_06.rs
    @@ -1,13 +1,17 @@
-  mod lib {
-      pub struct SessionToken(String);
+    mod lib {
+        pub struct SessionToken(String);
 
-   +	pub struct Order {
-   +    	pub amount: u8,
-   +    	pub name: String,
-   +	}
+   +    pub struct Order {
+   +        pub amount: u8,
+   +        pub name: String,
+   +    }
    +
-      pub fn authorize(auth_token: String) -> SessionToken {
-          unimplemented!()
-      }
+        pub fn authorize(auth_token: String) -> SessionToken {
+            unimplemented!()
+        }
 
-      pub fn send_order(session_token: &SessionToken,
-   -                  	amount: u8,
-   -                  	product: String) {
-   +                  	order: &Order) {
-          unimplemented!()
-      }
-  }
+        pub fn send_order(session_token: &SessionToken,
+   -                      amount: u8,
+   -                      product: String) {
+   +                      order: &Order) {
+            unimplemented!()
+        }
+    }
    @@ -16,6 +20,7 @@ pub use lib::*;
 
-  fn main() {
-      let session_token = authorize("My initial token".into());
-   -	send_order(&session_token, 10, "Bananas".into());
-   -	send_order(&session_token, 5, "Peras".into());
+    fn main() {
+        let session_token = authorize("My initial token".into());
+   -    send_order(&session_token, 10, "Bananas".into());
+   -    send_order(&session_token, 5, "Peras".into());
    +
-   +	let first_order = Order { amount: 10, name: "Bananas".into() };
-   +	send_order(&session_token, &first_order);
-  }
+   +    let first_order = Order { amount: 10, name: "Bananas".into() };
+   +    send_order(&session_token, &first_order);
+    }
    #+END_SRC
 
    [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_06.rs][O código completo para compilar está aqui.]]
@@ -602,18 +604,19 @@ error: aborting due to previous error
 ** Criando apenas Pedidos válidos
 
    Agora com nossa estrutura sendo utilizada pelo ~main~ e pelo ~send_order~,
-   podemos agora permitir que pedidos tenham uma quantidade válida antes de
-   fazer qualquer chamada.
-
-   Assim como fizemos com a estrutura do ~SessionToken~, podemos transformar a
-   estrutura interna privada, e apenas uma função dentro do módulo poderia
-   acessar os campos.
-
-   Vamos criar uma função ~send_order~, que valida e retorna nossa estrutura
+   podemos permitir que pedidos tenham uma quantidade válida para criar um
    ~Order~.
-   Isso seria como um construtor, mas que inclui as regras de validação.
-   Com as regras de visibilidade, esse será o único método que retorna a
+
+   Da mesma maneira que fizemos com a estrutura do ~SessionToken~, podemos
+   transformar a estrutura interna privada, permitindo que apenas uma função dentro
+   do módulo acessem os campos.
+
+   Vamos criar uma função ~send_order~, que valida, cria e retorna nossa
    estrutura ~Order~.
+   Isso seria como um construtor, mas que inclui as regras de validação.
+
+   Com as regras de visibilidade, esse será o único método que retorna a
+   estrutura ~Order~ no nosso módulo.
 
    #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_07.rs :exports none
      mod lib {
@@ -690,14 +693,15 @@ error: aborting due to previous error
       }
    #+END_SRC
 
-   Criamos um relacionamento forte entra a saida de ~create_order~ com a entrada de
-   ~send_order~, assim como fizemos anteriormente.
+   Criamos um relacionamento forte entra a saida de ~create_order~ com a entrada
+   de ~send_order~, assim como fizemos anteriormente.
 
    [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_07.rs][O código completo para compilar está aqui.]]
 
 ** Indicando que um pedido pode ser inválido
 
-   Uma pergunta surgiu com o código anterior: O que acontece se a validação falhar?
+   Uma pergunta surgiu com o código anterior: O que acontece se a validação
+   falhar?
 
    Como eu não posso retornar nulos (Rust não tem nulo) e nem lançar exceções
    (Rust não tem exceções), tenho duas opções:
@@ -706,12 +710,14 @@ error: aborting due to previous error
    2. Retornar uma estrutura de dados que indica a possibilidade de falha da nossa operação
 
    A opção 1 é não é ideal.
-   Eu não gostaria que meu programa falhasse completamente apenas por ter um pedido inválido.
-   Além do mais, nossas regras de negócio possuem instruções sobre o que fazer em caso de erro.
+   Eu não gostaria que meu programa falhasse completamente apenas por ter um
+   pedido inválido. Além do mais, nossas regras de negócio possuem instruções
+   sobre o que fazer em caso de erro.
 
    Precisamos de estratégias para lidar com pedidos inválidos.
 
-   Vamos aproveitar uma estrutura chamada [[https://doc.rust-lang.org/std/result/index.html][/Result/]] que está disponível na =stdlib= da linguagem.
+   Vamos aproveitar uma estrutura chamada [[https://doc.rust-lang.org/std/result/index.html][/Result/]] que está disponível na
+   =stdlib= da linguagem.
    Nós poderíamos reescrever essa estrutura nós mesmos, mas já existem várias
    funcionalidades que ganhamos ao utilizar a estrutura da =stdlib=.
 
@@ -794,16 +800,21 @@ error: aborting due to previous error
     }
    #+END_SRC
 
-   Com a assinatura atualizada, sou obrigado a utilizar alguma estratégia para
+   Com a assinatura atualizada, sou obrigado a considerar alguma estratégia para
    verificar se o pedido foi criado corretamente.
-   Vou utilizar /pattern matching/, e apenas enviar o pedido caso eu tenha um resultado /Ok/ no =main=.
+   A estratégia poderia ser falhar o programa em caso de erros chamando
+   =.unwrap()=, mas vou utilizar /pattern matching/, e apenas enviar o pedido
+   caso eu tenha um resultado /Ok/ no =main=.
 
    [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_08.rs][O código completo para compilar está aqui.]]
 
-   Vou aproveitar e criar uma estrutura bem específica para que possamos comunicar qual tipo de erro aconteceu ao criar nosso pedido.
-   Assim, a assinatura do nosso método fica mais explícita sobre os possíveis tipos de erro, ao invés de ser uma /String/ qualquer.
+   Aproveitamos e criaremos uma estrutura bem específica para que possamos
+   comunicar qual tipo de erro aconteceu ao criar nosso pedido.
+   Assim, a assinatura do nosso método fica mais explícita sobre os possíveis
+   tipos de erro, ao invés de ser uma /String/ qualquer.
 
-   A estrutura chamada ~InvalidOrder~ terá a uma mensagem de erro, e encapsula bem o domínio do possível erro na nossa função.
+   A estrutura chamada ~InvalidOrder~ terá a uma mensagem de erro, e encapsula
+   bem o domínio do possível erro na nossa função.
 
    #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_09.rs :exports none
      mod lib {
@@ -882,12 +893,12 @@ error: aborting due to previous error
    parte da assinatura das funções.
 
    Pedir um token de sessão envolve fazer uma chamada a um serviço, então
-   podemos ter erros e falhas que deveriam ser comunicados ao desenvolvedor para
-   que tomem uma decisão sobre o que fazer.
+   podemos ter falhas que deveriam ser comunicados ao desenvolvedor para que
+   tomem uma decisão sobre o que fazer.
 
    As razões de erro podem ser inúmeras nesse caso.
-   Por exemplo, podemos ter um erro ao fazer o parsing do /JSON/ ou a nossa conexão
-   cair.
+   Por exemplo, podemos ter um erro ao fazer o parsing do /JSON/ ou a nossa
+   conexão cair.
 
    Essa enumeração dos erros que vamos nos preocupar pode ser descrita por um
    [[https://doc.rust-lang.org/book/enums.html][/enum/]].
@@ -965,8 +976,8 @@ error: aborting due to previous error
 
    [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_10.rs][O código completo para compilar está aqui.]]
 
-   Com a nossa lista de possíveis erros, agora podemos fazer alterar a
-   assinatura do método para descrever que pedir um token pode falhar.
+   Com a nossa lista de possíveis erros, agora podemos alterar a assinatura do
+   método para informar que pedir um token pode falhar.
 
    Essa mudança na assinatura também requer uma mudança no ~main~.
 
@@ -1053,7 +1064,7 @@ error: aborting due to previous error
    +}
    #+END_SRC
 
-   Como eu só posso continuar com o processo e fazer o pedido caso a autorização
+   Como só posso continuar com o processo e fazer o pedido caso a autorização
    estaja ~Ok~, utilizamos a mesma estratégia de /pattern matching/ que
    utilizamos ao criar o pedido.
 
@@ -1070,8 +1081,10 @@ error: aborting due to previous error
    - +Toda sessão é iniciada por um token de autorização+
    -----
 
-   Temos bem claro que depois que um pedido é feito e temos um erro, deveríamos iniciar o fluxo novamente.
-   Assim, não tentamos fazer o mesmo pedido com um número maior que o estoque, por exemplo.
+   Temos bem claro que depois que um pedido é feito e temos um erro, deveríamos
+   iniciar o fluxo novamente.
+   Assim, não tentamos fazer o mesmo pedido com um número maior que o estoque,
+   por exemplo.
 
    Isso pode ser interpretado da seguinte maneira: assim que eu enviar o pedido,
    independente do resultado, eu não deveria enviar o mesmo Pedido.
@@ -1082,12 +1095,14 @@ error: aborting due to previous error
    Se uma thread enviar um pedido, outra thread não poderá enviar o mesmo
    pedido.
 
-   Como em Rust temos o conceito de /ownership/ que falamos antes, podemos expressar isso pela assinatura.
-   Alterando a assinatura em ~send_order~, podemos ao invés de pegar
-   /emprestado/ o valor do Pedido, pedir a posse do valor.
+   Como em Rust temos o conceito de /ownership/ que falamos antes, podemos
+   expressar isso pela assinatura.
+   Alterando a assinatura em ~send_order~, ao invés de pegar /emprestado/ o
+   valor do /Pedido/, podemos pedir a posse do valor também.
 
-   Com a mudança de =&Order= para =Order=, transmitimos que o não estará mais
-   disponível no contexto depois de chamar ~send_order~.
+   Com a mudança de =&Order= para =Order=, transmitimos que o pedido não estará
+   mais disponível depois de chamar ~send_order~, dado que o valor da variável
+   será movido para outro contexto.
 
    #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_12.rs :exports none
     mod lib {
@@ -1167,11 +1182,12 @@ error: aborting due to previous error
     }
    #+END_SRC
 
-   Nosso caso para o pedido é o inverso do que esperamos para o token ao fazer um pedido.
-   Nós gostaríamos de poder compartilhar o mesmo token com vários envios, mas o
-   mesma estrutura de pedido não deveria ser reutilizada.
+   Nosso caso para o ~Order~ é o inverso do que esperamos para o token ao fazer
+   um pedido.
+   Nós gostaríamos de compartilhar o mesmo token com vários envios, mas o mesma
+   estrutura de pedido não deveria ser reutilizada.
 
-   Nesse caso eu gosto de pensar que o pedido foi "consumido" por ~send_order~,
+   Nesse caso, gosto de pensar que o pedido foi "consumido" por ~send_order~,
    invalidando que outras partes do código utilize um valor já enviado.
 
    Na maioria dos casos, os problemas irão preferir utilizar o valor "emprestado",
@@ -1228,7 +1244,8 @@ error: aborting due to previous error
    #+END_SRC
 
    [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_13.rs][O código completo para compilar está aqui.]]
-   Descomente a linha no exemplo para ver o compilador reforçando que nosso pedido não pode mais ser utilizado.
+   Descomente a linha no exemplo para ver o compilador reforçando que nosso
+   pedido não pode mais ser utilizado.
 
    #+BEGIN_SRC
 $ rustc -A unused_variables -A dead_code ~/order.rs
@@ -1251,9 +1268,9 @@ error: aborting due to previous error
    Nosso domínio traz regras sobre o que fazer em caso de erro ao fazer um
    pedido.
    Nossa assinatura deveria refletir as nossas intenções e demonstrar que existe
-   uma resposta e possível falha ao fazer um pedido.
+   uma resposta e sobre a possível falha ao fazer um pedido.
 
-   Vamos converter a resposta em /JSON/ para uma estrutura na linguagem.
+   Primeiro, vamos converter a resposta em /JSON/ para uma estrutura na linguagem.
 
    #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_14.rs :exports none
      mod lib {
@@ -1342,7 +1359,8 @@ error: aborting due to previous error
   }
    #+END_SRC
 
-   Também vamos demonstrar que nosso envio do pedido pode falhar, assim como acontece ao iniciar uma sessão.
+   Também vamos indicar que nosso envio do pedido pode falhar, assim como
+   acontece ao iniciar uma sessão.
 
    #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_15.rs :exports none
      mod lib {
@@ -1435,29 +1453,29 @@ error: aborting due to previous error
  $ rustc -A unused_variables -A dead_code ~/order.rs
  warning: unused result which must be used, #[warn(unused_must_use)] on by default
    --> ~/order.rs:46:13
-  |
+    |
  46 |         	send_order(&session_token, order);
-  |         	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
    #+END_SRC
 
 ** Definindo possíveis status de um pedido
 
    Ainda aproveitando para demonstrar a expressividade do sistema de tipos,
-   podemos definir melhor quais os possíveis estados um resultado de pedido pode
-   estar.
+   podemos definir melhor quais os possíveis estados de um pedido.
 
-   Ao invés de aceitar qualquer tipo de =String=, podemos criar uma enumeração
-   com todos os possíveis estados que nos importamos.
+   Ao invés de aceitar qualquer tipo de =String=, vamos criar uma enumeração com
+   todos os possíveis estados que nos importamos.
 
-   Como desenvolvedores, não precisamos nos preocupar se devemos utilizar números,
-   strings em minúsculo, strings em maiúsculo, capitalizadas, etc.
+   Uma vantagem de utilizar um enum é não precisamos nos preocupar se devemos
+   utilizar números, strings em minúsculo, strings em maiúsculo, capitalizadas,
+   etc. ao criar um pedido.
 
-   Agora também estamos permitindo que alguém que esteja explorando a
-   documentação saiba os possíveis estados, que o compilador verifique se
-   cobrimos todos os casos em um /pattern match/, delegamos a responsabilidade
-   de transformar os valores a serem transmitidos e parseados para a parte que
-   faz a comunicação no programa independente de como representamos no nosso
-   código.
+   Agora também estamos permitindo que:
+
+   - alguém que esteja explorando a documentação saiba os possíveis estados;
+   - que o compilador verifique se cobrimos todos os casos em um /pattern match/;
+   - a responsabilidade de transformar os valores a serem transmitidos e parseados para a parte que
+     seja delegada para a parte de comunicação do programa.
 
    Vamos introduzir a estrutura ~OrderStatus~ no nosso código.
 
@@ -1561,9 +1579,9 @@ error: aborting due to previous error
    nossa API, veremos o tipo =Result<T, ApiError>=, várias e várias vezes.
    Inclusive, já temos duas funções com esse retorno na assinatura.
 
-   Vamos criar um tipo =ApiResponse= para que todos saibam que essa é uma chamada
-   para a API, e que todas as respostas que tem esse tipo, terão os mesmo possíveis
-   erros para se preocupar.
+   Vamos criar um tipo =ApiResponse= para que todos saibam que essa é uma
+   chamada para a API, e que todas as respostas que tem esse tipo, terão os
+   mesmo possíveis erros para se preocupar.
 
    #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_17.rs :exports none
      mod lib {
@@ -1673,20 +1691,21 @@ error: aborting due to previous error
    Trocamos verbosidade e tamanho de código por um programa expressando melhor
    nosso domínio.
 
-   Começamos com um programa bem simples que resolveu nosso problema e evoluímos aos poucos para trazer algumas das suposições e expectativas que
-   guardavamos em nossa cabeça como algo verificável pelo compilador.
+   Começamos com um programa bem simples que resolveu nosso problema e evoluímos
+   aos poucos para trazer algumas das suposições e expectativas que guardavamos
+   em nossa cabeça como algo verificável pelo compilador.
 
    Poucas das vezes tivemos que alterar o código no =main=.
-   Quando isso foi necessário alterar código no =main=, era para tratar com
-   alguma estratégia que antes não estava definida e que o padrão seria abortar
-   o programa.
+   As alterações necessárias aconteceram para definir estratégias que antes
+   estava definidas implicitamente e que por padrão seria abortar o programa
+   inteiro com um erro.
 
    Algumas categorias de erro em runtime foram removidos, como /null pointer
    exception/ ou /undefined is not a function/.
 
    Foi possível criar um relacionamento mais claro entre as saídas e entradas
-   das funções, tornando mais fácil navegar e definir a ordem das chamadas de
-   métodos.
+   das funções, tornando mais fácil navegar pelo módulo e definir a ordem das
+   chamadas de métodos.
 
    Mesmo sem escrever a implementação dos nosso metódos, podemos extrair algumas
    informações sobre nosso domínio.
@@ -1694,17 +1713,17 @@ error: aborting due to previous error
    ser melhor explorada pelos desenvolvedores.
 
    É preciso conhecer a semântica e regras do sistema para poder extrair e
-   descrever melhor a intenção do código. Essa é uma habilidade que pode ser
+   descrever melhor a intenção do código. Essa é uma habilidade a ser
    desenvolvida, assim como a habilidade de interpretação de texto.
 
    Uma apresentação que trabalha a idea de limitar os estados impossíveis do
-   domínio através do código é a apresentação [[https://www.youtube.com/watch?v=IcgmSRJHu_8]["Making Impossible States
-   Impossible"]] pelo Richard Feldman, com exemplos em Elm. Recomendo assistir
-   também, apesar de ser outra linguagem, no intuito de focar no conceito.
+   domínio através do código é a [[https://www.youtube.com/watch?v=IcgmSRJHu_8]["Making Impossible States Impossible"]] pelo
+   Richard Feldman, com exemplos em Elm. Recomendo assistir também, mesmo em
+   outra linguagem, no intuito de focar no conceito.
 
    Esse resultado final não está tão idiomático e pode melhorar.
-   Mas já temos o suficiente para explorar a expressividade de um sistema de tipos
-   estáticos como o de Rust para o dominio através de código.
+   Mas já temos o suficiente para explorar a expressividade de um sistema de
+   tipos estáticos como o de Rust para o dominio através de código.
 
    Como não cheguei a implementar o corpo das funções e quis apenas focar na
    informação que a assinatura contém, não cheguei a explorar como TDD pode nos
