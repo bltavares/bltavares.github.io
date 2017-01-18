@@ -40,15 +40,17 @@ public static class File {
 }
 ```
 
-Em Rust, não temos `null`. As funções que poderiam retornar `null` em outras linguagens precisam ter isso declarado na sua assinatura em Rust, alertando sobre o possível problema.
+Em Rust, não temos `null`. Funções que retornariam `null` em outras linguagens precisam retornar em Rust uma estrutura, indicando que o valor é opcional.
 
 ```rust
 mod file {
-    pub fn open(path: String) -> Result<File> {
+    pub fn open(path: String) -> Option<File> {
         // ....
     }
 }
 ```
+
+Assim, é preciso verificar se o valor está presente ou não, antes de continuar o processamento. Essa declaração agora também é parte da assinatura, e nos informa da possível falta do valor retornado.
 
 ## É possível expressar que um valor será invalidado após uma operação.
 
