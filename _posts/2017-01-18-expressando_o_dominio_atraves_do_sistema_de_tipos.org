@@ -155,7 +155,7 @@ isso queira dizer um pouco mais verboso e enrijecido.
 
 ** Implementação inicial
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_01.rs
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_01.rs
      pub fn authorize(auth_token: String) -> String {
          unimplemented!()
      }
@@ -196,7 +196,7 @@ isso queira dizer um pouco mais verboso e enrijecido.
    Vamos fazer uma pequena alteração no código, e extrair o conceito do token da
    sessão em uma estrutura retornada ao iniciar a sessão.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_02.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_02.rs :exports none
      pub struct SessionToken(String);
 
      pub fn authorize(auth_token: String) -> SessionToken {
@@ -215,10 +215,10 @@ isso queira dizer um pouco mais verboso e enrijecido.
      }
    #+END_SRC
 
-   Vou mostrar um /diff/ da mudança, e um [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/][link para o código pronto para ser compilado.]]
+   Vou mostrar um /diff/ da mudança, e um [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_02.rs][link para o código pronto para ser compilado.]]
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index order_01.rs order_02.rs | dos2unix
    #+END_SRC
 
@@ -309,7 +309,7 @@ isso queira dizer um pouco mais verboso e enrijecido.
    reescrever ou alterar o token, só vamos pegar /emprestado/ para poder fazer o
    pedido.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_03.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_03.rs :exports none
      pub struct SessionToken(String);
 
      pub fn authorize(auth_token: String) -> SessionToken {
@@ -330,7 +330,7 @@ isso queira dizer um pouco mais verboso e enrijecido.
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index order_02.rs order_03.rs | dos2unix
    #+END_SRC
 
@@ -361,7 +361,7 @@ isso queira dizer um pouco mais verboso e enrijecido.
 
    A mudança é pequena na assinatura: trocando de =SessionToken= para
    =&SessionToken= e corrigindo como passamos o argumento do token.
-   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_03.rs][Segue o link para copiar e compilar o código completo.]]
+   [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_03.rs][Segue o link para copiar e compilar o código completo.]]
 
    Temos agora definido no nível da assinatura que não vamos alterar o valor da
    variável =session_token= ao chamar =send_order= e que um mesmo token pode ser
@@ -395,7 +395,7 @@ isso queira dizer um pouco mais verboso e enrijecido.
    Vamos introduzir um módulo para controlarmos melhor quais construtores
    estarão visíveis.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_04.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_04.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -420,7 +420,7 @@ isso queira dizer um pouco mais verboso e enrijecido.
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index -w order_03.rs order_04.rs | dos2unix
    #+END_SRC
 
@@ -473,7 +473,7 @@ error: aborting due to previous error
    E como ~send_order~ precisa de um token, a relação entre as duas funções é
    mais forte e validada pelo compilador.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_05.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_05.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -499,7 +499,7 @@ error: aborting due to previous error
      }
    #+END_SRC
 
-   Experimentem descomentar a linha comentada no [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_04.rs][exemplo]] no ~main~, e ver o erro.
+   Experimentem descomentar a linha comentada no [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_04.rs][exemplo]] no ~main~, e ver o erro.
 
 ** Extraindo o conceito de Pedido
 
@@ -515,7 +515,7 @@ error: aborting due to previous error
 
    Primeiro, vamos criar uma estrutura que encapsula o conceito de pedido, chamada ~Order~.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_06.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_06.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -545,7 +545,7 @@ error: aborting due to previous error
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index order_04.rs order_06.rs | dos2unix
    #+END_SRC
 
@@ -587,7 +587,7 @@ error: aborting due to previous error
   }
    #+END_SRC
 
-   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_06.rs][O código completo para compilar está aqui.]]
+   [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_06.rs][O código completo para compilar está aqui.]]
 
 ** Criando apenas Pedidos válidos
 
@@ -605,7 +605,7 @@ error: aborting due to previous error
    Com as regras de visibilidade, esse será o único método que retorna a
    estrutura ~Order~.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_07.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_07.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -642,7 +642,7 @@ error: aborting due to previous error
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index order_06.rs order_07.rs | dos2unix
    #+END_SRC
 
@@ -683,7 +683,7 @@ error: aborting due to previous error
    Criamos um relacionamento forte entra a saida de ~create_order~ com a entrada de
    ~send_order~, assim como fizemos anteriormente.
 
-   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_07.rs][O código completo para compilar está aqui.]]
+   [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_07.rs][O código completo para compilar está aqui.]]
 
 ** Indicando que um pedido pode ser inválido
 
@@ -713,7 +713,7 @@ error: aborting due to previous error
    - Caso a operação tenha dado certo, ~Result::Ok(Order)~, você poderá extrair um valor do tipo =Order=;
    - E caso tenha um erro, ~Result::Err(String)~, você tera um valor do tipo =String=.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_08.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_08.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -753,7 +753,7 @@ error: aborting due to previous error
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index -w order_07.rs order_08.rs | dos2unix
    #+END_SRC
 
@@ -788,14 +788,14 @@ error: aborting due to previous error
    verificar se o pedido foi criado corretamente.
    Vou utilizar /pattern matching/, e apenas enviar o pedido caso eu tenha um resultado /Ok/ no =main=.
 
-   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_08.rs][O código completo para compilar está aqui.]]
+   [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_08.rs][O código completo para compilar está aqui.]]
 
    Vou aproveitar e criar uma estrutura bem específica para que possamos comunicar qual tipo de erro aconteceu ao criar nosso pedido.
    Assim, a assinatura do nosso método fica mais explícita sobre os possíveis tipos de erro, ao invés de ser uma /String/ qualquer.
 
    A estrutura chamada ~InvalidOrder~ terá a uma mensagem de erro, e encapsula bem o domínio do possível erro na nossa função.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_09.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_09.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -836,7 +836,7 @@ error: aborting due to previous error
      }
    #+END_SRC
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index -w order_08.rs order_09.rs | dos2unix
    #+END_SRC
 
@@ -864,7 +864,7 @@ error: aborting due to previous error
           }
    #+END_SRC
 
-   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_09.rs][O código completo para compilar está aqui.]]
+   [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_09.rs][O código completo para compilar está aqui.]]
 
 ** Trazendo o mesmo conceito de possível falha ao iniciar uma sessão
 
@@ -882,7 +882,7 @@ error: aborting due to previous error
    Essa enumeração dos erros que vamos nos preocupar pode ser descrita por um
    [[https://doc.rust-lang.org/book/enums.html][/enum/]].
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_10.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_10.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -929,7 +929,7 @@ error: aborting due to previous error
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index -w order_09.rs order_10.rs | dos2unix
    #+END_SRC
 
@@ -953,14 +953,14 @@ error: aborting due to previous error
             name: String,
    #+END_SRC
 
-   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_10.rs][O código completo para compilar está aqui.]]
+   [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_10.rs][O código completo para compilar está aqui.]]
 
    Com a nossa lista de possíveis erros, agora podemos fazer alterar a
    assinatura do método para descrever que pedir um token pode falhar.
 
    Essa mudança na assinatura também requer uma mudança no ~main~.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_11.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_11.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -1008,7 +1008,7 @@ error: aborting due to previous error
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index -w order_10.rs order_11.rs | dos2unix
    #+END_SRC
 
@@ -1079,7 +1079,7 @@ error: aborting due to previous error
    Com a mudança de =&Order= para =Order=, transmitimos que o não estará mais
    disponível no contexto depois de chamar ~send_order~.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_12.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_12.rs :exports none
     mod lib {
         pub struct SessionToken(String);
 
@@ -1127,7 +1127,7 @@ error: aborting due to previous error
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-    cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+    cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
     git --no-pager diff --no-index -w order_11.rs order_12.rs | dos2unix
    #+END_SRC
 
@@ -1168,7 +1168,7 @@ error: aborting due to previous error
    mas as nossas regras arbitrárias geraram esse cenário e gostaria de compartilhar
    esse exemplo com vocês.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_13.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_13.rs :exports none
     mod lib {
         pub struct SessionToken(String);
 
@@ -1217,7 +1217,7 @@ error: aborting due to previous error
     }
    #+END_SRC
 
-   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_13.rs][O código completo para compilar está aqui.]]
+   [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_13.rs][O código completo para compilar está aqui.]]
    Descomente a linha no exemplo para ver o compilador reforçando que nosso pedido não pode mais ser utilizado.
 
    #+BEGIN_SRC
@@ -1245,7 +1245,7 @@ error: aborting due to previous error
 
    Vamos converter a resposta em /JSON/ para uma estrutura na linguagem.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_14.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_14.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -1298,7 +1298,7 @@ error: aborting due to previous error
      }
    #+END_SRC
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index -w order_12.rs order_14.rs | dos2unix
    #+END_SRC
 
@@ -1334,7 +1334,7 @@ error: aborting due to previous error
 
    Também vamos demonstrar que nosso envio do pedido pode falhar, assim como acontece ao iniciar uma sessão.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_15.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_15.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -1388,7 +1388,7 @@ error: aborting due to previous error
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index -w order_14.rs order_15.rs | dos2unix
    #+END_SRC
 
@@ -1409,7 +1409,7 @@ error: aborting due to previous error
      }
    #+END_SRC
 
-   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_15.rs][O código completo para compilar está aqui.]]
+   [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_15.rs][O código completo para compilar está aqui.]]
 
    Uma grande vantagem de utilizar a estrutura /Result/ que vem junto da
    =stdlib=, é que o compilador entende a semântica de erros.
@@ -1451,7 +1451,7 @@ error: aborting due to previous error
 
    Vamos introduzir a estrutura ~OrderStatus~ no nosso código.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_16.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_16.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -1512,7 +1512,7 @@ error: aborting due to previous error
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-  cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+  cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
   git --no-pager diff --no-index order_15.rs order_16.rs | dos2unix
    #+END_SRC
 
@@ -1543,7 +1543,7 @@ error: aborting due to previous error
               unimplemented!()
    #+END_SRC
 
-   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_16.rs][Link para o código pronto para ser compilado.]]
+   [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_16.rs][Link para o código pronto para ser compilado.]]
 
 ** Dando um nome mais bonito para nossas respostas da API
 
@@ -1555,7 +1555,7 @@ error: aborting due to previous error
    para a API, e que todas as respostas que tem esse tipo, terão os mesmo possíveis
    erros para se preocupar.
 
-   #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_17.rs :exports none
+   #+BEGIN_SRC rust :tangle ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_17.rs :exports none
      mod lib {
          pub struct SessionToken(String);
 
@@ -1618,7 +1618,7 @@ error: aborting due to previous error
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+     cd ../assets/expressando_o_dominio_atraves_do_sistema_de_tipos && \
      git --no-pager diff --no-index order_16.rs order_17.rs | dos2unix
    #+END_SRC
 
@@ -1654,7 +1654,7 @@ error: aborting due to previous error
   }
    #+END_SRC
 
-   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_17.rs][Aqui temos o codigo com o resultado final, pronto para ser compilado]]
+   [[http:/assets/expressando_o_dominio_atraves_do_sistema_de_tipos/order_17.rs][Aqui temos o codigo com o resultado final, pronto para ser compilado]]
 
 ** Conclusão
    Depois de todos esses passos, o domínio no nosso programa está bem mais
