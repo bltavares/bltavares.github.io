@@ -1697,6 +1697,11 @@ error: aborting due to previous error
    descrever melhor a intenção do código. Essa é uma habilidade que pode ser
    desenvolvida, assim como a habilidade de interpretação de texto.
 
+   Uma apresentação que trabalha a idea de limitar os estados impossíveis do
+   domínio através do código é a apresentação [[https://www.youtube.com/watch?v=IcgmSRJHu_8]["Making Impossible States
+   Impossible"]] pelo Richard Feldman, com exemplos em Elm. Recomendo assistir
+   também, apesar de ser outra linguagem, no intuito de focar no conceito.
+
    Esse resultado final não está tão idiomático e pode melhorar.
    Mas já temos o suficiente para explorar a expressividade de um sistema de tipos
    estáticos como o de Rust para o dominio através de código.
