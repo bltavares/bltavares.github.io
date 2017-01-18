@@ -14,11 +14,12 @@ tags:
 (Note: This post should be Google Translate friendly. I've refrained from using
 slangs to help with that.)
 
-Esse post é para que eu possa desenvolver melhor a ideia e mostrar um pouco, de
-forma mais prática, as vantagens de utilizar um sistema de tipos expressivo, em
-relação a sistemas de tipos mais simples.
+Este post é para que eu possa desenvolver melhor a ideia sobre a relação de
+tipos e domínio, além de mostrar um pouco, de forma mais prática, as vantagens
+de utilizar um sistema de tipos expressivo, em relação a sistemas de tipos mais
+simples.
 
-Mas antes de tudo, vamos definir um pouco quais tipos entraram na categoria de
+Antes de tudo, vamos definir um pouco quais tipos entraram na categoria de
 sistema de tipos expressivo.
 Muitos dos sistemas de tipo que considero expressivo geralmente não são os que
 estamos acostumados, e que geralmente vem na nossa mente, como Java ou C#.
@@ -27,18 +28,19 @@ O Gary Bernhardt escreveu um Gist interessante sobre [[https://gist.github.com/g
 entender diferentes aspectos de cada linguagem.
 
 Esse não é um post para dizer que utilizando uma linguagem como JavaScript,
-Python ou Ruby não poderíamos chegar na mesma arquitetura. É um post para
-analisar como a existência do sistema de tipos estimula um outro tipo de design.
+Python ou Ruby não poderíamos chegar na mesma arquitetura.
+É um post para analisar como a existência do sistema de tipos estimula um outro
+tipo de design.
 
 Sistemas de tipos mais dinâmicos possuem suas vantagens, mas vou focar nas
-vantagens dos tipos estáticos e sem compará-los diretamente - talvez isso seja
-um assunto para outro artigo.
+vantagens dos tipos estáticos, sem compará-los diretamente - talvez isso seja um
+assunto para outro artigo.
 
 Demonstrarei a seguir um dos aspectos de um sistema de tipo mais restritivo e
 como aproveitar o investimento que é "definir melhor o seu programa" - mesmo que
 isso queira dizer um pouco mais verboso e enrijecido.
 
-** Lista do conteúdo                                     	:TOC_2_gh:noexport:
+** Lista do conteúdo                                      :TOC_2_gh:noexport:
    - [[#qual-sistema-estático-vou-utilizar][Qual "Sistema estático" vou utilizar?]]
    - [[#domínio-do-problema][Domínio do problema]]
    - [[#implementação-inicial][Implementação inicial]]
@@ -61,7 +63,7 @@ isso queira dizer um pouco mais verboso e enrijecido.
    peculiares, se comparados com o sistema de tipos estático mais comuns (Java
    ou C#).
 
-   Algumas das características peculiares se comparado com outras linguagens:
+   Algumas das características peculiares se comparado com essas linguagens:
 
 *** /Null/ não é um habitante de todos os /Tipos/.
 
@@ -95,11 +97,11 @@ isso queira dizer um pouco mais verboso e enrijecido.
 
 *** É possível expressar que um valor será invalidado após uma operação.
 
-    Como Rust possui o conceito de [[https://doc.rust-lang.org/book/ownership.html][posse do valor]] (em inglês, *ownership*), é
-    possível definir que uma função precisa ser dona de um valor, invalidando
-    qualquer outra referência, caso não seja possível copiar ou clonar o dado.
-    Isso traz mais expressividade, mas ao mesmo tempo um conceito a mais para
-    aprender.
+    Rust possui o conceito de [[https://doc.rust-lang.org/book/ownership.html][posse do valor]] (em inglês, *ownership*), que
+    define que um escopo precisa ser dono de seus valores, invalidando qualquer
+    outra referência, caso não seja possível copiar ou clonar o dado ao trocar
+    de escopo. Isso traz mais expressividade, mas ao mesmo tempo um conceito a
+    mais para aprender.
 
     A ideia de posse do valor é um conceito que Rust traz como novidade em
     comparação a outras linguagens, e que para mim é um ótimo motivo para
@@ -111,7 +113,7 @@ isso queira dizer um pouco mais verboso e enrijecido.
     características, para podermos considerar o valor.
 
     Para isso, vamos escrever código e observar o que é possível entender do
-    domínio, inclusive sem ter o corpo das funções.
+    domínio, mesmo sem ter o corpo das funções.
 
 *** Como compilar os exemplos de código
 
@@ -182,9 +184,9 @@ isso queira dizer um pouco mais verboso e enrijecido.
    - Existe uma função que pode gerar um token de sessão.
 
    Estamos com essas duas funções, mas de nenhuma forma estou definindo no
-   programa que essas duas funções mantém uma relação bem próximas.
+   programa que essas duas funções mantém uma relação bem próxima.
 
-   Sem essa definição, uma outra pessoa:
+   Sem essa definição de relação, uma outra pessoa:
 
    - Poderia chamar =send_order= sem chamar a função =authorize=
    - Poderia chamar a função =send_order= com uma /String/ arbitrária como token, e ter um erro de parsing, validação ou qualquer outra coisa.
@@ -193,9 +195,9 @@ isso queira dizer um pouco mais verboso e enrijecido.
 
 ** Extraindo o conceito de Session Token
 
-   Temos um relacionamento entre a =String= de saída do =authorize=, e a entrada
-   do =send_order=.
-   No nosso domínio, isso é o token da sessão.
+   Temos um relacionamento entre a =String= de saída do =authorize=, e a
+   =String= na entrada do =send_order=. No nosso domínio, isso é o token da
+   sessão.
 
    Vamos fazer uma pequena alteração no código, e extrair o conceito do token da
    sessão em uma estrutura retornada ao iniciar a sessão.
@@ -247,20 +249,24 @@ isso queira dizer um pouco mais verboso e enrijecido.
         unimplemented!()
    #+END_SRC
 
-   Sem se ater muito aos detalhes, esse novo snippet introduz uma estrutura que encapsula uma /String/.
+   Sem se ater muito aos detalhes, esse novo snippet introduz uma estrutura que
+   encapsula uma /String/.
    A nossa estrutura =SessionToken= faz a conexão entre o retorno de =authorize=
    com a entrada de =send_order=.
 
-   Se analisarmos as assinaturas, a conexão entre as duas funções agora vai além
+   Ao analisarmos as assinaturas, a conexão entre as duas funções agora vai além
    dos nomes e começa a entrar no nível de estruturas de dados que o compilador
    pode verificar.
 
    Nosso código de uso no =main= se manteve o mesmo.
 
-   Agora, programas que tentarem passar uma string arbitrária para a função =send_order= não poderão mais ser compilados.
-   Fica mais intuitivo (e com a ajuda de um auto-complete) associar as duas funções. Menos um erro de runtime.
+   Agora, programas que tentarem passar uma string arbitrária para a função
+   =send_order= não poderão mais ser compilados.
+   Fica mais intuitivo (e com a ajuda de um auto-complete) associar as duas
+   funções. Menos um erro de runtime.
 
-   Ainda podemos chamar a nossa função com uma /String/ arbitrária, caso seja necessário, como em um teste.
+   Ainda podemos chamar a nossa função com uma /String/ arbitrária, caso seja
+   necessário, como em um teste.
 
    #+BEGIN_SRC rust
      send_order(SessionToken("My test token".into()));
