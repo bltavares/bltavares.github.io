@@ -18,7 +18,7 @@ Esse post é para que eu possa desenvolver melhor a ideia e mostrar um pouco, de
 forma mais prática, as vantagens de utilizar um sistema de tipos expressivo, em
 relação a sistemas de tipos mais simples.
 
-Mas antes de tudo, vamos definir um pouco quais tipos entrariam na categoria de
+Mas antes de tudo, vamos definir um pouco quais tipos entraram na categoria de
 sistema de tipos expressivo.
 Muitos dos sistemas de tipo que considero expressivo geralmente não são os que
 estamos acostumados, e que geralmente vem na nossa mente, como Java ou C#.
@@ -27,7 +27,7 @@ O Gary Bernhardt escreveu um Gist interessante sobre [[https://gist.github.com/g
 entender diferentes aspectos de cada linguagem.
 
 Esse não é um post para dizer que utilizando uma linguagem como JavaScript,
-Python ou Ruby não poderiamos chegar na mesma arquitetura. É um post para
+Python ou Ruby não poderíamos chegar na mesma arquitetura. É um post para
 analisar como a existência do sistema de tipos estimula um outro tipo de design.
 
 Sistemas de tipos mais dinâmicos possuem suas vantagens, mas vou focar nas
@@ -36,9 +36,9 @@ um assunto para outro artigo.
 
 Demonstrarei a seguir um dos aspectos de um sistema de tipo mais restritivo e
 como aproveitar o investimento que é "definir melhor o seu programa" - mesmo que
-isso queira dizer um pouco mais verboso e enrigecido.
+isso queira dizer um pouco mais verboso e enrijecido.
 
-** Lista do conteudo                                         :TOC_2_gh:noexport:
+** Lista do conteúdo                                     	:TOC_2_gh:noexport:
    - [[#qual-sistema-estático-vou-utilizar][Qual "Sistema estático" vou utilizar?]]
    - [[#domínio-do-problema][Domínio do problema]]
    - [[#implementação-inicial][Implementação inicial]]
@@ -63,52 +63,51 @@ isso queira dizer um pouco mais verboso e enrigecido.
 
    Algumas das características peculiares se comparado com outras linguagens:
 
-   - /Null/ não é um habitante de todos os /Tipos/.
+*** /Null/ não é um habitante de todos os /Tipos/.
 
-     Em Java, por exemplo, a seguinte assinatura de método requer que o corpo da
-     função seja inspecionado para descobrir se ~null~ pode ser retornado.
+    Em Java, por exemplo, a seguinte assinatura de método requer que o corpo da
+    função seja inspecionado para descobrir se ~null~ pode ser retornado.
 
-     #+BEGIN_SRC java
-    public static class File {
-        public static File open(String path) {
-            //....
-        }
-    }
-     #+END_SRC
+    #+BEGIN_SRC java
+     public static class File {
+         public static File open(String path) {
+             //....
+         }
+     }
+    #+END_SRC
 
-     Em Rust, não temos ~null~.
-     As funções que poderiam retornar ~null~ em outras linguagens precisam ter
-     isso declarado na sua assinatura em Rust, alertando sobre o possível
-     problema.
+    Em Rust, não temos ~null~.
+    As funções que poderiam retornar ~null~ em outras linguagens precisam ter
+    isso declarado na sua assinatura em Rust, alertando sobre o possível
+    problema.
 
-     #+BEGIN_SRC rust
-      mod file {
-          pub fn open(path: String) -> Result<File> {
-              // ....
-          }
-      }
-     #+END_SRC
+    #+BEGIN_SRC rust
+     mod file {
+         pub fn open(path: String) -> Result<File> {
+             // ....
+         }
+     }
+    #+END_SRC
 
-   - É possível expressar que um valor será invalidado após uma operação.
+*** É possível expressar que um valor será invalidado após uma operação.
 
-     Como Rust possui o conceito de [[https://doc.rust-lang.org/book/ownership.html][posse do valor]] (em inglês, *ownership*), é
-     possível definir que uma função precisa ser dona de um valor, invalidando
-     qualquer outra referência, caso não seja possível copiar ou clonar o dado.
-     Isso traz mais expressividade, mas ao mesmo tempo um conceito a mais para
-     aprender.
+    Como Rust possui o conceito de [[https://doc.rust-lang.org/book/ownership.html][posse do valor]] (em inglês, *ownership*), é
+    possível definir que uma função precisa ser dona de um valor, invalidando
+    qualquer outra referência, caso não seja possível copiar ou clonar o dado.
+    Isso traz mais expressividade, mas ao mesmo tempo um conceito a mais para
+    aprender.
 
-     Esse é um conceito de posse do valor é um conceito novo que Rust traz como
-     novidade em comparação a outras linguagens, e que para mim é um ótimo motivo
-     para estudar a linguagem. O conceito é um pouco difícil, inclusive por ser
-     novidade, e mais pra frente no texto trarei alguns exemplos.
+    Esse é um conceito de posse do valor é um conceito novo que Rust traz como
+    novidade em comparação a outras linguagens, e que para mim é um ótimo motivo
+    para estudar a linguagem. O conceito é um pouco difícil, inclusive por ser
+    novidade, e mais pra frente no texto trarei alguns exemplos.
 
+    Tratar essas peculiaridades como benefícios, como sempre, são escolhas de
+    benefício x valor. Vamos ver o que é possível expressar utilizando essas
+    características, para podermos considerar o valor.
 
-   Tratar essas peculiaridades como benefícios, como sempre, são escolhas de
-   benefício x valor. Vamos ver o que é possível expressar utilizando essas
-   características, para podermos considerar o valor.
-
-   Para isso, vamos escrever código e observar o que é possível entender do
-   domínio, inclusive sem ter o corpo das funções.
+    Para isso, vamos escrever código e observar o que é possível entender do
+    domínio, inclusive sem ter o corpo das funções.
 
 *** Como compilar os exemplos de código
 
@@ -119,29 +118,35 @@ isso queira dizer um pouco mais verboso e enrigecido.
     seguir as instruções do [[https://www.rustup.rs/][rustup.rs]] para ter instalado o =rustc=.
 
     Pela linha de comando você então poderá chamar o compilador de uma das
-    seguint maneiras:
+    seguinte maneiras:
 
     #+BEGIN_SRC shell
+      # Chamada simples
       rustc exemplo.rs
+
+      # Chamada ignorando alguns alertas por não utilizarmos os argumentos ou funções
+      rustc -A unused_variables -A dead_code exemplo.rs
     #+END_SRC
 
 ** Domínio do problema
 
-   Vou escolher problemas em um domínio com algumas caractrísticas arbitrárias
+   Vou escolher problemas em um domínio com algumas características arbitrárias
    (descritas abaixo) para poder exercitar melhor os conceitos que o sistema de
    tipos de Rust possui.
 
    Estamos escrevendo um sistema de pedidos.
 
+   -----
    - Nossos pedidos acontecem por uma API em um servidor
    - Um pedido não pode ter quantidades negativas
    - Como podemos ficar fora de estoque, em caso de erro devemos voltar ao produto com uma mensagem
-     - É preciso inciar o processo inteiro novamente e nenhuma outra thread poderia usar nosso pedido
+     - É preciso iniciar o processo inteiro novamente e nenhuma outra thread poderia usar nosso pedido
    - Toda transação precisa receber um token de sessão
    - Toda sessão é iniciada por um token de autorização
+   -----
 
    Depois dessas regras arbitrárias, vamos ver o que é possível descrever do
-   nosso domínio apenas pelo sistema de tipos e regras de visiblidade.
+   nosso domínio apenas pelo sistema de tipos e regras de visibilidade.
 
    A implementação das funções não importa no momento.
 
@@ -173,7 +178,7 @@ isso queira dizer um pouco mais verboso e enrigecido.
    - Existe uma função que pode gerar um token de sessão.
 
    Estamos com essas duas funções, mas de nenhuma forma estou definindo no
-   programa que essas duas funções tem uma relação bem próximas.
+   programa que essas duas funções mantém uma relação bem próximas.
 
    Sem essa definição, uma outra pessoa:
 
@@ -184,9 +189,9 @@ isso queira dizer um pouco mais verboso e enrigecido.
 
 ** Extraindo o conceito de Session Token
 
-   Temos um relacionamento entre a =String= de saida do =authorize=, e a entrada
+   Temos um relacionamento entre a =String= de saída do =authorize=, e a entrada
    do =send_order=.
-   No nosso dominio, isso é o token da sessão.
+   No nosso domínio, isso é o token da sessão.
 
    Vamos fazer uma pequena alteração no código, e extrair o conceito do token da
    sessão em uma estrutura retornada ao iniciar a sessão.
@@ -210,7 +215,7 @@ isso queira dizer um pouco mais verboso e enrigecido.
      }
    #+END_SRC
 
-   Vou mostrar um diff da mudança, e um [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/][link para o código pronto para ser compilado.]]
+   Vou mostrar um /diff/ da mudança, e um [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/][link para o código pronto para ser compilado.]]
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
      cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
@@ -251,7 +256,7 @@ isso queira dizer um pouco mais verboso e enrigecido.
    Agora, programas que tentarem passar uma string arbitrária para a função =send_order= não poderão mais ser compilados.
    Fica mais intuitivo (e com a ajuda de um auto-complete) associar as duas funções. Menos um erro de runtime.
 
-   Ainda podemos progmaticamente chamar a nossa função com uma /String/ arbitrária, caso seja necessário, como em um teste.
+   Ainda podemos chamar a nossa função com uma /String/ arbitrária, caso seja necessário, como em um teste.
 
    #+BEGIN_SRC rust
      send_order(SessionToken("My test token".into()));
@@ -263,12 +268,12 @@ isso queira dizer um pouco mais verboso e enrigecido.
    compartilhando o mesmo token com o código anterior:
 
    #+BEGIN_SRC rust
- fn main() {
-     let session_token = authorize("My initial token".into());
-     send_order(session_token, 10, "Bananas".into());
-     // Adicionamos mais um pedido
-     send_order(session_token, 5, "Peras".into());
- }
+     fn main() {
+         let session_token = authorize("My initial token".into());
+         send_order(session_token, 10, "Bananas".into());
+         // Adicionamos mais um pedido
+         send_order(session_token, 5, "Peras".into());
+     }
    #+END_SRC
 
    Ao compilar o programa, temos o seguinte erro:
@@ -279,14 +284,13 @@ isso queira dizer um pouco mais verboso e enrigecido.
  error[E0382]: use of moved value: `session_token`
    --> /Users/bruno/order.rs:16:16
     |
- 15 |     send_order(session_token, 10, "Bananas".into());
-    |                ------------- value moved here
- 16 |     send_order(session_token, 5, "Peras".into());
-    |                ^^^^^^^^^^^^^ value used here after move
+ 15 | 	send_order(session_token, 10, "Bananas".into());
+    |            	------------- value moved here
+ 16 | 	send_order(session_token, 5, "Peras".into());
+    |            	^^^^^^^^^^^^^ value used here after move
     |
     = note: move occurs because `session_token` has type `SessionToken`, which does not implement the `Copy` trait
-
- error: aborting due to previous error
+    error: aborting due to previous error
    #+END_SRC
 
    Toda essa mensagem de erro está relacionada ao conceito de [[https://doc.rust-lang.org/book/ownership.html][posse do valor]] que Rust tem.
@@ -294,8 +298,8 @@ isso queira dizer um pouco mais verboso e enrigecido.
    Da forma que a assinatura da nossa função está escrita, temos que enviar todo
    o valor, junto com o registro /posse/ do =SessionToken= para fazer um pedido.
 
-   O valor do token pertence à variável em /main/.
-   Ao chamarmos a função /send_order/ pela primeira vez, esse valor é movido para
+   O valor do token pertence à variável em ~main~.
+   Ao chamarmos a função ~send_order~ pela primeira vez, esse valor é movido para
    a primeira chamada de =send_order= e não está mais disponível para mais um
    pedido.
 
@@ -365,14 +369,14 @@ isso queira dizer um pouco mais verboso e enrigecido.
 
 ** Expondo apenas uma maneira de criar um Session Token válido
 
-   Ainda lidando com o conceito de =SessionToken=, senti a necessidade te tornar o
-   relacinamento entre ~authorize~ e ~send_order~ mais forte.
+   Ainda lidando com o conceito de =SessionToken=, senti a necessidade de tornar o
+   relacionamento entre ~authorize~ e ~send_order~ mais forte.
 
    Com o código anterior, seria bem possível criar um token inválido:
 
    #+BEGIN_SRC rust
      fn main() {
-         // Session tokens precisam serguir um formato específico
+         // Session tokens precisam seguir um formato específico
          // ASDF não deveria ser um token válido
          send_order(SessionToken("ASDF".into()), 10, "Bananas".into());
      }
@@ -387,32 +391,32 @@ isso queira dizer um pouco mais verboso e enrigecido.
    estarão disponíveis para a função =main=.
 
    Em Rust, além de podermos utilizar um outro arquivo para criar módulos, é
-   possível criar um modulo no mesmo arquivo.
-   Vamos introduzir um modulo para controlarmos melhor quais construtores
+   possível criar um módulo no mesmo arquivo.
+   Vamos introduzir um módulo para controlarmos melhor quais construtores
    estarão visíveis.
 
    #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_04.rs :exports none
- mod lib {
-     pub struct SessionToken(String);
+     mod lib {
+         pub struct SessionToken(String);
 
-     pub fn authorize(auth_token: String) -> SessionToken {
-         unimplemented!()
+         pub fn authorize(auth_token: String) -> SessionToken {
+             unimplemented!()
+         }
+
+         pub fn send_order(session_token: &SessionToken,
+                           amount: u8,
+                           product: String) {
+             unimplemented!()
+         }
      }
 
-     pub fn send_order(session_token: &SessionToken,
-                       amount: u8,
-                       product: String) {
-         unimplemented!()
+     pub use lib::*;
+
+     fn main() {
+         let session_token = authorize("My initial token".into());
+         send_order(&session_token, 10, "Bananas".into());
+         send_order(&session_token, 5, "Peras".into());
      }
- }
-
- pub use lib::*;
-
- fn main() {
-     let session_token = authorize("My initial token".into());
-     send_order(&session_token, 10, "Bananas".into());
-     send_order(&session_token, 5, "Peras".into());
- }
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
@@ -422,47 +426,47 @@ isso queira dizer um pouco mais verboso e enrigecido.
 
    #+RESULTS:
    #+BEGIN_SRC diff
-   diff --git a/order_03.rs b/order_04.rs
-   index f3f939e..c31b445 100644
-   --- a/order_03.rs
-   +++ b/order_04.rs
-   @@ -1,3 +1,4 @@
-   +mod lib {
-        pub struct SessionToken(String);
+     diff --git a/order_03.rs b/order_04.rs
+     index f3f939e..c31b445 100644
+     --- a/order_03.rs
+     +++ b/order_04.rs
+     @@ -1,3 +1,4 @@
+     +mod lib {
+          pub struct SessionToken(String);
 
-        pub fn authorize(auth_token: String) -> SessionToken {
-   @@ -9,6 +10,9 @@ pub fn send_order(session_token: &SessionToken,
-                          product: String) {
-            unimplemented!()
-        }
-   +}
-   +
-   +pub use lib::*;
+          pub fn authorize(auth_token: String) -> SessionToken {
+     @@ -9,6 +10,9 @@ pub fn send_order(session_token: &SessionToken,
+                            product: String) {
+              unimplemented!()
+          }
+     +}
+     +
+     +pub use lib::*;
 
-    fn main() {
-        let session_token = authorize("My initial token".into());
+      fn main() {
+          let session_token = authorize("My initial token".into());
    #+END_SRC
 
    Criamos um módulo ~lib~ ao redor do nosso código, e no escopo do arquivo,
    importamos apenas as funções públicas com ~pub use lib::*~.
 
-   Apesar da nossa estrutura ser publica, o campo interno de dados não é.
+   Apesar da nossa estrutura ser pública, o campo interno de dados não é.
 
    #+BEGIN_SRC
 error[E0450]: cannot invoke tuple struct constructor with private fields
   --> ~/order.rs:18:15
    |
-2  |     pub struct SessionToken(String);
-   |                             ------- private field declared here
+2  | 	pub struct SessionToken(String);
+   |                         	------- private field declared here
 ...
-18 |       let s = SessionToken("ASDF".into());
-   |               ^^^^^^^^^^^^ cannot construct with a private field
+18 |   	let s = SessionToken("ASDF".into());
+   |           	^^^^^^^^^^^^ cannot construct with a private field
 
 error: aborting due to previous error
    #+END_SRC
 
-   Tanto o acesso para leitura e escrita dos campos privados da estrutura só
-   estarão disponíveis para as funções dentro do módulo.
+   Tanto o acesso para leitura e escrita dos campos privados da estrutura
+   estarão disponíveis apenas para as funções dentro do módulo.
    Assim, caso o desenvolvedor queira um =SessionToken=, é preciso chamar
    ~authorize~.
 
@@ -499,9 +503,9 @@ error: aborting due to previous error
 
 ** Extraindo o conceito de Pedido
 
-   Uma regra do dominio que está escrita nas entrelinhas é que temos o conceito
+   Uma regra do domínio que está escrita nas entrelinhas é que temos o conceito
    de um pedido válido.
-   Deveriamos ter apenas pedidos com números positivos, já que não podemos
+   Deveríamos ter apenas pedidos com números positivos, já que não podemos
    entregar -10 maçãs.
 
    Como no passo anterior, podemos extrair o conceito de /Pedido/ em uma estrutura,
@@ -512,32 +516,32 @@ error: aborting due to previous error
    Primeiro, vamos criar uma estrutura que encapsula o conceito de pedido, chamada ~Order~.
 
    #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_06.rs :exports none
- mod lib {
-     pub struct SessionToken(String);
+     mod lib {
+         pub struct SessionToken(String);
 
-     pub struct Order {
-         pub amount: u8,
-         pub name: String,
+         pub struct Order {
+             pub amount: u8,
+             pub name: String,
+         }
+
+         pub fn authorize(auth_token: String) -> SessionToken {
+             unimplemented!()
+         }
+
+         pub fn send_order(session_token: &SessionToken,
+                           order: &Order) {
+             unimplemented!()
+         }
      }
 
-     pub fn authorize(auth_token: String) -> SessionToken {
-         unimplemented!()
+     pub use lib::*;
+
+     fn main() {
+         let session_token = authorize("My initial token".into());
+
+         let first_order = Order { amount: 10, name: "Bananas".into() };
+         send_order(&session_token, &first_order);
      }
-
-     pub fn send_order(session_token: &SessionToken,
-                       order: &Order) {
-         unimplemented!()
-     }
- }
-
- pub use lib::*;
-
- fn main() {
-     let session_token = authorize("My initial token".into());
-
-     let first_order = Order { amount: 10, name: "Bananas".into() };
-     send_order(&session_token, &first_order);
- }
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
@@ -552,35 +556,35 @@ error: aborting due to previous error
    --- a/order_04.rs
    +++ b/order_06.rs
    @@ -1,13 +1,17 @@
-    mod lib {
-        pub struct SessionToken(String);
+  mod lib {
+      pub struct SessionToken(String);
 
-   +    pub struct Order {
-   +        pub amount: u8,
-   +        pub name: String,
-   +    }
+   +	pub struct Order {
+   +    	pub amount: u8,
+   +    	pub name: String,
+   +	}
    +
-        pub fn authorize(auth_token: String) -> SessionToken {
-            unimplemented!()
-        }
+      pub fn authorize(auth_token: String) -> SessionToken {
+          unimplemented!()
+      }
 
-        pub fn send_order(session_token: &SessionToken,
-   -                      amount: u8,
-   -                      product: String) {
-   +                      order: &Order) {
-            unimplemented!()
-        }
-    }
+      pub fn send_order(session_token: &SessionToken,
+   -                  	amount: u8,
+   -                  	product: String) {
+   +                  	order: &Order) {
+          unimplemented!()
+      }
+  }
    @@ -16,6 +20,7 @@ pub use lib::*;
 
-    fn main() {
-        let session_token = authorize("My initial token".into());
-   -    send_order(&session_token, 10, "Bananas".into());
-   -    send_order(&session_token, 5, "Peras".into());
+  fn main() {
+      let session_token = authorize("My initial token".into());
+   -	send_order(&session_token, 10, "Bananas".into());
+   -	send_order(&session_token, 5, "Peras".into());
    +
-   +    let first_order = Order { amount: 10, name: "Bananas".into() };
-   +    send_order(&session_token, &first_order);
-    }
+   +	let first_order = Order { amount: 10, name: "Bananas".into() };
+   +	send_order(&session_token, &first_order);
+  }
    #+END_SRC
 
    [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_06.rs][O código completo para compilar está aqui.]]
@@ -602,39 +606,39 @@ error: aborting due to previous error
    estrutura ~Order~.
 
    #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_07.rs :exports none
- mod lib {
-     pub struct SessionToken(String);
+     mod lib {
+         pub struct SessionToken(String);
 
-     pub struct Order {
-         amount: u8,
-         name: String,
-     }
+         pub struct Order {
+             amount: u8,
+             name: String,
+         }
 
-     pub fn create_order(amount: u8, name: String) -> Order {
-         if amount <= 0 {
+         pub fn create_order(amount: u8, name: String) -> Order {
+             if amount <= 0 {
+                 unimplemented!()
+             }
              unimplemented!()
          }
-         unimplemented!()
+
+         pub fn authorize(auth_token: String) -> SessionToken {
+             unimplemented!()
+         }
+
+         pub fn send_order(session_token: &SessionToken,
+                           order: &Order) {
+             unimplemented!()
+         }
      }
 
-     pub fn authorize(auth_token: String) -> SessionToken {
-         unimplemented!()
+     pub use lib::*;
+
+     fn main() {
+         let session_token = authorize("My initial token".into());
+
+         let first_order = create_order(10, "Bananas".into());
+         send_order(&session_token, &first_order);
      }
-
-     pub fn send_order(session_token: &SessionToken,
-                       order: &Order) {
-         unimplemented!()
-     }
- }
-
- pub use lib::*;
-
- fn main() {
-     let session_token = authorize("My initial token".into());
-
-     let first_order = create_order(10, "Bananas".into());
-     send_order(&session_token, &first_order);
- }
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
@@ -644,40 +648,40 @@ error: aborting due to previous error
 
    #+RESULTS:
    #+BEGIN_SRC diff
-   diff --git a/order_06.rs b/order_07.rs
-   index 47f56d9..a13f381 100644
-   --- a/order_06.rs
-   +++ b/order_07.rs
-   @@ -2,8 +2,15 @@ mod lib {
-        pub struct SessionToken(String);
+     diff --git a/order_06.rs b/order_07.rs
+     index 47f56d9..a13f381 100644
+     --- a/order_06.rs
+     +++ b/order_07.rs
+     @@ -2,8 +2,15 @@ mod lib {
+          pub struct SessionToken(String);
 
-        pub struct Order {
-   -        pub amount: u8,
-   -        pub name: String,
-   +        amount: u8,
-   +        name: String,
-   +    }
-   +
-   +    pub fn create_order(amount: u8, name: String) -> Order {
-   +        if amount <= 0 {
-   +            unimplemented!()
-   +        }
-   +        unimplemented!()
-        }
+          pub struct Order {
+     -        pub amount: u8,
+     -        pub name: String,
+     +        amount: u8,
+     +        name: String,
+     +    }
+     +
+     +    pub fn create_order(amount: u8, name: String) -> Order {
+     +        if amount <= 0 {
+     +            unimplemented!()
+     +        }
+     +        unimplemented!()
+          }
 
-        pub fn authorize(auth_token: String) -> SessionToken {
-   @@ -21,6 +28,6 @@ pub use lib::*;
-    fn main() {
-        let session_token = authorize("My initial token".into());
+          pub fn authorize(auth_token: String) -> SessionToken {
+     @@ -21,6 +28,6 @@ pub use lib::*;
+      fn main() {
+          let session_token = authorize("My initial token".into());
 
-   -    let first_order = Order { amount: 10, name: "Bananas".into() };
-   +    let first_order = create_order(10, "Bananas".into());
-        send_order(&session_token, &first_order);
-    }
+     -    let first_order = Order { amount: 10, name: "Bananas".into() };
+     +    let first_order = create_order(10, "Bananas".into());
+          send_order(&session_token, &first_order);
+      }
    #+END_SRC
 
    Criamos um relacionamento forte entra a saida de ~create_order~ com a entrada de
-   ~send_order~, assim como haviamos feito anteriormente.
+   ~send_order~, assim como fizemos anteriormente.
 
    [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_07.rs][O código completo para compilar está aqui.]]
 
@@ -692,22 +696,22 @@ error: aborting due to previous error
    2. Retornar uma estrutura de dados que indica a possibilidade de falha da nossa operação
 
    A opção 1 é não é ideal.
-   Eu não gostaria que meu programa falhase completamente apenas por ter um pedido inválido.
+   Eu não gostaria que meu programa falhasse completamente apenas por ter um pedido inválido.
    Além do mais, nossas regras de negócio possuem instruções sobre o que fazer em caso de erro.
 
    Precisamos de estratégias para lidar com pedidos inválidos.
 
    Vamos aproveitar uma estrutura chamada [[https://doc.rust-lang.org/std/result/index.html][/Result/]] que está disponível na =stdlib= da linguagem.
-   Nós poderiamos reescrever essa estrutura nós mesmos, mas já existem várias
+   Nós poderíamos reescrever essa estrutura nós mesmos, mas já existem várias
    funcionalidades que ganhamos ao utilizar a estrutura da =stdlib=.
 
    O conceito de ~Result<T, U>~ é uma estrutura que tem duas variações de tipos.
    Temos o ~Result::Ok(T)~, que envolve o valor em caso de sucesso, e o
    ~Result::Err(U)~ com o valor em caso de erro.
 
-   Um valor com tipo =Result<Order, String>= significaria que caso a operação tenha
-   dado certo, ~Result::Ok(Order)~, você poderá extrair um valor do tipo =Order= e caso
-   tenha dado errado, ~Result::Err(String)~, você tera um valor do tipo =String=.
+   Um valor com tipo =Result<Order, String>= significa:
+   - Caso a operação tenha dado certo, ~Result::Ok(Order)~, você poderá extrair um valor do tipo =Order=;
+   - E caso tenha um erro, ~Result::Err(String)~, você tera um valor do tipo =String=.
 
    #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_08.rs :exports none
      mod lib {
@@ -787,49 +791,49 @@ error: aborting due to previous error
    [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_08.rs][O código completo para compilar está aqui.]]
 
    Vou aproveitar e criar uma estrutura bem específica para que possamos comunicar qual tipo de erro aconteceu ao criar nosso pedido.
-   Assim, a assinatura do nosso metodo fica mais explicita sobre os possíveis tipos de erro, ao invés de ser uma /String/ qualquer.
+   Assim, a assinatura do nosso método fica mais explícita sobre os possíveis tipos de erro, ao invés de ser uma /String/ qualquer.
 
-   A estrututura chamada ~InvalidOrder~ terá a uma mensagem de erro, e encapsula bem o domínio do possível erro na nossa função.
+   A estrutura chamada ~InvalidOrder~ terá a uma mensagem de erro, e encapsula bem o domínio do possível erro na nossa função.
 
    #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_09.rs :exports none
- mod lib {
-     pub struct SessionToken(String);
+     mod lib {
+         pub struct SessionToken(String);
 
-     pub struct InvalidOrder(String);
+         pub struct InvalidOrder(String);
 
-     pub struct Order {
-         amount: u8,
-         name: String,
-     }
+         pub struct Order {
+             amount: u8,
+             name: String,
+         }
 
-     pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
-         if amount <= 0 {
+         pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+             if amount <= 0 {
+                 unimplemented!()
+             }
              unimplemented!()
          }
-         unimplemented!()
+
+         pub fn authorize(auth_token: String) -> SessionToken {
+             unimplemented!()
+         }
+
+         pub fn send_order(session_token: &SessionToken,
+                           order: &Order) {
+             unimplemented!()
+         }
      }
 
-     pub fn authorize(auth_token: String) -> SessionToken {
-         unimplemented!()
+     pub use lib::*;
+
+     fn main() {
+         let session_token = authorize("My initial token".into());
+
+         let first_order = create_order(10, "Bananas".into());
+
+         if let Ok(order) = first_order {
+             send_order(&session_token, &order);
+         }
      }
-
-     pub fn send_order(session_token: &SessionToken,
-                       order: &Order) {
-         unimplemented!()
-     }
- }
-
- pub use lib::*;
-
- fn main() {
-     let session_token = authorize("My initial token".into());
-
-     let first_order = create_order(10, "Bananas".into());
-
-     if let Ok(order) = first_order {
-         send_order(&session_token, &order);
-     }
- }
    #+END_SRC
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
      cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
@@ -843,21 +847,21 @@ error: aborting due to previous error
    --- a/order_08.rs
    +++ b/order_09.rs
    @@ -1,12 +1,14 @@
-    mod lib {
-        pub struct SessionToken(String);
+  mod lib {
+      pub struct SessionToken(String);
 
-   +    pub struct InvalidOrder(String);
+   +	pub struct InvalidOrder(String);
    +
-        pub struct Order {
-            amount: u8,
-            name: String,
-        }
+      pub struct Order {
+          amount: u8,
+          name: String,
+      }
 
-   -    pub fn create_order(amount: u8, name: String) -> Result<Order, String> {
-   +    pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
-            if amount <= 0 {
-                unimplemented!()
-            }
+   -	pub fn create_order(amount: u8, name: String) -> Result<Order, String> {
+   +	pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+          if amount <= 0 {
+              unimplemented!()
+          }
    #+END_SRC
 
    [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_09.rs][O código completo para compilar está aqui.]]
@@ -949,25 +953,6 @@ error: aborting due to previous error
             name: String,
    #+END_SRC
 
-   #+BEGIN_SRC diff
-   diff --git a/order_09.rs b/order_10.rs
-   index 8d9b087..d87db05 100644
-   --- a/order_09.rs
-   +++ b/order_10.rs
-   @@ -3,6 +3,11 @@ mod lib {
-
-        pub struct InvalidOrder(String);
-
-   +    pub enum ApiError {
-   +        ParsingError(String),
-   +        IoError(String),
-   +    }
-   +
-        pub struct Order {
-            amount: u8,
-            name: String,
-   #+END_SRC
-
    [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_10.rs][O código completo para compilar está aqui.]]
 
    Com a nossa lista de possíveis erros, agora podemos fazer alterar a
@@ -1034,27 +1019,27 @@ error: aborting due to previous error
    --- a/order_10.rs
    +++ b/order_11.rs
    @@ -20,7 +20,7 @@ mod lib {
-            unimplemented!()
-        }
+          unimplemented!()
+      }
 
-   -    pub fn authorize(auth_token: String) -> SessionToken {
-   +    pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
-            unimplemented!()
-        }
+   -	pub fn authorize(auth_token: String) -> SessionToken {
+   +	pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
+          unimplemented!()
+      }
 
    @@ -33,7 +33,7 @@ mod lib {
-    pub use lib::*;
+  pub use lib::*;
 
-    fn main() {
-   -    let session_token = authorize("My initial token".into());
-   +    if let Ok(session_token) = authorize("My initial token".into()) {
+  fn main() {
+   -	let session_token = authorize("My initial token".into());
+   +	if let Ok(session_token) = authorize("My initial token".into()) {
 
-            let first_order = create_order(10, "Bananas".into());
+          let first_order = create_order(10, "Bananas".into());
 
    @@ -41,3 +41,4 @@ fn main() {
-                send_order(&session_token, &order);
-            }
-        }
+              send_order(&session_token, &order);
+          }
+      }
    +}
    #+END_SRC
 
@@ -1066,12 +1051,14 @@ error: aborting due to previous error
 
    Revisando a lista de problemas que temos para resolver:
 
+   -----
    - +Nossos pedidos acontecem por uma API em um servidor+
    - +Um pedido não pode ter quantidades negativas+
    - Como podemos ficar fora de estoque, em caso de erro devemos voltar ao produto com uma mensagem
-     - É preciso inciar o processo inteiro novamente e nenhuma outra thread poderia usar nosso pedido
+     - É preciso iniciar o processo inteiro novamente e nenhuma outra thread poderia usar nosso pedido
    - +Toda transação precisa receber um token de sessão+
    - +Toda sessão é iniciada por um token de autorização+
+   -----
 
    Temos bem claro que depois que um pedido é feito e temos um erro, deveríamos iniciar o fluxo novamente.
    Assim, não tentamos fazer o mesmo pedido com um número maior que o estoque, por exemplo.
@@ -1080,7 +1067,7 @@ error: aborting due to previous error
    independente do resultado, eu não deveria enviar o mesmo Pedido.
 
    Se imaginarmos que nosso código será usado em um ambiente com multi-thread,
-   poderiamos trazer essa regra para a nossa assinatura e fazer com que o
+   poderíamos trazer essa regra para a nossa assinatura e fazer com que o
    compilador reforce essa regra.
    Se uma thread enviar um pedido, outra thread não poderá enviar o mesmo
    pedido.
@@ -1088,58 +1075,60 @@ error: aborting due to previous error
    Como em Rust temos o conceito de /ownership/ que falamos antes, podemos expressar isso pela assinatura.
    Alterando a assinatura em ~send_order~, podemos ao invés de pegar
    /emprestado/ o valor do Pedido, pedir a posse do valor.
-   De =&Order= para =Order=, transmitimos que o não estará mais disponível no contexto depois de chamar ~send_order~.
+
+   Com a mudança de =&Order= para =Order=, transmitimos que o não estará mais
+   disponível no contexto depois de chamar ~send_order~.
 
    #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_12.rs :exports none
- mod lib {
-     pub struct SessionToken(String);
+    mod lib {
+        pub struct SessionToken(String);
 
-     pub struct InvalidOrder(String);
+        pub struct InvalidOrder(String);
 
-     pub enum ApiError {
-         ParsingError(String),
-         IoError(String),
-     }
+        pub enum ApiError {
+            ParsingError(String),
+            IoError(String),
+        }
 
-     pub struct Order {
-         amount: u8,
-         name: String,
-     }
+        pub struct Order {
+            amount: u8,
+            name: String,
+        }
 
-     pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
-         if amount <= 0 {
-             unimplemented!()
-         }
-         unimplemented!()
-     }
+        pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+            if amount <= 0 {
+                unimplemented!()
+            }
+            unimplemented!()
+        }
 
-     pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
-         unimplemented!()
-     }
+        pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
+            unimplemented!()
+        }
 
-     pub fn send_order(session_token: &SessionToken,
-                       order: Order) {
-         unimplemented!()
-     }
- }
+        pub fn send_order(session_token: &SessionToken,
+                          order: Order) {
+            unimplemented!()
+        }
+    }
 
- pub use lib::*;
+    pub use lib::*;
 
- fn main() {
-     if let Ok(session_token) = authorize("My initial token".into()) {
+    fn main() {
+        if let Ok(session_token) = authorize("My initial token".into()) {
 
-         let first_order = create_order(10, "Bananas".into());
+            let first_order = create_order(10, "Bananas".into());
 
-         if let Ok(order) = first_order {
-             send_order(&session_token, order);
-         }
-     }
- }
+            if let Ok(order) = first_order {
+                send_order(&session_token, order);
+            }
+        }
+    }
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
-     git --no-pager diff --no-index -w order_11.rs order_12.rs | dos2unix
+    cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+    git --no-pager diff --no-index -w order_11.rs order_12.rs | dos2unix
    #+END_SRC
 
    #+RESULTS:
@@ -1169,7 +1158,7 @@ error: aborting due to previous error
    #+END_SRC
 
    Nosso caso para o pedido é o inverso do que esperamos para o token ao fazer um pedido.
-   Nós gostariamos de poder compartilhar o mesmo token com vários envios, mas o
+   Nós gostaríamos de poder compartilhar o mesmo token com vários envios, mas o
    mesma estrutura de pedido não deveria ser reutilizada.
 
    Nesse caso eu gosto de pensar que o pedido foi "consumido" por ~send_order~,
@@ -1180,67 +1169,67 @@ error: aborting due to previous error
    esse exemplo com vocês.
 
    #+BEGIN_SRC rust :tangle expressando_o_dominio_atraves_do_sistema_de_tipos/order_13.rs :exports none
-     mod lib {
-         pub struct SessionToken(String);
+    mod lib {
+        pub struct SessionToken(String);
 
-         pub struct InvalidOrder(String);
+        pub struct InvalidOrder(String);
 
-         pub enum ApiError {
-             ParsingError(String),
-             IoError(String),
-         }
+        pub enum ApiError {
+            ParsingError(String),
+            IoError(String),
+        }
 
-         pub struct Order {
-             amount: u8,
-             name: String,
-         }
+        pub struct Order {
+            amount: u8,
+            name: String,
+        }
 
-         pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
-             if amount <= 0 {
-                 unimplemented!()
-             }
-             unimplemented!()
-         }
+        pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+            if amount <= 0 {
+                unimplemented!()
+            }
+            unimplemented!()
+        }
 
-         pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
-             unimplemented!()
-         }
+        pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
+            unimplemented!()
+        }
 
-         pub fn send_order(session_token: &SessionToken,
-                           order: Order) {
-             unimplemented!()
-         }
-     }
+        pub fn send_order(session_token: &SessionToken,
+                          order: Order) {
+            unimplemented!()
+        }
+    }
 
-     pub use lib::*;
+    pub use lib::*;
 
-     fn main() {
-         if let Ok(session_token) = authorize("My initial token".into()) {
+    fn main() {
+        if let Ok(session_token) = authorize("My initial token".into()) {
 
-             let first_order = create_order(10, "Bananas".into());
+            let first_order = create_order(10, "Bananas".into());
 
-             if let Ok(order) = first_order {
-                 send_order(&session_token, order);
-                 // Descomente para falhar
-                 // send_order(&session_token, order);
-             }
-         }
-     }
+            if let Ok(order) = first_order {
+                send_order(&session_token, order);
+                // Descomente para falhar
+                // send_order(&session_token, order);
+            }
+        }
+    }
    #+END_SRC
 
    [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_13.rs][O código completo para compilar está aqui.]]
    Descomente a linha no exemplo para ver o compilador reforçando que nosso pedido não pode mais ser utilizado.
 
    #+BEGIN_SRC
-   $ rustc -A unused_variables -A dead_code ~/order.rs
+$ rustc -A unused_variables -A dead_code ~/order.rs
 error[E0382]: use of moved value: `order`
-  --> ~/order_13.rs:43:28
+--> ~/order_13.rs:43:28
    |
-41 |             send_order(&session_token, order);
-   |                                        ----- value moved here
-42 |             // Tente descomentar para falhar
+41 |         	send_order(&session_token, order);
+   |                                    	----- value moved here
+42 |         	// Tente descomentar para falhar
 43 | send_order(&session_token, order);
-   |                            ^^^^^ value used here after move
+   |                        	^^^^^ value used here after move
    |
    = note: move occurs because `order` has type `lib::Order`, which does not implement the `Copy` trait
 
@@ -1320,27 +1309,27 @@ error: aborting due to previous error
    --- a/order_12.rs
    +++ b/order_14.rs
    @@ -13,6 +13,12 @@ mod lib {
-            name: String,
-        }
+          name: String,
+      }
 
-   +    pub struct OrderResponse {
-   +        pub name: String,
-   +        pub status: String,
-   +        pub amount: u8,
-   +    }
+   +	pub struct OrderResponse {
+   +    	pub name: String,
+   +    	pub status: String,
+   +    	pub amount: u8,
+   +	}
    +
-        pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
-            if amount <= 0 {
-                unimplemented!()
+      pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+          if amount <= 0 {
+              unimplemented!()
    @@ -25,7 +31,7 @@ mod lib {
-        }
+      }
 
-        pub fn send_order(session_token: &SessionToken,
-   -                      order: Order) {
-   +                      order: Order) -> OrderResponse {
-            unimplemented!()
-        }
-    }
+      pub fn send_order(session_token: &SessionToken,
+   -                  	order: Order) {
+   +                  	order: Order) -> OrderResponse {
+          unimplemented!()
+      }
+  }
    #+END_SRC
 
    Também vamos demonstrar que nosso envio do pedido pode falhar, assim como acontece ao iniciar uma sessão.
@@ -1405,26 +1394,26 @@ error: aborting due to previous error
 
    #+RESULTS:
    #+BEGIN_SRC diff
-   diff --git a/order_14.rs b/order_15.rs
-   index 4277e4c..dee3edd 100644
-   --- a/order_14.rs
-   +++ b/order_15.rs
-   @@ -31,7 +31,7 @@ mod lib {
-        }
+      diff --git a/order_14.rs b/order_15.rs
+      index 4277e4c..dee3edd 100644
+      --- a/order_14.rs
+      +++ b/order_15.rs
+      @@ -31,7 +31,7 @@ mod lib {
+         }
 
-        pub fn send_order(session_token: &SessionToken,
-   -                      order: Order) -> OrderResponse {
-   +                      order: Order) -> Result<OrderResponse, ApiError> {
-            unimplemented!()
-        }
-    }
+         pub fn send_order(session_token: &SessionToken,
+      -                  	order: Order) -> OrderResponse {
+      +                  	order: Order) -> Result<OrderResponse, ApiError> {
+             unimplemented!()
+         }
+     }
    #+END_SRC
 
    [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_15.rs][O código completo para compilar está aqui.]]
 
    Uma grande vantagem de utilizar a estrutura /Result/ que vem junto da
    =stdlib=, é que o compilador entende a semântica de erros.
-   Nosso código esta fazendo uma chamada que pode falhar ao enviar o pedido, mas
+   Nosso código faz uma chamada que pode falhar ao enviar o pedido, mas
    nunca está verificando se a resposta está Ok.
 
    O compilador sabe que =Result= tem a semântica de uma operação que pode
@@ -1436,9 +1425,9 @@ error: aborting due to previous error
  $ rustc -A unused_variables -A dead_code ~/order.rs
  warning: unused result which must be used, #[warn(unused_must_use)] on by default
    --> ~/order.rs:46:13
-    |
- 46 |             send_order(&session_token, order);
-    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+ 46 |         	send_order(&session_token, order);
+  |         	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
    #+END_SRC
 
 ** Definindo possíveis status de um pedido
@@ -1523,8 +1512,8 @@ error: aborting due to previous error
    #+END_SRC
 
    #+BEGIN_SRC shell :exports results :results output :wrap "SRC diff"
-     cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
-     git --no-pager diff --no-index order_15.rs order_16.rs | dos2unix
+  cd expressando_o_dominio_atraves_do_sistema_de_tipos && \
+  git --no-pager diff --no-index order_15.rs order_16.rs | dos2unix
    #+END_SRC
 
    #+RESULTS:
@@ -1535,30 +1524,30 @@ error: aborting due to previous error
    +++ b/order_16.rs
    @@ -15,10 +15,17 @@ mod lib {
 
-        pub struct OrderResponse {
-            pub name: String,
-   -        pub status: String,
-   +        pub status: OrderStatus,
-            pub amount: u8,
-        }
+      pub struct OrderResponse {
+          pub name: String,
+   -    	pub status: String,
+   +    	pub status: OrderStatus,
+          pub amount: u8,
+      }
 
-   +    pub enum OrderStatus {
-   +        Waiting,
-   +        Shipping,
-   +        Shipped,
-   +        Delivered,
-   +    }
+   +	pub enum OrderStatus {
+   +    	Waiting,
+   +    	Shipping,
+   +    	Shipped,
+   +    	Delivered,
+   +	}
    +
-        pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
-            if amount <= 0 {
-                unimplemented!()
+      pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+          if amount <= 0 {
+              unimplemented!()
    #+END_SRC
 
-   [[file:~/repos/bltavares.github.io/_drafts][Link para o código pronto para ser compilado.]]
+   [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_16.rs][Link para o código pronto para ser compilado.]]
 
 ** Dando um nome mais bonito para nossas respostas da API
 
-   Assim que começarmos a criar mais e mais funções que utilizam comunição com
+   Assim que começarmos a criar mais e mais funções que utilizam comunicação com
    nossa API, veremos o tipo =Result<T, ApiError>=, várias e várias vezes.
    Inclusive, já temos duas funções com esse retorno na assinatura.
 
@@ -1640,43 +1629,42 @@ error: aborting due to previous error
    --- a/order_16.rs
    +++ b/order_17.rs
    @@ -26,6 +26,8 @@ mod lib {
-            Delivered,
-        }
+          Delivered,
+      }
 
-   +    pub type ApiResponse<T> = Result<T, ApiError>;
+   +	pub type ApiResponse<T> = Result<T, ApiError>;
    +
-        pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
-            if amount <= 0 {
-                unimplemented!()
+      pub fn create_order(amount: u8, name: String) -> Result<Order, InvalidOrder> {
+          if amount <= 0 {
+              unimplemented!()
    @@ -33,12 +35,12 @@ mod lib {
-            unimplemented!()
-        }
+          unimplemented!()
+      }
 
-   -    pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
-   +    pub fn authorize(auth_token: String) -> ApiResponse<SessionToken> {
-            unimplemented!()
-        }
+   -	pub fn authorize(auth_token: String) -> Result<SessionToken, ApiError> {
+   +	pub fn authorize(auth_token: String) -> ApiResponse<SessionToken> {
+          unimplemented!()
+      }
 
-        pub fn send_order(session_token: &SessionToken,
-   -                      order: Order) -> Result<OrderResponse, ApiError> {
-   +                      order: Order) -> ApiResponse<OrderResponse> {
-            unimplemented!()
-        }
-    }
+      pub fn send_order(session_token: &SessionToken,
+   -                  	order: Order) -> Result<OrderResponse, ApiError> {
+   +                  	order: Order) -> ApiResponse<OrderResponse> {
+          unimplemented!()
+      }
+  }
    #+END_SRC
 
    [[file:expressando_o_dominio_atraves_do_sistema_de_tipos/order_17.rs][Aqui temos o codigo com o resultado final, pronto para ser compilado]]
 
 ** Conclusão
-   Depois de todos esses passos, o dominio no nosso programa está bem mais
+   Depois de todos esses passos, o domínio no nosso programa está bem mais
    definido do que no início, mas com mais linhas de código também.
 
    Trocamos verbosidade e tamanho de código por um programa expressando melhor
    nosso domínio.
 
-   Começamos com um programa bem simples que resolvia nosso problema e fomos
-   evoluindo aos poucos para trazer algumas das suposições e expectativas que
-   mantinhamos na nossa cabeça como algo verificável pelo compilador.
+   Começamos com um programa bem simples que resolveu nosso problema e evoluímos aos poucos para trazer algumas das suposições e expectativas que
+   guardavamos em nossa cabeça como algo verificável pelo compilador.
 
    Poucas das vezes tivemos que alterar o código no =main=.
    Quando isso foi necessário alterar código no =main=, era para tratar com
@@ -1691,11 +1679,11 @@ error: aborting due to previous error
    métodos.
 
    Mesmo sem escrever a implementação dos nosso metódos, podemos extrair algumas
-   informações sobre nosso dominio.
-   Saber extrair e definir essas informações e
-   intenções também é uma prática a ser melhor explorada pelos desenvolvedores.
+   informações sobre nosso domínio.
+   Saber extrair e definir essas informações e intenções também é uma prática a
+   ser melhor explorada pelos desenvolvedores.
 
-   É preciso conhecer a semantica e regras do sistema para poder extrair e
+   É preciso conhecer a semântica e regras do sistema para poder extrair e
    descrever melhor a intenção do código. Essa é uma habilidade que pode ser
    desenvolvida, assim como a habilidade de interpretação de texto.
 
@@ -1704,7 +1692,7 @@ error: aborting due to previous error
    estáticos como o de Rust para o dominio através de código.
 
    Como não cheguei a implementar o corpo das funções e quis apenas focar na
-   informação que a assinatura contem, não cheguei a explorar como TDD pode nos
+   informação que a assinatura contém, não cheguei a explorar como TDD pode nos
    ajudar a evoluir nosso design em conjunto dos tipos.
    Isso pode ser material para outro post.
 
