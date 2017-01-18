@@ -10,15 +10,15 @@ tags:
 
 (Note: This post should be Google Translate friendly. I've refrained from using slangs to help with that.)
 
-Esse post é para que eu possa desenvolver melhor a ideia e mostrar um pouco, de forma mais prática, as vantagens de utilizar um sistema de tipos expressivo, em relação a sistemas de tipos mais simples.
+Este post é para que eu possa desenvolver melhor a ideia sobre a relação de tipos e domínio, além de mostrar um pouco, de forma mais prática, as vantagens de utilizar um sistema de tipos expressivo, em relação a sistemas de tipos mais simples.
 
-Mas antes de tudo, vamos definir um pouco quais tipos entraram na categoria de sistema de tipos expressivo. Muitos dos sistemas de tipo que considero expressivo geralmente não são os que estamos acostumados, e que geralmente vem na nossa mente, como Java ou C#.
+Antes de tudo, vamos definir um pouco quais tipos entraram na categoria de sistema de tipos expressivo. Muitos dos sistemas de tipo que considero expressivo geralmente não são os que estamos acostumados, e que geralmente vem na nossa mente, como Java ou C#.
 
 O Gary Bernhardt escreveu um Gist interessante sobre ["Types"](https://gist.github.com/garybernhardt/122909856b570c5c457a6cd674795a9c) em que é possível entender diferentes aspectos de cada linguagem.
 
 Esse não é um post para dizer que utilizando uma linguagem como JavaScript, Python ou Ruby não poderíamos chegar na mesma arquitetura. É um post para analisar como a existência do sistema de tipos estimula um outro tipo de design.
 
-Sistemas de tipos mais dinâmicos possuem suas vantagens, mas vou focar nas vantagens dos tipos estáticos e sem compará-los diretamente - talvez isso seja um assunto para outro artigo.
+Sistemas de tipos mais dinâmicos possuem suas vantagens, mas vou focar nas vantagens dos tipos estáticos, sem compará-los diretamente - talvez isso seja um assunto para outro artigo.
 
 Demonstrarei a seguir um dos aspectos de um sistema de tipo mais restritivo e como aproveitar o investimento que é "definir melhor o seu programa" - mesmo que isso queira dizer um pouco mais verboso e enrijecido.
 
@@ -26,7 +26,7 @@ Demonstrarei a seguir um dos aspectos de um sistema de tipo mais restritivo e co
 
 Esse post foi pensado em Rust, que tem algumas características um pouco peculiares, se comparados com o sistema de tipos estático mais comuns (Java ou C#).
 
-Algumas das características peculiares se comparado com outras linguagens:
+Algumas das características peculiares se comparado com essas linguagens:
 
 ## *Null* não é um habitante de todos os *Tipos*.
 
@@ -54,13 +54,13 @@ Assim, é preciso verificar se o valor está presente ou não, antes de continua
 
 ## É possível expressar que um valor será invalidado após uma operação.
 
-Como Rust possui o conceito de [posse do valor](https://doc.rust-lang.org/book/ownership.html) (em inglês, **ownership**), é possível definir que uma função precisa ser dona de um valor, invalidando qualquer outra referência, caso não seja possível copiar ou clonar o dado. Isso traz mais expressividade, mas ao mesmo tempo um conceito a mais para aprender.
+Rust possui o conceito de [posse do valor](https://doc.rust-lang.org/book/ownership.html) (em inglês, **ownership**), que define que um escopo precisa ser dono de seus valores, invalidando qualquer outra referência, caso não seja possível copiar ou clonar o dado ao trocar de escopo. Isso traz mais expressividade, mas ao mesmo tempo um conceito a mais para aprender.
 
 A ideia de posse do valor é um conceito que Rust traz como novidade em comparação a outras linguagens, e que para mim é um ótimo motivo para estudar a linguagem. O conceito é um pouco difícil, inclusive por ser novidade, e mais pra frente no texto trarei alguns exemplos.
 
 Tratar essas peculiaridades como benefícios, como sempre, são escolhas de benefício x valor. Vamos ver o que é possível expressar utilizando essas características, para podermos considerar o valor.
 
-Para isso, vamos escrever código e observar o que é possível entender do domínio, inclusive sem ter o corpo das funções.
+Para isso, vamos escrever código e observar o que é possível entender do domínio, mesmo sem ter o corpo das funções.
 
 ## Como compilar os exemplos de código
 
@@ -125,9 +125,9 @@ Essa é uma implementação inicial e pode ser amadurecida.
 -   Temos nossa função principal do problema, `send_order`, com os conceitos de: quantidade, produto e token de sessão.
 -   Existe uma função que pode gerar um token de sessão.
 
-Estamos com essas duas funções, mas de nenhuma forma estou definindo no programa que essas duas funções mantém uma relação bem próximas.
+Estamos com essas duas funções, mas de nenhuma forma estou definindo no programa que essas duas funções mantém uma relação bem próxima.
 
-Sem essa definição, uma outra pessoa:
+Sem essa definição de relação, uma outra pessoa:
 
 -   Poderia chamar `send_order` sem chamar a função `authorize`
 -   Poderia chamar a função `send_order` com uma *String* arbitrária como token, e ter um erro de parsing, validação ou qualquer outra coisa.
@@ -136,7 +136,7 @@ Vamos deixar nosso programa melhor definido escrevendo mais código.
 
 # Extraindo o conceito de Session Token
 
-Temos um relacionamento entre a `String` de saída do `authorize`, e a entrada do `send_order`. No nosso domínio, isso é o token da sessão.
+Temos um relacionamento entre a `String` de saída do `authorize`, e a `String` na entrada do `send_order`. No nosso domínio, isso é o token da sessão.
 
 Vamos fazer uma pequena alteração no código, e extrair o conceito do token da sessão em uma estrutura retornada ao iniciar a sessão.
 
@@ -164,7 +164,7 @@ index cfce64f..9b95b16 100644
 
 Sem se ater muito aos detalhes, esse novo snippet introduz uma estrutura que encapsula uma *String*. A nossa estrutura `SessionToken` faz a conexão entre o retorno de `authorize` com a entrada de `send_order`.
 
-Se analisarmos as assinaturas, a conexão entre as duas funções agora vai além dos nomes e começa a entrar no nível de estruturas de dados que o compilador pode verificar.
+Ao analisarmos as assinaturas, a conexão entre as duas funções agora vai além dos nomes e começa a entrar no nível de estruturas de dados que o compilador pode verificar.
 
 Nosso código de uso no `main` se manteve o mesmo.
 
@@ -789,6 +789,8 @@ Foi possível criar um relacionamento mais claro entre as saídas e entradas das
 Mesmo sem escrever a implementação dos nosso metódos, podemos extrair algumas informações sobre nosso domínio. Saber extrair e definir essas informações e intenções também é uma prática a ser melhor explorada pelos desenvolvedores.
 
 É preciso conhecer a semântica e regras do sistema para poder extrair e descrever melhor a intenção do código. Essa é uma habilidade que pode ser desenvolvida, assim como a habilidade de interpretação de texto.
+
+Uma apresentação que trabalha a idea de limitar os estados impossíveis do domínio através do código é a apresentação ["Making Impossible States Impossible"](https://www.youtube.com/watch?v=IcgmSRJHu_8) pelo Richard Feldman, com exemplos em Elm. Recomendo assistir também, apesar de ser outra linguagem, no intuito de focar no conceito.
 
 Esse resultado final não está tão idiomático e pode melhorar. Mas já temos o suficiente para explorar a expressividade de um sistema de tipos estáticos como o de Rust para o dominio através de código.
 
