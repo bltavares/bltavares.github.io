@@ -80,10 +80,6 @@ isso queira dizer um pouco mais verboso e enrijecido.
     Funções que retornariam ~null~ em outras linguagens precisam retornar em
     Rust uma estrutura, indicando que o valor é opcional.
 
-    As funções que poderiam retornar ~null~ em outras linguagens precisam ter
-    isso declarado na sua assinatura em Rust, alertando sobre o possível
-    problema.
-
     #+BEGIN_SRC rust
      mod file {
          pub fn open(path: String) -> Option<File> {
@@ -94,6 +90,8 @@ isso queira dizer um pouco mais verboso e enrijecido.
 
     Assim, é preciso verificar se o valor está presente ou não, antes de
     continuar o processamento.
+    Essa declaração agora também é parte da assinatura, e nos informa da
+    possível falta do valor retornado.
 
 *** É possível expressar que um valor será invalidado após uma operação.
 
@@ -103,9 +101,9 @@ isso queira dizer um pouco mais verboso e enrijecido.
     Isso traz mais expressividade, mas ao mesmo tempo um conceito a mais para
     aprender.
 
-    Esse é um conceito de posse do valor é um conceito novo que Rust traz como
-    novidade em comparação a outras linguagens, e que para mim é um ótimo motivo
-    para estudar a linguagem. O conceito é um pouco difícil, inclusive por ser
+    A ideia de posse do valor é um conceito que Rust traz como novidade em
+    comparação a outras linguagens, e que para mim é um ótimo motivo para
+    estudar a linguagem. O conceito é um pouco difícil, inclusive por ser
     novidade, e mais pra frente no texto trarei alguns exemplos.
 
     Tratar essas peculiaridades como benefícios, como sempre, são escolhas de

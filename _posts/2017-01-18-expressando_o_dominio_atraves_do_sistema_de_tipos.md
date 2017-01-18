@@ -56,7 +56,7 @@ Assim, é preciso verificar se o valor está presente ou não, antes de continua
 
 Como Rust possui o conceito de [posse do valor](https://doc.rust-lang.org/book/ownership.html) (em inglês, **ownership**), é possível definir que uma função precisa ser dona de um valor, invalidando qualquer outra referência, caso não seja possível copiar ou clonar o dado. Isso traz mais expressividade, mas ao mesmo tempo um conceito a mais para aprender.
 
-Esse é um conceito de posse do valor é um conceito novo que Rust traz como novidade em comparação a outras linguagens, e que para mim é um ótimo motivo para estudar a linguagem. O conceito é um pouco difícil, inclusive por ser novidade, e mais pra frente no texto trarei alguns exemplos.
+A ideia de posse do valor é um conceito que Rust traz como novidade em comparação a outras linguagens, e que para mim é um ótimo motivo para estudar a linguagem. O conceito é um pouco difícil, inclusive por ser novidade, e mais pra frente no texto trarei alguns exemplos.
 
 Tratar essas peculiaridades como benefícios, como sempre, são escolhas de benefício x valor. Vamos ver o que é possível expressar utilizando essas características, para podermos considerar o valor.
 
