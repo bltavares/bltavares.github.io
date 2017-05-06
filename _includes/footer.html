@@ -1,8 +1,11 @@
 <div class="disclaimer">
-  {% if site.data.theme.show_disclaimer %}
-  <p>
-    The postings on this site are my own and don't necessarily represent my
-    employer’s positions, strategies or opinions.
-  </p>
-  {% endif %}
+    {% if site.data.theme.show_disclaimer %}
+    <p>
+        <a href="{{site.url}}"> <i class="fa fa-home"></i> Home</a> -
+        {{ site.data.theme.name }} © {{ site.time | date: '%Y' }}
+        -
+        The postings on this site are my own and don't necessarily represent my
+        employer’s positions, strategies or opinions.
+    </p>
+    {% endif %}
 </div>
