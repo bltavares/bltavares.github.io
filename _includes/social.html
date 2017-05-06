@@ -1,18 +1,19 @@
-Follow me:
-<div id="stalker">
-  {% if site.data.social.github %}
-  <a title="{{ site.data.social.github }} on Github" href="http://github.com/{{ site.data.social.github }}">
-    <i class="icon-github-sign"></i>
-  </a>
-  {% endif %}
+<div id="social">
+    <span id="stalker">
+        {% if site.data.social.github %}
+        <a title="{{ site.data.social.github }} on Github" href="http://github.com/{{ site.data.social.github }}">
+            <i class="fa fa-github-square"></i>
+        </a>
+        {% endif %}
 
-  {% if site.data.social.twitter %}
-  <a title="{{ site.data.social.twitter }} on Twitter" href="http://twitter.com/{{ site.data.social.twitter }}">
-    <i class="icon-twitter-sign"></i>
-  </a>
-  {% endif %}
+        {% if site.data.social.twitter %}
+        <a title="{{ site.data.social.twitter }} on Twitter" href="http://twitter.com/{{ site.data.social.twitter }}">
+            <i class="fa fa-twitter-square"></i>
+        </a>
+        {% endif %}
 
-  <a title="RSS feed" id="rss" href="/atom.xml">
-    <i class="icon-rss-sign"></i>
-  </a>
+        <a title="RSS feed" id="rss" href="/atom.xml">
+            <i class="fa fa-rss-square"></i>
+        </a>
+    </span>
 </div>

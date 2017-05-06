@@ -8,9 +8,29 @@
 {% include css/syntax.css %}
 
 #post p {
-  line-height: 1.5em;
-  font-family: serif;
-  font-size: 1.2em;
+  line-height: 1.6em;
+  font-family: 'Open Sans Light';
+  font-size: 1.3em;
+}
+
+#post li {
+    color: #333;
+}
+
+#post h1:nth-child(n+2),
+#post h2, #post h3,
+#post h4, #post h5, #post h6 {
+    color: #333;
+    padding-top: 1em;
+    padding-bottom: 0.4em;
+}
+
+#post h1 {
+    color: #222;
+}
+
+#social {
+    text-align: center;
 }
 
 @media only screen and (max-width: 959px) {

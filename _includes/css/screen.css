@@ -9,7 +9,7 @@ html, body {
 
 body {
   font-size: 16px;
-  background-color: white;
+  background-color: {{ site.data.background_color }};
   color: #222222;
   line-height: 24px;
   margin: 0;
@@ -120,8 +120,8 @@ nav hr {
 }
 
 #post pre {
-  border: 1px solid #ddd;
-  background-color: #FDFFF2;
+  border: 1px solid #e5e5c5;
+  background-color: {{ site.data.code_background }};
   padding: 0 .4em;
   margin-bottom: 20px !important;
 }
@@ -133,7 +133,7 @@ nav hr {
 
 #post code {
   border: 1px solid #ddd;
-  background-color: #FDFFF2;
+  background-color: {{ site.data.code_background }};
   font-size: 85%;
   padding: 0 .2em;
 }
@@ -157,7 +157,6 @@ nav hr {
 
 .content {
   font: 400 16px/22px "open sans", sans-serif;
-  border-left: 1px solid #DDD;
   padding-left: 40px;
   padding-top: 25px;
   min-height: 400px;
@@ -209,15 +208,6 @@ nav hr {
   color: {{ site.data.highlight_color }};
 }
 
-span.icon-hn {
-  font-family: "open sans", sans-serif;
-  line-height: 20px;
-  text-align: center;
-  font-weight: bold;
-  position: relative;
-  left: 7px;
-}
-
 .home {
   font-size: 24px;
   float: right;
@@ -234,7 +224,7 @@ span.icon-hn {
   text-align: center;
 }
 
-.footnotes { 
+.footnotes {
   font-size: 14px;
   font-style: italic;
 }
@@ -248,8 +238,8 @@ span.icon-hn {
 }
 
 .caption {
-  margin: 0 auto; 
-  text-align: center; 
-  font-size: smaller; 
+  margin: 0 auto;
+  text-align: center;
+  font-size: smaller;
   padding-bottom: 10px
 }
