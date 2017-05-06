@@ -18,8 +18,6 @@
 
 /* Tablet Portrait size to standard 960 (devices and browsers) */
 @media only screen and (min-width: 768px) and (max-width: 959px) {
-	nav {
-		width: 160px; }
 	.header h2 {
 		font-size: 18px;
 	}
@@ -39,6 +37,7 @@
 	.content {
 		border: 0px;
 		padding-left: 0px;
+    font-size: 0.8em;
 	}
 }
 
