@@ -3,7 +3,6 @@ background_color: '#fffffa'
 highlight_color: '#444'
 code_background: '#fafaf0'
 
-# Profile links on the left sidebar, leave blank to ignore
 social:
   github: bltavares
   twitter: bltavares

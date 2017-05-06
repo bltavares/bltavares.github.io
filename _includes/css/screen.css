@@ -142,16 +142,16 @@ nav hr {
   border: none;
 }
 
-.sidebar {
+.header {
   padding-top: 25px;
   font-family: "open sans", sans-serif;
 }
 
-.sidebar p {
+.header p {
   font-weight: 200;
 }
 
-.sidebar a {
+.header a {
   font-weight: 600;
 }
 
