@@ -1,0 +1,16 @@
+# Color for top bar, links, etc
+background_color: '#fffffa'
+highlight_color: '#444'
+code_background: '#fafaf0'
+
+# Profile links on the left sidebar, leave blank to ignore
+social:
+  github: bltavares
+  twitter: bltavares
+
+name: Bruno Tavares
+email: contato@bltavares.com
+tagline: "blog"
+
+# Toggle "Postings are my own" disclaimer in footer
+show_disclaimer: true

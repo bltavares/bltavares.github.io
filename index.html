@@ -6,18 +6,9 @@ title: Blog Posts
 <div id="home">
     <h2><i class="fa fa-comments-o"></i> Presentations</h2>
     <ul id="presentations" class="posts">
-        <li><span>02 Dec 2016 &raquo;</span><a target="_blank" href="http://presentations.bltavares.com/multiplos-deploys/">Como multiples desplegues ayundan a reducir riesgos (y como hacerlos?) [es] </a></li>
-        <li><span>05 Jul 2016 &raquo;</span><a target="_blank" href="http://presentations.bltavares.com/tdc-introducao-ao-rust/">Rust - Uma linguagem interessante</a></li>
-        <li><span>14 Jun 2016 &raquo;</span><a target="_blank" href="http://presentations.bltavares.com/do-php-ao-rust/">Uma jornada de desenvolvimento: do PHP ao Rust</a></li>
-        <li><span>03 Mar 2016 &raquo;</span><a target="_blank" href="https://github.com/bltavares/presentations/blob/gh-pages/rust-e-traits-uteis/presentation.org">Traits úteis na stdlib de Rust</a></li>
-        <li><span>13 Jan 2016 &raquo;</span><a target="_blank" href="https://github.com/bltavares/presentations/blob/gh-pages/rust-tipos-e-ownership/rust-tipos-e-ownership.org">Rust: Estruturas de dados e (um pouco sobre) Ownership</a></li>
-        <li><span>30 Sep 2015 &raquo;</span><a target="_blank" href="https://github.com/bltavares/presentations/blob/gh-pages/getting-started-with-rust/presentation.org">Getting started with Rust</a></li>
-        <li><span>26 Mar 2014 &raquo;</span><a target="_blank" href="http://presentations.bltavares.com/passwords/">Passwords: **</a></li>
-        <li><span>21 Nov 2013 &raquo;</span><a target="_blank" href="http://presentations.bltavares.com/off-the-record-communication/">Off the record communication</a></li>
-        <li><span>31 Oct 2013 &raquo;</span><a target="_blank" href="http://presentations.bltavares.com/privacy-and-security">Privacy and security on the internet</a></li>
-        <li><span>19 Oct 2013 &raquo;</span><a target="_blank" href="http://presentations.bltavares.com/the-roaming-developer">The roaming developer</a></li>
-        <li><span>24 Apr 2013 &raquo;</span><a target="_blank" href="https://speakerdeck.com/bltavares/callbacks-are-calling-back">Callbacks are calling back</a></li>
-        <li><span>21 Apr 2013 &raquo;</span><a target="_blank" href="https://speakerdeck.com/bltavares/brincando-com-puppet-e-bots">Brincando com Puppet e Bots</a></li>
+        {% for presentation in site.data.presentations %}
+        <li><span>{{ presentation.date }} &raquo;</span><a href="{{ presentation.url }}">{{ presentation.title }}</a></li>
+        {% endfor %}
     </ul>
     <hr />
     <h2><i class="fa fa-paragraph"></i> Blog Posts</h2>

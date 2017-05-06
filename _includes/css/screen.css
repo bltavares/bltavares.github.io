@@ -9,11 +9,11 @@ html, body {
 
 body {
   font-size: 16px;
-  background-color: {{ site.data.background_color }};
+  background-color: {{ site.data.theme.background_color }};
   color: #222222;
   line-height: 24px;
   margin: 0;
-  border-top: 7px solid {{ site.data.highlight_color }};
+  border-top: 7px solid {{ site.data.theme.highlight_color }};
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -48,17 +48,17 @@ ul {
 }
 
 a {
-  color: {{ site.data.highlight_color }};
+  color: {{ site.data.theme.highlight_color }};
   text-decoration: none;
 }
 
 a:hover {
-  color: {{ site.data.highlight_color }};
+  color: {{ site.data.theme.highlight_color }};
   text-decoration: underline;
 }
 
 a:visited {
-  color: {{ site.data.highlight_color }};
+  color: {{ site.data.theme.highlight_color }};
 }
 
 table {
@@ -121,7 +121,7 @@ nav hr {
 
 #post pre {
   border: 1px solid #e5e5c5;
-  background-color: {{ site.data.code_background }};
+  background-color: {{ site.data.theme.code_background }};
   padding: 0 .4em;
   margin-bottom: 20px !important;
 }
@@ -133,7 +133,7 @@ nav hr {
 
 #post code {
   border: 1px solid #ddd;
-  background-color: {{ site.data.code_background }};
+  background-color: {{ site.data.theme.code_background }};
   font-size: 85%;
   padding: 0 .2em;
 }
@@ -179,7 +179,7 @@ nav hr {
 }
 
 #home h2 {
-  color: {{ site.data.highlight_color }};
+  color: {{ site.data.theme.highlight_color }};
 }
 
 #logo {
@@ -205,7 +205,7 @@ nav hr {
 
 #stalker a:hover {
   text-decoration: none;
-  color: {{ site.data.highlight_color }};
+  color: {{ site.data.theme.highlight_color }};
 }
 
 .home {
