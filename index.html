@@ -4,16 +4,16 @@ title: Blog Posts
 ---
 
 <div id="home">
-    <div class="h-feed">
-        <h2 class="p-name"><i class="fa fa-comments-o"></i> Presentations</h2>
+    <div class="h-feed hfeed">
+        <h2 class="p-name" rel="tag"><i class="fa fa-comments-o"></i> Presentations</h2>
 
         <ul id="presentations" class="posts">
             {% for presentation in site.data.presentations %}
-            <li class="h-feed">
+            <li class="h-entry hentry">
                 <span>
-                    <time class="dt-published" datetime="{{ presentation.date }}">{{ presentation.date }}</time>
+                    <time class="dt-published published" datetime="{{ presentation.date }}">{{ presentation.date }}</time>
                     &raquo;</span>
-                <a href="{{ presentation.url }}" class="u-url p-name">{{ presentation.title }}</a>
+                <a href="{{ presentation.url }}" class="u-url p-name bookmark entry-title">{{ presentation.title }}</a>
             </li>
             {% endfor %}
         </ul>
@@ -21,16 +21,16 @@ title: Blog Posts
 
     <hr />
 
-    <div class="h-feed">
-        <h2 class="p-name"><i class="fa fa-paragraph"></i> Blog Posts</h2>
+    <div class="h-feed hfeed">
+        <h2 class="p-name" rel="tag"><i class="fa fa-paragraph"></i> Blog Posts</h2>
 
         <ul id="blog-posts" class="posts">
             {% for post in site.posts %}
-            <li class="h-feed">
+            <li class="h-entry hentry">
                 <span>
-                    <time class="dt-published" datetime="{{ post.date }}">{{ post.date | date_to_string }}</time>
+                    <time class="dt-published published" datetime="{{ post.date }}">{{ post.date | date_to_string }}</time>
                     &raquo;</span>
-                <a href="{{ post.url }}" class="u-url p-name">{{ post.title }}</a>
+                <a href="{{ post.url }}" class="u-url p-name bookmark entry-title">{{ post.title }}</a>
             </li>
             {% endfor %}
         </ul>

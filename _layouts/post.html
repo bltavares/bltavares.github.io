@@ -24,14 +24,14 @@ layout: default
 
 <aside id="related">
     <h3>Related Posts</h3>
-    <ul class="posts h-feed">
+    <ul class="posts h-feed hfeed">
         {% for post in site.related_posts limit:3 %}
-        <li class="h-entry">
+        <li class="h-entry hentry">
             <span>
-                <time class="dt-published" datetime="{{ post.date }}">{{ post.date | date_to_string }}</time> &raquo;
+                <time class="dt-published published" datetime="{{ post.date }}">{{ post.date | date_to_string }}</time> &raquo;
             </span>
-            <a href="{{ post.url }}" class="u-url">
-                <span class="p-name">{{ post.title }}</span>
+            <a href="{{ post.url }}" class="u-url bookmark">
+                <span class="p-name entry-title">{{ post.title }}</span>
             </a>
         </li>
         {% endfor %}
