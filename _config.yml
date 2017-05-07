@@ -1,5 +1,5 @@
 # General Jekyll Config
-url: http://blog.bltavares.com
+url: https://blog.bltavares.com
 permalink: pretty
 exclude: [LICENSE, CNAME, README.md, .gitignore, _posts/*.org]
 timezone: America/Sao_Paulo
