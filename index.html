@@ -9,11 +9,20 @@ title: Blog Posts
 
         <ul id="presentations" class="posts">
             {% for presentation in site.data.presentations %}
-            <li class="h-entry hentry">
+            <li class="h-entry hentry"
+                itemscope="" itemtype="http://schema.org/BlogPosting">
                 <span>
-                    <time class="dt-published published" datetime="{{ presentation.date }}">{{ presentation.date }}</time>
-                    &raquo;</span>
-                <a href="{{ presentation.url }}" rel="bookmark" class="u-url p-name bookmark entry-title">{{ presentation.title }}</a>
+                    <meta itemprop="author" content="{{ site.data.theme.name }}" />
+                    <time class="dt-published published" datetime="{{ presentation.date }}"
+                          itemprop="datePublished dateModified">
+                        {{ presentation.date | date_to_string }}
+                    </time>
+                    &raquo;
+                </span>
+                <a href="{{ presentation.url }}" rel="bookmark" class="u-url p-name bookmark entry-title"
+                   itemprop="url mainEntityOfPage name headline">
+                    {{ presentation.title }}
+                </a>
             </li>
             {% endfor %}
         </ul>
@@ -26,11 +35,20 @@ title: Blog Posts
 
         <ul id="blog-posts" class="posts">
             {% for post in site.posts %}
-            <li class="h-entry hentry">
+            <li class="h-entry hentry"
+                itemscope="" itemtype="http://schema.org/BlogPosting">
                 <span>
-                    <time class="dt-published published" datetime="{{ post.date }}">{{ post.date | date_to_string }}</time>
-                    &raquo;</span>
-                <a href="{{ post.url }}" rel="bookmark" class="u-url p-name bookmark entry-title">{{ post.title }}</a>
+                    <meta itemprop="author" content="{{ site.data.theme.name }}" />
+                    <time class="dt-published published" datetime="{{ post.date }}"
+                          itemprop="datePublished dateModified">
+                        {{ post.date | date_to_string }}
+                    </time>
+                    &raquo;
+                </span>
+                <a href="{{ post.url }}" rel="bookmark" class="u-url p-name bookmark entry-title"
+                   itemprop="url mainEntityOfPage name headline">
+                    {{ post.title }}
+                </a>
             </li>
             {% endfor %}
         </ul>

@@ -2,50 +2,62 @@
 layout: default
 ---
 
-<article class="h-entry hentry"
-         itemscope="" itemtype="http://schema.org/BlogPosting">
-    <p class="meta">
-        <time class="dt-published published" datetime="{{ page.date }}"
-              itemprop="datePublished dateModified">
-            {{ page.date | date: "%B %d, %Y" }}
-        </time>
-        -
-        <span itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-            <a href="{{ site.url }}" class="p-author h-card author" rel="author"
-               itemprop="url name">
-                {{ site.data.theme.name }}
-            </a>
-        </span>
-        <a href="/" itemprop="mainEntityOfPage">
-            <i class="home fa fa-home"></i>
-        </a>
-    </p>
 
-    <h1 class="title p-name entry-title"
-        itemprop="name headline">
-        <a href="{{ page.url }}" class="u-url bookmark" rel="bookmark">
-            {{ page.title }}
-        </a>
-    </h1>
-
-    <div id="post" class="e-content entry-content"
-         itemprop="articleBody">
-        {{ content }}
-    </div>
-
-    <aside id="related">
-        <h3>Related Posts</h3>
-        <ul class="posts h-feed hfeed">
-            {% for post in site.related_posts limit:3 %}
-            <li class="h-entry hentry">
-                <span>
-                    <time class="dt-published published" datetime="{{ post.date }}">{{ post.date | date_to_string }}</time> &raquo;
-                </span>
-                <a href="{{ post.url }}" class="u-url bookmark" rel="bookmark">
-                    <span class="p-name entry-title">{{ post.title }}</span>
+<main aria-label="Main content" itemscope itemtype="https://schema.org/Blog">
+    <article class="h-entry hentry"
+             itemprop="blogPost" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <p class="meta">
+            <time class="dt-published published" datetime="{{ page.date }}"
+                  itemprop="datePublished dateModified">
+                {{ page.date | date: "%B %d, %Y" }}
+            </time>
+            -
+            <span itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+                <a href="{{ site.url }}" class="p-author h-card author" rel="author"
+                   itemprop="url name">
+                    {{ site.data.theme.name }}
                 </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </aside>
-</article>
+            </span>
+            <a href="/">
+                <i class="home fa fa-home"></i>
+            </a>
+        </p>
+
+        <h1 class="title p-name entry-title"
+            itemprop="name headline">
+            <a href="{{ page.url }}" class="u-url bookmark" rel="bookmark"
+               itemprop="mainEntityOfPage">
+                {{ page.title }}
+            </a>
+        </h1>
+
+        <div id="post" class="e-content entry-content"
+             itemprop="articleBody">
+            {{ content }}
+        </div>
+
+        <aside id="related">
+            <h3>Related Posts</h3>
+            <ul class="posts h-feed hfeed">
+                {% for post in site.related_posts limit:3 %}
+                <li class="h-entry hentry" itemscope="" itemtype="http://schema.org/BlogPosting">
+                    <meta itemprop="author" content="{{ site.data.theme.name }}" />
+                    <span>
+                        <time class="dt-published published" datetime="{{ post.date }}"
+                              itemprop="datePublished dateModified">
+                            {{ post.date | date_to_string }}
+                        </time>
+                        &raquo;
+                    </span>
+                    <a href="{{ post.url }}" class="u-url bookmark" rel="bookmark" itemprop="url mainEntityOfPage">
+                        <span class="p-name entry-title"
+                              itemprop="name headline">
+                            {{ post.title }}
+                        </span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </aside>
+    </article>
+</main>
