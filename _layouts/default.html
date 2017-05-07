@@ -2,10 +2,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ page.title }}</title>
     <meta name="author" content="{{ site.data.theme.name }}" />
-    <meta name="description" content="{{ site.data.theme.name }} - Blog" />
-    <link rel="canonical" href="{{ site.url }}{{ page.url | replace:'index.html','' }}" />
 
     <link href="//fonts.googleapis.com/css?family=Open+Sans:600,800" rel="stylesheet" type="text/css">
     <link rel="shortcut icon" href="/favicon.png">
@@ -14,8 +11,7 @@
     <link rel="stylesheet" href="/assets/css/all.css">
     <meta name="theme-color" content="{{ site.data.theme.highlight_color }}" />
 
-    <meta name="yandex-verification" content="c256e221e48f6bd4" />
-    <meta name="msvalidate.01" content="0411A18071388E4453DC05E26EBB943F" />
+    {% seo %}
 </head>
 <body>
     <div class="container">

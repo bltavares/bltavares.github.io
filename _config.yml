@@ -11,7 +11,28 @@ redcarpet:
       - fenced_code_blocks
 
 gems:
-    - jekyll-sitemap
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+## SEO Tag plugin
+title: Bruno Lara Tavares - Blog
+description: "A tech blog full of opinions"
+
+twitter:
+  username: bltavares
+
+facebook:
+  publisher: bltavares
+
+social:
+  name: Bruno Tavares
+  links:
+    - https://twitter.com/bltavares
+    - https://github.com/bltavares
+
+webmaster_verifications:
+  yandex: c256e221e48f6bd4
+  bing: 0411A18071388E4453DC05E26EBB943F
 
 ## GitHub Defaults that we can change
 kramdown:
