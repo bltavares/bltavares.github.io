@@ -9,9 +9,9 @@ title: Blog Posts
 
         <ul id="presentations" class="posts">
             {% for presentation in site.data.presentations %}
-            <meta itemprop="author" content="{{ site.data.theme.name }}">
             <li class="h-entry hentry"
                 itemscope="" itemtype="http://schema.org/BlogPosting">
+                <meta itemprop="author" content="{{ site.data.theme.name }}">
                 <span>
                     <time class="dt-published published" datetime="{{ presentation.date }}"
                           itemprop="datePublished dateModified">
