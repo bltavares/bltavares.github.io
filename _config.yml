@@ -17,6 +17,9 @@ gems:
 ## SEO Tag plugin
 title: Bruno Lara Tavares - Blog
 description: "A tech blog full of opinions"
+author:
+  name: Bruno Lara Tavares
+  twitter: bltavares
 
 twitter:
   username: bltavares
