@@ -1,2 +1,3 @@
 User-agent: *
 Disallow: /assets
+Sitemap: https://blog.bltavares.com/sitemap.xml
