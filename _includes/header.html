@@ -1,5 +1,8 @@
 <nav>
-  <h2>Hi, I'm <a href="{{ site.url }}" class="h-card" rel="me">{{ site.data.theme.name }}</a>.</h2>
+    <h2>Hi, I'm
+        <address style="display:inline" class="author vcard">
+            <a href="{{ site.url }}" class="h-card url fn" rel="me">{{ site.data.theme.name }}</a>.</h2>
+        </address>
   <span id="social">
     {% include social.html %}
   </span>

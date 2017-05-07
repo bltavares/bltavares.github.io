@@ -2,23 +2,23 @@
 layout: default
 ---
 
-<article class="h-entry">
+<article class="h-entry hentry">
 <p class="meta">
-    <time class="dt-published" datetime="{{ page.date }}">{{ page.date | date: "%B %d, %Y" }}</time>
+    <time class="dt-published published" datetime="{{ page.date }}">{{ page.date | date: "%B %d, %Y" }}</time>
     -
-    <a href="{{ site.url }}" class="p-author h-card" rel="author">{{ site.data.theme.name }}</a>
+    <a href="{{ site.url }}" class="p-author h-card author" rel="author">{{ site.data.theme.name }}</a>
     <a href="/">
         <i class="home fa fa-home"></i>
     </a>
 </p>
 
-<h1 class="title p-name">
-    <a href="{{ page.url }}" class="u-url">
+<h1 class="title p-name entry-title">
+    <a href="{{ page.url }}" class="u-url bookmark" rel="bookmark">
         {{ page.title }}
     </a>
 </h1>
 
-<div id="post" class="e-content">
+<div id="post" class="e-content entry-content">
     {{ content }}
 </div>
 
