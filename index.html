@@ -13,7 +13,7 @@ title: Blog Posts
                 <span>
                     <time class="dt-published published" datetime="{{ presentation.date }}">{{ presentation.date }}</time>
                     &raquo;</span>
-                <a href="{{ presentation.url }}" class="u-url p-name bookmark entry-title">{{ presentation.title }}</a>
+                <a href="{{ presentation.url }}" rel="bookmark" class="u-url p-name bookmark entry-title">{{ presentation.title }}</a>
             </li>
             {% endfor %}
         </ul>
@@ -30,7 +30,7 @@ title: Blog Posts
                 <span>
                     <time class="dt-published published" datetime="{{ post.date }}">{{ post.date | date_to_string }}</time>
                     &raquo;</span>
-                <a href="{{ post.url }}" class="u-url p-name bookmark entry-title">{{ post.title }}</a>
+                <a href="{{ post.url }}" rel="bookmark" class="u-url p-name bookmark entry-title">{{ post.title }}</a>
             </li>
             {% endfor %}
         </ul>
