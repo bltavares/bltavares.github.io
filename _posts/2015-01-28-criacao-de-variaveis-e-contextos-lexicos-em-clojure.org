@@ -3,6 +3,7 @@
 ---
 layout: post
 title: Criação de variáveis e contextos léxicos em Clojure
+lang: pt_BR
 tags:
 - coding
 - clojure
@@ -47,7 +48,7 @@ pouco como valores são associados a símbolos em Clojure.
    simbolo nos queremos nos referir explicitamente.
 
    #+BEGIN_SRC clojure
-    variavel ;; => "exemplo" 
+    variavel ;; => "exemplo"
     exemplo/variavel ;; => "exemplo"
    #+END_SRC
 
@@ -128,7 +129,7 @@ pouco como valores são associados a símbolos em Clojure.
    consulta do valor, podendo obscurecer símbolos associados previamente.
 
    #+BEGIN_SRC clojure
-     (def exemplo 1) 
+     (def exemplo 1)
 
      (let [nova-variavel 2]
        (println exemplo)
@@ -255,15 +256,15 @@ pouco como valores são associados a símbolos em Clojure.
      ((fn recursiva [index]
         (if (= index 0)
           "Done"
-          (recursiva (dec index)))) Integer/MAX_VALUE) 
+          (recursiva (dec index)))) Integer/MAX_VALUE)
 
      ;; utilize o recur
      ((fn recursiva [index]
         (if (= index 0)
           "Done"
-          (recur (dec index)))) Integer/MAX_VALUE) 
+          (recur (dec index)))) Integer/MAX_VALUE)
    #+END_SRC
-   
+
 
 ** Links
 
@@ -271,7 +272,7 @@ pouco como valores são associados a símbolos em Clojure.
 - [[http://clojure.org/special_forms#Special%20Forms--(let%20%5Bbindings*%20%5D%20exprs*)][Documentacao do Clojure sobre o let]]
 - [[http://clojure.org/special_forms#Special%20Forms--(fn%20name?%20%5Bparams*%20%5D%20condition-map?%20exprs*)][Documentacao do Clojure sobre o fn]]
 - [[http://clojure.org/special_forms#Special%20Forms--(recur%20exprs*)][Documentacao do Clojure sobre o recur]]
- 
+
 Obrigado [[https://twitter.com/mariane_sm][Mariane]], [[https://twitter.com/erickpintor][Erick]] e [[https://github.com/renanreismartins][Renan]] pelo review.
 
 #  LocalWords:  namespace callbacks Clojure namespaces váriaveis REPL

@@ -1,0 +1,68 @@
+#+TITLE: ?
+
+Working remotely is a growing topic on many of the top tech
+companies. Some times they are considered harmful to be forbiden, like
+on Yahoo, others companies embrace it fully, like GitHub and 37Signals.
+
+Allowing people to work from home means having a wider range of talent
+available, and with that, a more diverse and capable team. During one
+of my projects in ThoughtWorks I was able to participate of an
+enabling process for better interaction when people were working from
+home, and I would like to share some of the learnings for others that
+are looking into the possibility of having a more flexible work
+location.
+
+* Working remotely has its challenges
+  
+  After the first time we tried to get one of our coworkers working
+  for a week from home, we noticed how much we relied on side-channel
+  conversation.  We were part of a distributed development team and we
+  used mostly email to communicate. But the big part of the
+  development team were colocated.
+  
+  Much of the project updates and task blockers were communicated over
+  face to face communication, and many of those bits of information were
+  not transmitted over a more persistent and across location media.
+  
+  Email is useful for sharing information project wide, but it is not
+  ideal for the daily conversation that we were used to have when being
+  in person. We decided to create a group chat, over IRC, so we could
+  have more in prompt inputs.
+  
+  That was one of the ways we used to increase the reachability that the
+  virtual presence lacks. When being remote, you need to be active
+  reinforcing your presence over group chat, live video feeds or other
+  ways. We would daily have standups using video chat so we can have a
+  closer communication, of higher bandwidth and less virtual.
+  
+* The benefits of having remote workers
+  
+  During the transition period on that project, we had some changes to
+  make the development process less relied on locality. Some of the
+  tools were made available over VPNs and delivery was improved with our
+  tools. It was when we started introducing some of the ChatOps
+  techniques that notified the whole team about changes and kept
+  everybody on the same page.
+  
+  We had also happier team members, as they could strive for a better
+  balance of work and family time. Having happy team members is one of
+  the best things you can do to have a healthy project.
+  
+  Today I work on a very distributed project. We have people over 4
+  locations, and some that work from home from time to time. I really
+  appreciate the possibility of dealing with some household chores and
+  still be able to be productive during work hours. Or even while visit
+  family and friends or working from a coffee shop.
+  
+  All the important daily decisions are communicated over IRC, and when
+  a higher discussion channel is needed we meet over on a video chat. It
+  does not replace being able to talk to the person face to face, but it
+  has many benefits that are as valuable when summed up.
+  
+  
+  Enabling remote workers requires learning from both the team and the
+  people that would like to be remote. It requires maturity to balance
+  work time and personal time, as well as being aware of the presence of
+  others over the network. But a better process and communication across
+  the team, with happy team members are worth it.
+  

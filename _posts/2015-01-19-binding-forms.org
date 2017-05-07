@@ -3,6 +3,7 @@
 ---
 layout: post
 title: binding-form e associação de valores em Clojure
+lang: pt_BR
 tags:
 - coding
 - design
@@ -43,14 +44,14 @@ do Clojure.
 Mas existem outras formatos que podemos utilizar, chamadas de desestruturação.
 
 ** Desestruturação de Listas
-   
+
    O primeiro exemplo que vou utilizar esta na desestruturação de listas.
    Podemos na hora de associar os valores, pegar elementos de dentro da lista diretamente.
-   
+
    Você pode inspecionar a estrutura de dado que será atribuída aos
    símbolos e relacionar partes dela ao invés de ter que chamar funções e
    fazer criar variáveis consecutivas.
-   
+
    #+BEGIN_SRC clojure
   (let [lista [1 2 3]
         primeiro (nth lista 0)
@@ -63,32 +64,32 @@ Mas existem outras formatos que podemos utilizar, chamadas de desestruturação.
     (+ primeiro segundo terceiro)) ;; => 6
 
    #+END_SRC
-   
+
    Escrevendo um ~let~ assim, podemos explorar esse aspecto da associação em Clojure.
    Ao invés de tentar associar o valor da lista apenas para um símbolo,
    nos criamos uma outra forma, uma lista com símbolos na posição dos
    valores que queremos associar a eles.
-   
+
    Esse tipo de desestruturação indexada funciona para estruturas
    sequenciais, que respondem a ~nth~, como Strings, Listas e Vetores.
-   
+
    #+BEGIN_SRC clojure
   (let [[x] "exemplo"
         [y] '(1 2 3)
         [z] [4 5 6]]
     [x y z]) ;; => [\e 1 4]
    #+END_SRC
-   
+
    Para estruturas sequenciais, ainda temos mais algumas opções de formas
    para desestruturar.
    Podemos combinar a atribuição de valores posicionais e capturar o
    restante da estrutura em outro símbolo.
-   
+
    Trabalhando com listas, é bem comum ter interesse no primeiro
    elemento, e fazer uma recursão no resto da lista.
    Podemos utilizar a forma ~[a b c & rest]~ para pegar os valores
    restantes que não foram atribuídos por índice.
-   
+
    #+BEGIN_SRC clojure
      (let [lista [1 2 3]
            head (nth lista 0)
@@ -99,19 +100,19 @@ Mas existem outras formatos que podemos utilizar, chamadas de desestruturação.
            [head & tail] lista]
        [head tail]) ;; => [1 [2 3]]
    #+END_SRC
-   
+
    E uma ultima opções que temos ao desestruturar sequências, é pegar o
    valor completo, mesmo depois de desestruturar, com a forma de ~[a b c :as tudo]~.
-   
+
    Podemos combinar os exemplos anteriores em uma única forma.
-   
+
    #+BEGIN_SRC clojure
      (let [[a b c & resto :as letras] "Ola Mundo"]
        [a b c resto letras]) ;; => [\O \l \a (\space \M \u \n \d \o) "Ola Mundo"]
    #+END_SRC
-   
+
 ** Desestruturação de Mapas
-   
+
 Uma segunda estrutura de dados muito utilizada em Clojure são os Mapas.
 Da mesma forma que temos facilidades para trabalhar com valores dentro
 de Sequências, temos um ~binding-form~ para Mapas. Eles permitem
@@ -212,7 +213,7 @@ aninhadas. Podemos extrair o terceiro elemento de uma sequência
 associada a uma chave em um mapa utilizando o que vimos agora, por
 exemplo.
 
-#+BEGIN_SRC clojure  
+#+BEGIN_SRC clojure
   (def meu-mapa {:chave "abcd"
                  :valores [1 2 3 4 5]})
 
@@ -231,12 +232,12 @@ costumam utilizar.
  - Extraindo valores de mapas - [[https://github.com/Raynes/lazybot/blob/master/src/lazybot/plugins/debug.clj#L27][debug.clj]]
  - Pegar o primeiro grupo capturado por um regex - [[https://github.com/Raynes/lazybot/blob/master/src/lazybot/plugins/debug.clj#L27][ping.clj]]
  - Valores de mapas dentro de mapas - [[https://github.com/clojure/clojurescript/blob/master/src/clj/cljs/compiler.clj#L53-L54][compiler.clj]]
-  
+
 Com o tempo você vai começar a ver onde seu código ficaria melhor
 utilizando as desestruturações.
 
 ** Mais links
-   
+
 - [[http://clojure.org/special_forms#binding-forms]]
 - [[https://gist.github.com/john2x/e1dca953548bfdfb9844]]
 - https://clojurebridge.github.io/community-docs/docs/clojure/destructuring/

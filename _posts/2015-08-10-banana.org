@@ -1,0 +1,109 @@
+- Dan Maclure wrote about what he considers as big changes on how to
+maintain one's productivity, even out of the office.
+
+The Internet has generated revolution on the definition of workspace.
+It has enable to interact with people over miles of distance and
+create communication channels of high bandwidth.
+
+How does that impact the project development, specially on distributed
+teams? I will tell you how being able to work remotely was very
+important to me, and the challenges I had to face while changing the
+team practices to support a different workflow.
+
+* Working remote is possible
+  The reasons to want to work remote are of a wide variety. I'm a
+  person that likes to spend some quality time with the family, and I
+  live quite far from them.
+  
+  From time to time, I get into a plane for 3 hours and then a bus of
+  +1 hour to visit them and share some of the news in my life. That is
+  very important to me, but we can't forget that we have
+  responsibilities with our project.
+  
+  Visiting for the weekend would be less than ideal, and that is when
+  I started a conversation with the team.
+  
+  We were a small distributed team, with two main locations. We were 1
+  dev pair in San Francisco and 2 dev pairs in Porto Alegre. Because
+  the distributed aspect of the project, we were already used to have
+  some video standups, email conversations and some time zones differences.
+  
+  For the San Francisco team there were no issues to address with my
+  remote work request. But with our local team mates we had to run
+  some experiments. We were used to have the high bandwidth channel of
+  face-to-face conversation. We could simply turn to one side and
+  start a conversation.
+  
+  We planned a initial spike to see how we would adapt. I planned a
+  couple of days to work from home, flying back the after the weekend
+  and we decided to give it a try.
+  
+* The first time working from home: Feeling disconnected
+  
+  The first experience working from home can be a bit lonesome. You
+  are used to see your coworkers everyday, you have a routine, a
+  office and meeting rooms.
+  
+  I was eager to deliver value and show that working from home is
+  possible, so there was a slight tendency to overwork. That is why it
+  is important to define a boundary between your workspace and
+  personal space.
+  
+  On this first couple of days I also felt disconnected and without
+  visibility on what you are doing. That was the days I valued a lot
+  the standup. Seeing everybody and discussing what you are doing was
+  really important to me.
+  
+  In the end of that week, it worked well but there was
+  improvements to be done if I wanted to keep working remotely from
+  time to time.
+  
+  
+* Adjusting the workflow together with the team
+  
+  After I came back from this first time working from home for a
+  longer time than a day, I had a brief conversation with the team.
+  We discussed how the experience was for them and for me, and defined
+  what could be improved.
+  
+  The first issue addressed was the communicataion gap.  There were
+  conversations happening on the team side which I would have
+  beneffited to be part of. We needed a shared communication channel,
+  where all the team members could participate and peek on what is
+  being discussed on the project. We then setup a group message chat.
+  
+  
+  We invited all the members, from Porto Alegre and San Francisco,
+  into a group chat over IRC. We focused on having all the
+  conversations related to the project over this channel, so we could
+  test it with intensity and see how it would go.
+  
+  Then some of the beneffits started to show up, even without people
+  not working from home. Some of the discussions we had from the Porto
+  Alegre side had some useful inputs from the San Francisco
+  side. Others would be able to come back from a coffee break and see
+  the discussion that just happen, be aware and share what they knew.
+  
+  We had abstract the need to be present.
+  
+* What I've learned
+  
+  After that, we had many other changes to help alliviate the need to
+  be collocated all the time.  There were a couple of services that
+  were only accessible from the office, but could have been easilly
+  carried into the laptop, into a vritual machine.
+  
+  During the process we learned more about the application. We
+  documented better what are the service dependencies of our
+  application. Others joining the project would benefit of that
+  information during their ramp up process.
+  
+  Those changes were made to remove the need to be collocated all the
+  time, but it brought up many other benefits.
+  
+  I've learned that being able to work from home is quite possible,
+  but it needs the support from the team to change their normal workflow.
+  And that during the process, we will learn more about our process,
+  our app and even improve the work from people in the office.
+  
+  This article was written while working from home.

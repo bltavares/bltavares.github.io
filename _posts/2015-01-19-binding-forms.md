@@ -1,6 +1,7 @@
 ---
 layout: post
 title: binding-form e associação de valores em Clojure
+lang: pt_BR
 tags:
 - coding
 - design

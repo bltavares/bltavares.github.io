@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Contexto de classes na declaracao de tipos em Haskell
+lang: pt_BR
 tags:
 - coding
 - dojo
@@ -105,4 +106,3 @@ import Money
 
 result = dollar 16.00 -- USD 16.00
 ```
-

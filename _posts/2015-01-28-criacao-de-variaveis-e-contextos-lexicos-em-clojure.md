@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Criação de variáveis e contextos léxicos em Clojure
+lang: pt_BR
 tags:
 - coding
 - clojure
@@ -44,7 +45,7 @@ também podemos especificar com um qualificador de namespace, qual
 simbolo nos queremos nos referir explicitamente.
 
 ```clojure
-variavel ;; => "exemplo" 
+variavel ;; => "exemplo"
 exemplo/variavel ;; => "exemplo"
 ```
 
@@ -113,14 +114,14 @@ Uma visualização gráfica possível para os contextos acima seria algo assim:
     |   | (println                        |
     |   |     (+ variavel nova-variavel)) |
     |   |                                 |
-    +---+---------------------------------+
+    +---|---------------------------------+
 
 É possível criar escopos dentro de escopos também.
 As atribuições introduzidas pelo novo escopo tem precendência na
 consulta do valor, podendo obscurecer símbolos associados previamente.
 
 ```clojure
-(def exemplo 1) 
+(def exemplo 1)
 
 (let [nova-variavel 2]
   (println exemplo)
@@ -150,7 +151,7 @@ Para não deixar faltar, vamos visualizar graficamente os contextos.
     |   |   | exemplo = 4          |
     |   |   |                      |
     |   |   | (println ...)        |
-    +---+---+----------------------+
+    +---|---|----------------------+
 
 Dentro do primeiro `let`, o valor para `exemplo` continua sendo o do
 contexto anterior. Dentro do segundo `let` nos associamos outro
@@ -244,7 +245,7 @@ limite máximo de chamadas de função (StackOverflow)
 ((fn recursiva [index]
    (if (= index 0)
      "Done"
-     (recursiva (dec index)))) Integer/MAX_VALUE) 
+     (recursiva (dec index)))) Integer/MAX_VALUE)
 
 ;; utilize o recur
 ((fn recursiva [index]
