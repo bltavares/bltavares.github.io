@@ -9,21 +9,22 @@ title: Blog Posts
 
         <ul id="presentations" class="posts">
             {% for presentation in site.data.presentations %}
+            <meta itemprop="author" content="{{ site.data.theme.name }}">
             <li class="h-entry hentry"
                 itemscope="" itemtype="http://schema.org/BlogPosting">
                 <span>
-                    <meta itemprop="author" content="{{ site.data.theme.name }}" />
                     <time class="dt-published published" datetime="{{ presentation.date }}"
                           itemprop="datePublished dateModified">
                         {{ presentation.date | date_to_string }}
                     </time>
                     &raquo;
                 </span>
-                <a href="{{ presentation.url }}" rel="bookmark" class="u-url p-name bookmark entry-title"
+                <a href="{{ presentation.url }}"
+                   rel="bookmark" class="u-url bookmark"
                    itemprop="url mainEntityOfPage">
-                    <span itemprop="name headline">
+                    <u class="p-name entry-title" itemprop="name headline">
                         {{ presentation.title }}
-                    </span>
+                    </u>
                 </a>
             </li>
             {% endfor %}
@@ -39,19 +40,20 @@ title: Blog Posts
             {% for post in site.posts %}
             <li class="h-entry hentry"
                 itemscope="" itemtype="http://schema.org/BlogPosting">
+                <meta itemprop="author" content="{{ site.data.theme.name }}">
                 <span>
-                    <meta itemprop="author" content="{{ site.data.theme.name }}" />
                     <time class="dt-published published" datetime="{{ post.date }}"
                           itemprop="datePublished dateModified">
                         {{ post.date | date_to_string }}
                     </time>
                     &raquo;
                 </span>
-                <a href="{{ post.url }}" rel="bookmark" class="u-url p-name bookmark entry-title"
-                   itemprop="url mainEntityOfPage"
-                    <span itemprop="name headline">
+                <a href="{{ post.url }}"
+                   rel="bookmark" class="u-url bookmark"
+                   itemprop="url mainEntityOfPage">
+                    <u class="p-name entry-title" itemprop="name headline">
                         {{ post.title }}
-                    </span>
+                    </u>
                 </a>
             </li>
             {% endfor %}
