@@ -20,8 +20,10 @@ title: Blog Posts
                     &raquo;
                 </span>
                 <a href="{{ presentation.url }}" rel="bookmark" class="u-url p-name bookmark entry-title"
-                   itemprop="url mainEntityOfPage name headline">
-                    {{ presentation.title }}
+                   itemprop="url mainEntityOfPage">
+                    <span itemprop="name headline">
+                        {{ presentation.title }}
+                    </span>
                 </a>
             </li>
             {% endfor %}
@@ -46,8 +48,10 @@ title: Blog Posts
                     &raquo;
                 </span>
                 <a href="{{ post.url }}" rel="bookmark" class="u-url p-name bookmark entry-title"
-                   itemprop="url mainEntityOfPage name headline">
-                    {{ post.title }}
+                   itemprop="url mainEntityOfPage"
+                    <span itemprop="name headline">
+                        {{ post.title }}
+                    </span>
                 </a>
             </li>
             {% endfor %}
