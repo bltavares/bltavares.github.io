@@ -16,17 +16,17 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <header class="header">
             {% include header.html %}
-        </div>
+        </header>
 
-        <div class="content">
+        <main class="content">
             {{ content }}
+        </main>
 
-            <div class="footer">
-                {% include footer.html %}
-            </div>
-        </div>
+        <footer class="footer">
+            {% include footer.html %}
+        </footer>
     </div>
 
     {% include analytics.html %}

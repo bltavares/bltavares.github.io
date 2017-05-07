@@ -10,6 +10,9 @@ redcarpet:
       - strikethrough
       - fenced_code_blocks
 
+gems:
+    - jekyll-sitemap
+
 ## GitHub Defaults that we can change
 kramdown:
   input: GFM
@@ -17,7 +20,6 @@ kramdown:
 
 ## GitHub Defaults that we cannot change
 lsi: false
-safe: true
 incremental: false
 highlighter: rouge
 gist:
