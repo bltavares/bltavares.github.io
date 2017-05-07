@@ -1,13 +1,17 @@
 <div id="social">
     <span id="stalker">
         {% if site.data.theme.social.github %}
-        <a itemprop="sameAs" title="{{ site.data.theme.social.github }} on Github" href="http://github.com/{{ site.data.theme.social.github }}">
+        <a itemprop="sameAs"
+           class="u-url" rel="me"
+           title="{{ site.data.theme.social.github }} on Github" href="http://github.com/{{ site.data.theme.social.github }}">
             <i class="fa fa-github-square"></i>
         </a>
         {% endif %}
 
         {% if site.data.theme.social.twitter %}
-        <a itemprop="sameAs" title="{{ site.data.theme.social.twitter }} on Twitter" href="http://twitter.com/{{ site.data.theme.social.twitter }}">
+        <a itemprop="sameAs"
+           class="u-url" rel="me"
+           title="{{ site.data.theme.social.twitter }} on Twitter" href="http://twitter.com/{{ site.data.theme.social.twitter }}">
             <i class="fa fa-twitter-square"></i>
         </a>
         {% endif %}
