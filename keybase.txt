@@ -1,0 +1,54 @@
+==================================================================
+https://keybase.io/bltavares
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://blog.bltavares.com
+  * I am bltavares (https://keybase.io/bltavares) on keybase.
+  * I have a public key ASAfL8PUsRUU_F4lQFmq0MiGrA1exJQ-RDnz_7CRgu7ByAo
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "eldest_kid": "012085eef95c0e3598af72c230ae319c6b14d37cd3b6e620166e3e3be45ba3f737d20a",
+            "host": "keybase.io",
+            "kid": "01201f2fc3d4b11514fc5e254059aad0c886ac0d5ec4943e4439f3ffb09182eec1c80a",
+            "uid": "aa1b9c6f2556da83565f41622fadc619",
+            "username": "bltavares"
+        },
+        "service": {
+            "hostname": "blog.bltavares.com",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "client": {
+        "name": "keybase.io go client",
+        "version": "1.0.22"
+    },
+    "ctime": 1495370854,
+    "expire_in": 504576000,
+    "merkle_root": {
+        "ctime": 1495370789,
+        "hash": "0c393824582fbad18de7f26d5556f2ce1847c9a1356ce1aaed7363fa61ddfb68c6cc317734acc11e389cbefae219e0394baa152cdf19762672c00c57fb6bfe0f",
+        "seqno": 1099196
+    },
+    "prev": "c18efec068b3d14b6eb56e49d58341b8df94dd10db69a998f10e8a869e77465e",
+    "seqno": 17,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgHy/D1LEVFPxeJUBZqtDIhqwNXsSUPkQ58/+wkYLuwcgKp3BheWxvYWTFAv17ImJvZHkiOnsia2V5Ijp7ImVsZGVzdF9raWQiOiIwMTIwODVlZWY5NWMwZTM1OThhZjcyYzIzMGFlMzE5YzZiMTRkMzdjZDNiNmU2MjAxNjZlM2UzYmU0NWJhM2Y3MzdkMjBhIiwiaG9zdCI6ImtleWJhc2UuaW8iLCJraWQiOiIwMTIwMWYyZmMzZDRiMTE1MTRmYzVlMjU0MDU5YWFkMGM4ODZhYzBkNWVjNDk0M2U0NDM5ZjNmZmIwOTE4MmVlYzFjODBhIiwidWlkIjoiYWExYjljNmYyNTU2ZGE4MzU2NWY0MTYyMmZhZGM2MTkiLCJ1c2VybmFtZSI6ImJsdGF2YXJlcyJ9LCJzZXJ2aWNlIjp7Imhvc3RuYW1lIjoiYmxvZy5ibHRhdmFyZXMuY29tIiwicHJvdG9jb2wiOiJodHRwczoifSwidHlwZSI6IndlYl9zZXJ2aWNlX2JpbmRpbmciLCJ2ZXJzaW9uIjoxfSwiY2xpZW50Ijp7Im5hbWUiOiJrZXliYXNlLmlvIGdvIGNsaWVudCIsInZlcnNpb24iOiIxLjAuMjIifSwiY3RpbWUiOjE0OTUzNzA4NTQsImV4cGlyZV9pbiI6NTA0NTc2MDAwLCJtZXJrbGVfcm9vdCI6eyJjdGltZSI6MTQ5NTM3MDc4OSwiaGFzaCI6IjBjMzkzODI0NTgyZmJhZDE4ZGU3ZjI2ZDU1NTZmMmNlMTg0N2M5YTEzNTZjZTFhYWVkNzM2M2ZhNjFkZGZiNjhjNmNjMzE3NzM0YWNjMTFlMzg5Y2JlZmFlMjE5ZTAzOTRiYWExNTJjZGYxOTc2MjY3MmMwMGM1N2ZiNmJmZTBmIiwic2Vxbm8iOjEwOTkxOTZ9LCJwcmV2IjoiYzE4ZWZlYzA2OGIzZDE0YjZlYjU2ZTQ5ZDU4MzQxYjhkZjk0ZGQxMGRiNjlhOTk4ZjEwZThhODY5ZTc3NDY1ZSIsInNlcW5vIjoxNywidGFnIjoic2lnbmF0dXJlIn2jc2lnxEDSsJ0MOURThgR1gms2TdwyzDLJN4U4OhcINaJXKaYtX1e+inhUuvt1qS9ox5E1UowaW163ZUKO6v3wZJUAEWoDqHNpZ190eXBlIKRoYXNogqR0eXBlCKV2YWx1ZcQgQ3tw9KnLwEL9S/RjnhTSmljvvIr/SLT+pxabD2W5WCGjdGFnzQICp3ZlcnNpb24B
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/bltavares
+
+==================================================================
