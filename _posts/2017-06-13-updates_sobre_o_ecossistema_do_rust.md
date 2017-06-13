@@ -11,6 +11,8 @@ tags:
 - updates
 ---
 
+(Note: This post should be Google Translate friendly. I've refrained from using slangs to help with that.)
+
 Algumas pessoas que me acompanham no dia a dia já perceberam o quanto Rust me fascina.
 
 Eu venho acompanhando a linguagem tem algum tempo, e sempre me perguntam o motivo desse interesse. Um dos motivos é ver como a comunidade vem evoluindo e tornando possível usar Rust em vários lugares.
