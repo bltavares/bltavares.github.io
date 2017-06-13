@@ -1,6 +1,6 @@
 # Color for top bar, links, etc
 background_color: '#fffffa'
-highlight_color: '#444'
+highlight_color: 'darkgoldenrod'
 code_background: '#fafaf0'
 
 social:
