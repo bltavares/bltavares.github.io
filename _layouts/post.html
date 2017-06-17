@@ -14,6 +14,7 @@ layout: default
             -
             <span itemprop="author" itemscope="" itemtype="http://schema.org/Person">
                 <a href="{{ site.url }}" class="p-author h-card author" rel="author"
+                   title="Author: {{ site.data.theme.name }}"
                    itemprop="url name">
                     {{ site.data.theme.name }}
                 </a>
@@ -49,7 +50,9 @@ layout: default
                         </time>
                         &raquo;
                     </span>
-                    <a href="{{ post.url }}" class="u-url bookmark" rel="bookmark" itemprop="url mainEntityOfPage">
+                    <a href="{{ post.url }}"
+                       hreflang="{{ post.lang | default: 'en' | slugify }}"
+                       class="u-url bookmark" rel="bookmark" itemprop="url mainEntityOfPage">
                         <b class="p-name entry-title"
                               itemprop="name headline">
                             {{ post.title }}

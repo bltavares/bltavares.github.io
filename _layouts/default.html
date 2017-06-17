@@ -1,36 +1,37 @@
 <!DOCTYPE html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="{{ site.data.theme.name }}" />
+<html lang="{{ page.lang | default: 'en' | slugify }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="{{ site.data.theme.name }}" />
 
-    <link href="//fonts.googleapis.com/css?family=Open+Sans:600,800" rel="stylesheet" type="text/css">
-    <link rel="shortcut icon" href="/favicon.png">
-    <link rel="alternate" type="application/rss+xml" title="{{ site.data.theme.name }}" href="{{site.url}}/atom.xml" />
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:600,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="/favicon.png">
+        <link rel="alternate" type="application/rss+xml" title="{{ site.data.theme.name }}" href="{{site.url}}/atom.xml" />
 
-    <link rel="stylesheet" href="/assets/css/all.css?{{site.time | date: '%s%N'}}">
-    <meta name="theme-color" content="{{ site.data.theme.highlight_color }}" />
+        <link rel="stylesheet" href="/assets/css/all.css?{{site.time | date: '%s%N'}}">
+        <meta name="theme-color" content="{{ site.data.theme.highlight_color }}" />
 
-    {% seo %}
+        {% seo %}
 
-    <link rel="pingback" href="https://webmention.io/blog.bltavares.com/xmlrpc" />
-    <link rel="webmention" href="https://webmention.io/blog.bltavares.com/webmention" />
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            {% include header.html %}
-        </header>
+        <link rel="pingback" href="https://webmention.io/blog.bltavares.com/xmlrpc" />
+        <link rel="webmention" href="https://webmention.io/blog.bltavares.com/webmention" />
+    </head>
+    <body>
+        <div class="container">
+            <header class="header">
+                {% include header.html %}
+            </header>
 
-        <main class="content">
-            {{ content }}
-        </main>
+            <main class="content">
+                {{ content }}
+            </main>
 
-        <footer class="footer">
-            {% include footer.html %}
-        </footer>
-    </div>
+            <footer class="footer">
+                {% include footer.html %}
+            </footer>
+        </div>
 
-    {% include analytics.html %}
-</body>
+        {% include analytics.html %}
+    </body>
 </html>

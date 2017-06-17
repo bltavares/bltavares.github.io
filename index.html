@@ -20,6 +20,7 @@ title: Blog Posts
                     &raquo;
                 </span>
                 <a href="{{ presentation.url }}"
+                   hreflang="{{ presentation.lang | default: 'en' | slugify }}"
                    rel="bookmark" class="u-url bookmark"
                    itemprop="url mainEntityOfPage">
                     <b class="p-name entry-title" itemprop="name headline">
@@ -49,6 +50,7 @@ title: Blog Posts
                     &raquo;
                 </span>
                 <a href="{{ post.url }}"
+                   hreflang="{{ post.lang | default: 'en' | slugify }}"
                    rel="bookmark" class="u-url bookmark"
                    itemprop="url mainEntityOfPage">
                     <b class="p-name entry-title" itemprop="name headline">
