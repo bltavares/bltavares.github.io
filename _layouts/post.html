@@ -19,6 +19,9 @@ layout: default
                     {{ site.data.theme.name }}
                 </a>
             </span>
+            {% unless page.tags == empty %}
+                <span>[{{ page.tags | join: ", " }}]</span>
+            {% endunless %}
             <a href="/">
                 <i class="home fa fa-home"></i>
             </a>

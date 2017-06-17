@@ -57,6 +57,9 @@ title: Blog Posts
                         {{ post.title }}
                     </b>
                 </a>
+                {% unless post.tags == empty %}
+                    <span>[{{ post.tags | join: ", " }}]</span>
+                {% endunless %}
             </li>
             {% endfor %}
         </ul>

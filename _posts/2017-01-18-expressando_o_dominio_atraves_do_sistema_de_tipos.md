@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Expressando o domínio através do sistema de tipos (em Rust)
+title: Expressando o domínio através do sistema de tipos
 lang: pt_BR
 tags:
 - rust

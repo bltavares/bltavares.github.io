@@ -2,7 +2,7 @@
 #+BEGIN_EXPORT html
 ---
 layout: post
-title: Expressando o domínio através do sistema de tipos (em Rust)
+title: Expressando o domínio através do sistema de tipos
 lang: pt_BR
 tags:
 - rust
@@ -42,21 +42,21 @@ como aproveitar o investimento que é "definir melhor o seu programa" - mesmo qu
 isso queira dizer um pouco mais verboso e enrijecido.
 
 ** Lista do conteúdo                                      :TOC_2_gh:noexport:
-   - [[#qual-sistema-estático-vou-utilizar][Qual "Sistema estático" vou utilizar?]]
-   - [[#domínio-do-problema][Domínio do problema]]
-   - [[#implementação-inicial][Implementação inicial]]
-   - [[#extraindo-o-conceito-de-session-token][Extraindo o conceito de Session Token]]
-   - [[#reutilizando-o-session-token][Reutilizando o Session Token]]
-   - [[#expondo-apenas-uma-maneira-de-criar-um-session-token-válido][Expondo apenas uma maneira de criar um Session Token válido]]
-   - [[#extraindo-o-conceito-de-pedido][Extraindo o conceito de Pedido]]
-   - [[#criando-apenas-pedidos-válidos][Criando apenas Pedidos válidos]]
-   - [[#indicando-que-um-pedido-pode-ser-inválido][Indicando que um pedido pode ser inválido]]
-   - [[#trazendo-o-mesmo-conceito-de-possível-falha-ao-iniciar-uma-sessão][Trazendo o mesmo conceito de possível falha ao iniciar uma sessão]]
-   - [[#invalidando-uma-ordem-depois-que-ela-é-enviada][Invalidando uma ordem depois que ela é enviada]]
-   - [[#trazendo-uma-resposta-sobre-o-resultado-do-pedido][Trazendo uma resposta sobre o resultado do Pedido]]
-   - [[#definindo-possíveis-status-de-um-pedido][Definindo possíveis status de um pedido]]
-   - [[#dando-um-nome-mais-bonito-para-nossas-respostas-da-api][Dando um nome mais bonito para nossas respostas da API]]
-   - [[#conclusão][Conclusão]]
+  - [[#qual-sistema-estático-vou-utilizar][Qual "Sistema estático" vou utilizar?]]
+  - [[#domínio-do-problema][Domínio do problema]]
+  - [[#implementação-inicial][Implementação inicial]]
+  - [[#extraindo-o-conceito-de-session-token][Extraindo o conceito de Session Token]]
+  - [[#reutilizando-o-session-token][Reutilizando o Session Token]]
+  - [[#expondo-apenas-uma-maneira-de-criar-um-session-token-válido][Expondo apenas uma maneira de criar um Session Token válido]]
+  - [[#extraindo-o-conceito-de-pedido][Extraindo o conceito de Pedido]]
+  - [[#criando-apenas-pedidos-válidos][Criando apenas Pedidos válidos]]
+  - [[#indicando-que-um-pedido-pode-ser-inválido][Indicando que um pedido pode ser inválido]]
+  - [[#trazendo-o-mesmo-conceito-de-possível-falha-ao-iniciar-uma-sessão][Trazendo o mesmo conceito de possível falha ao iniciar uma sessão]]
+  - [[#invalidando-uma-ordem-depois-que-ela-é-enviada][Invalidando uma ordem depois que ela é enviada]]
+  - [[#trazendo-uma-resposta-sobre-o-resultado-do-pedido][Trazendo uma resposta sobre o resultado do Pedido]]
+  - [[#definindo-possíveis-status-de-um-pedido][Definindo possíveis status de um pedido]]
+  - [[#dando-um-nome-mais-bonito-para-nossas-respostas-da-api][Dando um nome mais bonito para nossas respostas da API]]
+  - [[#conclusão][Conclusão]]
 
 ** Qual "Sistema estático" vou utilizar?
 
