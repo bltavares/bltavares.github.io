@@ -1,14 +1,8 @@
 <nav itemscope itemtype="https://schema.org/Person" class="h-card">
     <meta itemprop="url" content="{{ site.url }}">
-    <h2>Hi, I'm
+    <h1>Hi, I'm
         <address style="display:inline" class="author vcard">
-            <a href="{{ site.url }}" class="url u-url" rel="me">
-                <span class="fn p-name"
-                      itemprop="name">
-                    {{ site.data.theme.name }}
-                </span>
-            </a>
-            .</h2>
+            <a href="{{ site.url }}" class="url u-url" rel="me"><span class="fn p-name" itemprop="name">{{ site.data.theme.name }}</span></a></h1>
         </address>
         <span id="social">
             {% include social.html %}
