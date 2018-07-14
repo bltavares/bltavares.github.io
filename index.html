@@ -23,9 +23,9 @@ title: Blog Posts
                    hreflang="{{ presentation.lang | default: 'en' | slugify }}"
                    rel="bookmark" class="u-url bookmark"
                    itemprop="url mainEntityOfPage">
-                    <b class="p-name entry-title" itemprop="name headline">
+                    <i class="p-name entry-title" itemprop="name headline">
                         {{ presentation.title }}
-                    </b>
+                    </i>
                 </a>
             </li>
             {% endfor %}
@@ -49,17 +49,17 @@ title: Blog Posts
                     </time>
                     &raquo;
                 </span>
+                {% unless post.tags == empty %}
+                <span>[{{ post.tags | join: ", " }}]</span>
+                {% endunless %}
                 <a href="{{ post.url }}"
                    hreflang="{{ post.lang | default: 'en' | slugify }}"
                    rel="bookmark" class="u-url bookmark"
                    itemprop="url mainEntityOfPage">
-                    <b class="p-name entry-title" itemprop="name headline">
+                    <h3 class="p-name entry-title" itemprop="name headline">
                         {{ post.title }}
-                    </b>
+                    </h3>
                 </a>
-                {% unless post.tags == empty %}
-                    <span>[{{ post.tags | join: ", " }}]</span>
-                {% endunless %}
             </li>
             {% endfor %}
         </ul>

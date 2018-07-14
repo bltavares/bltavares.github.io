@@ -1,7 +1,7 @@
 # General Jekyll Config
 url: https://blog.bltavares.com
 permalink: pretty
-exclude: [LICENSE, CNAME, README.md, .gitignore, _posts/*.org]
+exclude: [LICENSE, CNAME, README.md, .gitignore, _posts/*.org, vendor]
 timezone: America/Sao_Paulo
 redcarpet:
     extensions:

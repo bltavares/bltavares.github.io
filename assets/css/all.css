@@ -58,12 +58,19 @@ header h1 {
     text-align: center;
 }
 
-@media only screen and (max-width: 959px) {
-  ul.posts span {
+blockquote,
+blockquote p {
+    color: #555;
+    font-size: 0.9em;
+}
+
+@media only screen and (max-width: 767px) {
+  #presentations span {
     display: block;
   }
-  ul.posts li {
-    margin: 10px 0;
+
+  #presentations li {
+      margin: 0.1em 0 1em;
   }
 }
 

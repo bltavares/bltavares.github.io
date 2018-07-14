@@ -7,6 +7,10 @@ layout: default
     <article class="h-entry hentry"
              itemprop="blogPost" itemscope="" itemtype="http://schema.org/BlogPosting">
         <p class="meta">
+          <a href="/" aria-label="Go to homepage">
+            <i class="home fa fa-home"></i>
+          </a>
+          <br />
             <time class="dt-published published" datetime="{{ page.date }}"
                   itemprop="datePublished dateModified">
                 {{ page.date | date: "%B %d, %Y" }}
@@ -22,9 +26,6 @@ layout: default
             {% unless page.tags == empty %}
                 <span>[{{ page.tags | join: ", " }}]</span>
             {% endunless %}
-            <a href="/">
-                <i class="home fa fa-home"></i>
-            </a>
         </p>
 
         <h1 class="title p-name entry-title"
