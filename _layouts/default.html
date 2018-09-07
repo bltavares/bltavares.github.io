@@ -12,6 +12,10 @@
         <link rel="stylesheet" href="/assets/css/all.css?{{site.time | date: '%s%N'}}">
         <meta name="theme-color" content="{{ site.data.theme.highlight_color }}" />
 
+        <link rel="authorization_endpoint" href="https://indieauth.com/auth"> 
+        <link rel="token_endpoint" href="https://tokens.indieauth.com/token">
+        <link rel="micropub" href="https://indie-blog-bltavares.herokuapp.com/micropub/main">
+
         {% seo %}
 
         <link rel="pingback" href="https://webmention.io/blog.bltavares.com/xmlrpc" />
