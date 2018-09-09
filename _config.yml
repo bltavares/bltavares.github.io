@@ -44,6 +44,7 @@ webmaster_verifications:
 kramdown:
   input: GFM
   hard_wrap: false
+  math_engine: mathjax
 
 ## GitHub Defaults that we cannot change
 lsi: false
@@ -51,5 +52,3 @@ incremental: false
 highlighter: rouge
 gist:
   noscript: false
-kramdown:
-  math_engine: mathjax
