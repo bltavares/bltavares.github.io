@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: 'en' | slugify }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="author" content="{{ site.data.theme.name }}" />
 
-        <link href="//fonts.googleapis.com/css?family=Open+Sans:600,800" rel="stylesheet" type="text/css">
-        <link rel="shortcut icon" href="/favicon.png">
-        <link rel="alternate" type="application/rss+xml" title="{{ site.data.theme.name }}" href="{{site.url}}/atom.xml" />
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="{{ site.data.theme.name }}" />
 
-        <link rel="stylesheet" href="/assets/css/all.css?{{site.time | date: '%s%N'}}">
-        <meta name="theme-color" content="{{ site.data.theme.highlight_color }}" />
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:600,800" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="alternate" type="application/rss+xml" title="{{ site.data.theme.name }}" href="{{site.url}}/atom.xml" />
+    <link rel="manifest" href="/manifest.json">
 
-        <link rel="authorization_endpoint" href="https://indieauth.com/auth"> 
-        <link rel="token_endpoint" href="https://tokens.indieauth.com/token">
-        <link rel="micropub" href="https://indie-blog-bltavares.herokuapp.com/micropub/main">
+    <link rel="stylesheet" href="/assets/css/all.css?{{site.time | date: '%s%N'}}">
+    <meta name="theme-color" content="{{ site.data.theme.highlight_color }}" />
 
-        {% seo %}
+    <link rel="authorization_endpoint" href="https://indieauth.com/auth">
+    <link rel="token_endpoint" href="https://tokens.indieauth.com/token">
+    <link rel="micropub" href="https://indie-blog-bltavares.herokuapp.com/micropub/main">
 
-        <link rel="pingback" href="https://webmention.io/blog.bltavares.com/xmlrpc" />
-        <link rel="webmention" href="https://webmention.io/blog.bltavares.com/webmention" />
-    </head>
-    <body>
-        <div class="container">
-            <header class="header">
-                {% include header.html %}
-            </header>
+    {% seo %}
 
-            <main class="content">
-                {{ content }}
-            </main>
+    <link rel="pingback" href="https://webmention.io/blog.bltavares.com/xmlrpc" />
+    <link rel="webmention" href="https://webmention.io/blog.bltavares.com/webmention" />
+</head>
 
-            <footer class="footer">
-                {% include footer.html %}
-            </footer>
-        </div>
+<body>
+    <div class="container">
+        <header class="header">
+            {% include header.html %}
+        </header>
 
-        {% include analytics.html %}
-    </body>
+        <main class="content">
+            {{ content }}
+        </main>
+
+        <footer class="footer">
+            {% include footer.html %}
+        </footer>
+    </div>
+
+    {% include analytics.html %}
+
+    <script type="text/javascript" src="/service-worker-installation.js" async></script>
+</body>
+
 </html>

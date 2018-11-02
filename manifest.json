@@ -1,0 +1,23 @@
+---
+---
+{
+    "short_name": "@bltavares",
+    "name": "bltavares' blog",
+    "icons": [
+        {
+            "src": "/favicon.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/favicon.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "/",
+    "background_color": "{{ site.data.theme.background_color }}",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "{{ site.data.theme.highlight_color }}"
+}
