@@ -1,0 +1,47 @@
+---
+layout: default
+---
+
+
+<main aria-label="Main content" itemscope itemtype="https://schema.org/Blog">
+    <article class="h-entry hentry" itemprop="article" itemscope="" itemtype="https://schema.org/Article">
+        <p class="meta">
+            <a href="/" aria-label="Go to homepage">
+                <i class="home fa fa-home"></i>
+            </a>
+            <br />
+            <time class="dt-updated updated" datetime="{{ page.date }}" itemprop="dateModified">
+                Last modified: {{ page.date | date: "%B %d, %Y" }}
+            </time>
+            -
+            <span itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+                <a href="{{ site.url }}" class="p-author h-card author" rel="author" title="Author: {{ site.data.theme.name }}"
+                    itemprop="url name">
+                    {{ site.data.theme.name }}
+                </a>
+            </span>
+            <br />
+            {% unless page.tags == empty %}
+            <span>Tags: [{{ page.tags | join: ", " }}]</span>
+            {% endunless %}
+            -
+            <a href="https://github.com/bltavares/bltavares.github.io/commits/wip-pages/{{ page.path }}">
+                Modification history
+            </a>
+            -
+            <a href="https://github.com/bltavares/bltavares.github.io/blob/master/{{ page.path }}">
+                Contribute to this page
+            </a>
+        </p>
+
+        <h1 class="title p-name entry-title" itemprop="name headline">
+            <a href="{{ page.url }}" class="u-url bookmark" rel="bookmark" itemprop="mainEntityOfPage url">
+                {{ page.title }}
+            </a>
+        </h1>
+
+        <div id="post" class="e-content entry-content" itemprop="articleBody">
+            {{ content }}
+        </div>
+    </article>
+</main>
