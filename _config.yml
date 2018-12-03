@@ -52,3 +52,7 @@ incremental: false
 highlighter: rouge
 gist:
   noscript: false
+
+collections:
+  pages:
+    output: true
