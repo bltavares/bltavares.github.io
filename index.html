@@ -14,9 +14,10 @@ title: Blog Posts
                 <time class="dt-updated updated" datetime="{{ presentation.date }}" itemprop="datePublished dateModified" />
                 <a href="{{ presentation.url }}" hreflang="{{ presentation.lang | default: 'en' | slugify }}" rel="bookmark"
                     class="u-url bookmark" itemprop="url mainEntityOfPage">
-                    <i class="p-name entry-title" itemprop="name headline">
+                    <h4 class="p-name entry-title" itemprop="name headline">
+                        <span>&raquo;</span>
                         {{ presentation.title }}
-                    </i>
+                    </h4>
                 </a>
             </li>
             {% endfor %}
