@@ -2,7 +2,7 @@
 url: https://blog.bltavares.com
 permalink: pretty
 exclude: [LICENSE, CNAME, README.md, .gitignore, _posts/*.org, vendor, Gemfile, Gemfile.lock]
-include: [".well-known"]
+include: [".well-known", "dat.json"]
 keep_files: [".datignore", ".dat", "dat.json"]
 timezone: America/Sao_Paulo
 redcarpet:
