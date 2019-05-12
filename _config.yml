@@ -12,7 +12,7 @@ redcarpet:
       - strikethrough
       - fenced_code_blocks
 
-gems:
+plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
 
