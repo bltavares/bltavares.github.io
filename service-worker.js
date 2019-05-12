@@ -27,151 +27,151 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "2011/06/16/desafio-do-ano/index.html",
-    "revision": "3ad97ba224460b244babfc27ea40fced"
+    "revision": "a0cb6127fdc1151008ac6f53a4df0622"
   },
   {
     "url": "2011/06/17/e-nasce-o-cabinet/index.html",
-    "revision": "ac6e8f6859f4426b81310fed35643a04"
+    "revision": "4fe510eb3445f3a9aada06a4a5c70cc2"
   },
   {
     "url": "2011/06/22/novidades-e-dilemas-no-design-do-cabinet/index.html",
-    "revision": "615e398146cbc0565812e1b4a5f7b8c5"
+    "revision": "b24ff3856088aefc621a14a55356498c"
   },
   {
     "url": "2011/06/22/tip-fabricator-1-0-and-memoization/index.html",
-    "revision": "1820e864bb43163d4b5e80a866893755"
+    "revision": "1d0cd02e68bb66e5e1637dd690e341d6"
   },
   {
     "url": "2011/07/01/cabinet-e-as-relationships/index.html",
-    "revision": "57131dcdff9e1896cc91a44c865ca4f9"
+    "revision": "2febd5a3275074e2a1635021f517ae7a"
   },
   {
     "url": "2011/07/01/rails-migration-and-column-names/index.html",
-    "revision": "13e91622fa2100d5fcf2f2b69b3699fd"
+    "revision": "9edbd2971b75c9bd012baa02474c154a"
   },
   {
     "url": "2011/07/01/speech-input-to-simple-form/index.html",
-    "revision": "57e1ee0d9920fd6e67bd2e2c05aca596"
+    "revision": "4fb08589c5f519c3c8cc6423b93711db"
   },
   {
     "url": "2011/07/07/yelly-rspec-formatter-now-for-linux-too/index.html",
-    "revision": "222a13509dc8b6718eefd3bbbc45aee1"
+    "revision": "b58021236bb20fb015c42ad45580803f"
   },
   {
     "url": "2011/07/08/primeiro-teste-do-cabinet-na-vida-real-ou-nao/index.html",
-    "revision": "4903d1480b7033134e6e217b4ba0160f"
+    "revision": "0a2f0d60544b1591f8e18e5dad4b08b9"
   },
   {
     "url": "2011/07/16/cabinet-0-0-1-released/index.html",
-    "revision": "863c12b6cea45fb66e5a38020e01a393"
+    "revision": "44e14167c36d62265931f5055e41006f"
   },
   {
     "url": "2011/07/21/coderwall-konami-code-bookmarklet/index.html",
-    "revision": "6891131af751dab3297c45a1cfc26756"
+    "revision": "8d347f5d26e36c2d1a8e4c3bc9f5ccf6"
   },
   {
     "url": "2011/07/26/canhaz-icanhaz-for-underscore/index.html",
-    "revision": "a01e9f15f01b7d6ef1ad10b337f65fb7"
+    "revision": "c14ed4cd84a8199357bbd0fc25b1a4d8"
   },
   {
     "url": "2011/09/16/how-ive-setup-git-for-continuous-deployment-on-a-php/index.html",
-    "revision": "358d7c1fcdab8e00ec5cf6c60da12461"
+    "revision": "65640e212db79739a15dbbc3214b2a0a"
   },
   {
     "url": "2011/09/19/1-8-0-rc/index.html",
-    "revision": "c04d33a5e68906fdc18a49285360f6ad"
+    "revision": "a664544dcad4650fe60d526b047c21c6"
   },
   {
     "url": "2011/09/21/bdd-vs-tdd/index.html",
-    "revision": "a0f2ca484a83397992e183db4ad85ef7"
+    "revision": "301c0541351469c2c78831b55c78acf3"
   },
   {
     "url": "2011/12/23/atualizacoes-no-cabinet/index.html",
-    "revision": "d8260175c124c48bbe121d8d62e5bb94"
+    "revision": "19343b7f371191fee4c1933a241569c6"
   },
   {
     "url": "2011/12/23/ja-conhece-o-eufori/index.html",
-    "revision": "7b181f61924230e7c42f677ee53d80eb"
+    "revision": "12be2b3c0c29ddb6450bab36b52689ab"
   },
   {
     "url": "2012/01/26/delegate-and-decorators/index.html",
-    "revision": "8f7a9d9a513dffcbd8826dc50f87e784"
+    "revision": "a24347ae1d37727fd1db6da34226dca2"
   },
   {
     "url": "2012/03/10/cleaning-database-after-testing-on-c/index.html",
-    "revision": "f13691e76daf76382c8a81ec07d33392"
+    "revision": "1be8d64dcc069fb6f12052ca7f9e6086"
   },
   {
     "url": "2012/08/06/improving-the-user-password-combo/index.html",
-    "revision": "b4b2d1746319475e4d205fa392a9fdd7"
+    "revision": "a5ba42f85a7c78395c17a60f0e6917fd"
   },
   {
     "url": "2012/09/02/mozillas-hackday-on-porto-alegre-review/index.html",
-    "revision": "4b19c752ecd4cae8fe27a8c85fcfcecf"
+    "revision": "9499b297c24152d599749bf6850988af"
   },
   {
     "url": "2013/05/23/kata-problem-git-wrong-commit/index.html",
-    "revision": "e13c473a611ae54e91baa7ba6c962cc7"
+    "revision": "387c299a0d1b4a0aa8301a992d995021"
   },
   {
     "url": "2013/08/09/following-the-error-lein-cljsbuild-and-foreign-libs/index.html",
-    "revision": "6b829d9875c40d5c9fd147565343b3b6"
+    "revision": "27780d963f204b4d0b6dc5ad71ecbdaa"
   },
   {
     "url": "2013/08/19/following-the-error-spring-autowired-and-bean/index.html",
-    "revision": "48fc1017cbd550994d623d10372bd095"
+    "revision": "d93e935fb36579f841e5060a604bdac9"
   },
   {
     "url": "2013/11/02/comments-on-single-responsibility-principle/index.html",
-    "revision": "d2107f316968fb921ed761b1c340b80a"
+    "revision": "830b761c72e0ff83027d9e1a22b5a86a"
   },
   {
     "url": "2013/11/21/contexto-de-classes-na-declaracao-de-tipos-em-haskell/index.html",
-    "revision": "97a69f7b4f7e8c41c3c84e5f9219161b"
+    "revision": "fcc09ec4d66d795fc275d076a6bc2914"
   },
   {
     "url": "2013/12/02/thoughts-about-variadic-functions/index.html",
-    "revision": "3a7cc7dcb99f3ece94c66d27172f67df"
+    "revision": "d5fa0ab9718e2c79e53106e5782aae41"
   },
   {
     "url": "2014/03/01/story-from-the-trenches-baseline-workflow/index.html",
-    "revision": "005b88d527e1cef79b2157726d5309ab"
+    "revision": "e70dd7863cd7ad46e709047822d87c20"
   },
   {
     "url": "2014/03/20/baseline-and-vagrant-integration/index.html",
-    "revision": "5891cbf87faff45b0c3cc954c9d1a1df"
+    "revision": "677d723aa787f3585a651a3d7404cff5"
   },
   {
     "url": "2014/05/03/quick-intro-to-make/index.html",
-    "revision": "c4e4f30e0ccc2f58178453818ef6ec6c"
+    "revision": "559f1121acdd137e859906af9ff890af"
   },
   {
     "url": "2015/01/19/binding-forms/index.html",
-    "revision": "85c2c3c5c9441d859ad3a6ffe0ee0f0d"
+    "revision": "467d3ffed0dff25dc57fece7f5556ebc"
   },
   {
     "url": "2015/01/28/criacao-de-variaveis-e-contextos-lexicos-em-clojure/index.html",
-    "revision": "4657f356287caf58627216a6a57c9cce"
+    "revision": "39d4d7c6695f373280a1e151a4890163"
   },
   {
     "url": "2015/07/04/about-tty/index.html",
-    "revision": "ffa9e9f51905213f78cded4f54c8a80e"
+    "revision": "16301b4e346bbb6da37e017a3f069ca2"
   },
   {
     "url": "2015/08/10/why-im-having-fun-with-rust/index.html",
-    "revision": "8d57394dd69e41e7aa86fb9c25998b04"
+    "revision": "ce2f07a771696a95d2de2494140032fa"
   },
   {
     "url": "2017/01/18/expressando_o_dominio_atraves_do_sistema_de_tipos/index.html",
-    "revision": "384813fecfaf13d40fe7f15dd38f11ff"
+    "revision": "3fe04e5f23f78f8a2cecca4df7455827"
   },
   {
     "url": "2017/06/13/updates_sobre_o_ecossistema_do_rust/index.html",
-    "revision": "2e3e236bb5abc0c3967ee0ff7acf609a"
+    "revision": "74bcc02a363cb05a676b72bca190cdbe"
   },
   {
     "url": "2019/05/12/cluster_em_casa_hardware/index.html",
-    "revision": "6f2fc51117fea4c756b9c5ac1a0c388e"
+    "revision": "225d0d49c4a346c802797466dc6f6bd5"
   },
   {
     "url": "assets/cluster_em_casa/conjunto_pi_hardware.jpg",
@@ -279,7 +279,7 @@ self.__precacheManifest = [
   },
   {
     "url": "atom.xml",
-    "revision": "94c592c145c57bcd9f0bfc862a2652eb"
+    "revision": "b402d7398a0e8bb29f325f82c4e181bf"
   },
   {
     "url": "favicon.png",
@@ -287,7 +287,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "4c224918f22732281dceff07acd4a57b"
+    "revision": "cff3a9ea01605c836d2ae7b6ed4c443a"
   },
   {
     "url": "keybase.txt",
