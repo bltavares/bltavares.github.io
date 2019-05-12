@@ -282,10 +282,6 @@ self.__precacheManifest = [
     "revision": "94c592c145c57bcd9f0bfc862a2652eb"
   },
   {
-    "url": "dat.json",
-    "revision": "6a5c3d77463c8f1ce12cacc06d1cf037"
-  },
-  {
     "url": "favicon.png",
     "revision": "cd203f6c2b548699de85a9ed4054c832"
   },
@@ -419,5 +415,7 @@ self.__precacheManifest = [
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
+workbox.precaching.cleanupOutdatedCaches();
 
 workbox.routing.registerRoute(/\.(?:png|jpg|jpeg|svg)$/, new workbox.strategies.CacheFirst({ "cacheName":"images", plugins: [new workbox.expiration.Plugin({ maxEntries: 10, purgeOnQuotaError: false })] }), 'GET');

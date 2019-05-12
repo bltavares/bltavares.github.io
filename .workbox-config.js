@@ -4,6 +4,8 @@ module.exports = {
     globPatterns: [
         "**/**",
     ],
+    globIgnores: ['dat.json', '.dat', '.datignore'],
+    cleanupOutdatedCaches: true,
     runtimeCaching: [{
         urlPattern: /\.(?:png|jpg|jpeg|svg)$/,
         handler: 'CacheFirst',
