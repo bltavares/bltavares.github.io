@@ -5,24 +5,40 @@ title: Blog Posts
 
 <div id="home">
     <section class="h-feed hfeed">
+        <h2 class="p-name" rel="tag"><i class="fa fa-cogs-o"></i> Extra Content</h2>
+        <ul id="extra-pages" class="posts">
+            <li class="h-entry hentry" itemscope="" itemtype="http://schema.org/BlogPosting">
+                <meta itemprop="author" content="{{ site.data.theme.name }}">
+                <span>
+                    &raquo;
+                </span>
+                <a href="/diy" hreflang="en" rel="bookmark" class="u-url bookmark" itemprop="url mainEntityOfPage">
+                    <i class="p-name entry-title" itemprop="name headline">
+                        DIY: Things I'd like to build (if I had the time)
+                    </i>
+                </a>
+            </li>
+        </ul>
+    </section>
+
+    <hr />
+
+    <section class="h-feed hfeed">
         <h2 class="p-name" rel="tag"><i class="fa fa-comments-o"></i> Presentations</h2>
 
         <ul id="presentations" class="posts">
             {% for presentation in site.data.presentations %}
-            <li class="h-entry hentry"
-                itemscope="" itemtype="http://schema.org/BlogPosting">
+            <li class="h-entry hentry" itemscope="" itemtype="http://schema.org/BlogPosting">
                 <meta itemprop="author" content="{{ site.data.theme.name }}">
                 <span>
                     <time class="dt-published published" datetime="{{ presentation.date }}"
-                          itemprop="datePublished dateModified">
+                        itemprop="datePublished dateModified">
                         {{ presentation.date | date_to_string }}
                     </time>
                     &raquo;
                 </span>
-                <a href="{{ presentation.url }}"
-                   hreflang="{{ presentation.lang | default: 'en' | slugify }}"
-                   rel="bookmark" class="u-url bookmark"
-                   itemprop="url mainEntityOfPage">
+                <a href="{{ presentation.url }}" hreflang="{{ presentation.lang | default: 'en' | slugify }}"
+                    rel="bookmark" class="u-url bookmark" itemprop="url mainEntityOfPage">
                     <i class="p-name entry-title" itemprop="name headline">
                         {{ presentation.title }}
                     </i>
@@ -39,12 +55,11 @@ title: Blog Posts
 
         <ul id="blog-posts" class="posts">
             {% for post in site.posts %}
-            <li class="h-entry hentry"
-                itemscope="" itemtype="http://schema.org/BlogPosting">
+            <li class="h-entry hentry" itemscope="" itemtype="http://schema.org/BlogPosting">
                 <meta itemprop="author" content="{{ site.data.theme.name }}">
                 <span>
                     <time class="dt-published published" datetime="{{ post.date }}"
-                          itemprop="datePublished dateModified">
+                        itemprop="datePublished dateModified">
                         {{ post.date | date_to_string }}
                     </time>
                     &raquo;
@@ -52,10 +67,8 @@ title: Blog Posts
                 {% unless post.tags == empty %}
                 <span>[{{ post.tags | join: ", " }}]</span>
                 {% endunless %}
-                <a href="{{ post.url }}"
-                   hreflang="{{ post.lang | default: 'en' | slugify }}"
-                   rel="bookmark" class="u-url bookmark"
-                   itemprop="url mainEntityOfPage">
+                <a href="{{ post.url }}" hreflang="{{ post.lang | default: 'en' | slugify }}" rel="bookmark"
+                    class="u-url bookmark" itemprop="url mainEntityOfPage">
                     <h3 class="p-name entry-title" itemprop="name headline">
                         {{ post.title }}
                     </h3>
