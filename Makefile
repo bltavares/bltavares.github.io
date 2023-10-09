@@ -6,4 +6,7 @@ build:
 update-wpa:
 	docker run -v ${PWD}:/app bltavares/workbox generateSW .workbox-config
 
+announce:
+	bash ./ping.sh
+
 .PHONY: build update-wpa
