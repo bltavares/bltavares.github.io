@@ -6,14 +6,16 @@
     "description": "{{ site.description }}",
     "icons": [
         {
-            "src": "/assets/wpa-icon-128.png",
+            "src": "/assets/maskable_icon_x192.png",
             "type": "image/png",
-            "sizes": "128x128"
+            "sizes": "192x192",
+            "purpose": "any maskable"
         },
         {
-            "src": "/assets/wpa-icon-512.png",
+            "src": "/assets/maskable_icon_x512.png",
             "type": "image/png",
-            "sizes": "512x512"
+            "sizes": "512x512",
+            "purpose": "any maskable"
         }
     ],
     "start_url": "/",
